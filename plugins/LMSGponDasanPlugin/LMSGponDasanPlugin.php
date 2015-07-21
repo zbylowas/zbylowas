@@ -34,7 +34,7 @@ class LMSGponZtePlugin extends LMSPlugin {
 	const PLUGIN_DBVERSION = '2015072100';
 	const PLUGIN_NAME = 'GPON Dasan';
 	const PLUGIN_DESCRIPTION = 'GPON Dasan Hardware Support';
-	const PLUGIN_AUTHOR = 'Tomasz Chiliński &lt;tomasz.chilinski@chilan.com&gt;';
+	const PLUGIN_AUTHOR = 'AP-Media,<br>Tomasz Chiliński &lt;tomasz.chilinski@chilan.com&gt;';
 
 	public function registerHandlers() {
 		$this->handlers = array(
