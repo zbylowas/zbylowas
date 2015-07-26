@@ -24,9 +24,6 @@
  *  $Id$
  */
 
-include(PLUGINS_DIR . DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name .
-	DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'gponoffline.inc.php');
-
 $layout['pagetitle'] = 'GPON-ONU-TV';
 
 if(!isset($_GET['o']))

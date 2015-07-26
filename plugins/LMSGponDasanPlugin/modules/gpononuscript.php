@@ -24,9 +24,6 @@
  *  $Id$
  */
 
-include(PLUGINS_DIR . DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name .
-	DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'gponoffline.inc.php');
-
 $gpon_onu_autoscript_debug = ConfigHelper::checkConfig('gpon-dasan.onu_autoscript_debug');
 
 $output=$GPON->GetGponAutoScript($gpon_onu_autoscript_debug);

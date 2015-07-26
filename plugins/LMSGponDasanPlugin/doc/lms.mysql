@@ -169,7 +169,6 @@ DELIMITER ;
 -- uiconfig --
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'max_onu_to_olt', '64', 'GPON - Domyślna maksymalna liczba ONU przypisanych do portu OLT', 0);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'onumodels_pagelimit', '100', 'Limit wyświetlanych rekordów na jednej stronie listy modeli ONU.', 0);
-INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'enabled', '1', 'Moduł GPON', 0);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'onu_pagelimit', '100', 'Limit wyświetlanych rekordów na jednej stronie listy ONU.', 0);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'olt_pagelimit', '100', 'Limit wyświetlanych rekordów na jednej stronie listy OLT.', 0);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'onu_customerlimit', '5', 'Maksymalna liczba Klientów przypisanych do ONU', 0);

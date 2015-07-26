@@ -24,9 +24,6 @@
  *  $Id$
  */
 
-include(PLUGINS_DIR . DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name .
-	DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'gponoffline.inc.php');
-
 if(! $GPON->GponOnuModelsExists($_GET['id']))
 {
 	$SESSION->redirect('m=gpononumodelslist');

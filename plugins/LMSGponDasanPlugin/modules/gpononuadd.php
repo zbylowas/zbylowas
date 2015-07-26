@@ -24,9 +24,6 @@
  *  $Id$
  */
 
-include(PLUGINS_DIR . DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name .
-	DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'gponoffline.inc.php');
-
 $onu_customerlimit = ConfigHelper::getConfig('gpon-dasan.onu_customerlimit', 1);
 $onu_check_add=isset($_GET['onu_check_add'])?intval($_GET['onu_check_add']):0;
 if(isset($_POST['onucheck']))
