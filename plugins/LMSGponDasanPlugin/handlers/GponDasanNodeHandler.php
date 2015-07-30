@@ -30,22 +30,34 @@
  * @author Tomasz Chiliński <tomasz.chilinski@chilan.com>
  */
 class GponDasanNodeHandler {
-	public function NodeAddOnLoad() {
-		global $SMARTY, $LMS, $GPON;
+	public function nodeAddBeforeDisplay(array $hook_data) {
+		global $LMS, $GPON;
+
+		$SMARTY = $hook_data['smarty'];
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+
+		return $hook_data;
 	}
 
-	public function NodeInfoOnLoad() {
-		global $SMARTY, $LMS, $GPON;
+	public function nodeInfoBeforeDisplay(array $hook_data) {
+		global $LMS, $GPON;
+
+		$SMARTY = $hook_data['smarty'];
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+
+		return $hook_data;
 	}
 
-	public function NodeEditOnLoad() {
-		global $SMARTY, $LMS, $GPON;
+	public function nodeEditBeforeDisplay(array $hook_data) {
+		global $LMS, $GPON;
+
+		$SMARTY = $hook_data['smarty'];
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+
+		return $hook_data;
 	}
 
-	public function NodeScanOnLoad() {
+	public function nodeScanOnLoad() {
 		global $SMARTY, $LMS, $GPON;
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
 	}

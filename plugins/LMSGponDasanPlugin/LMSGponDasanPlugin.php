@@ -58,29 +58,29 @@ class LMSGponZtePlugin extends LMSPlugin {
 				'class' => 'GponDasanInitHandler',
 				'method' => 'accessTableInit'
 			),
-			'customerinfo_on_load' => array(
+			'customerinfo_before_display' => array(
 				'class' => 'GponDasanCustomerHandler',
-				'method' => 'customerInfoOnLoad'
+				'method' => 'customerInfoBeforeDisplay'
 			),
-			'customeredit_on_load' => array(
+			'customeredit_before_display' => array(
 				'class' => 'GponDasanCustomerHandler',
-				'method' => 'customerEditOnLoad'
+				'method' => 'customerEditBeforeDisplay'
 			),
-			'nodeadd_on_load' => array(
+			'nodeadd_before_display' => array(
 				'class' => 'GponDasanNodeHandler',
-				'method' => 'NodeAddOnLoad'
+				'method' => 'nodeAddBeforeDisplay'
 			),
-			'nodeinfo_on_load' => array(
+			'nodeinfo_before_display' => array(
 				'class' => 'GponDasanNodeHandler',
-				'method' => 'NodeInfoOnLoad'
+				'method' => 'nodeInfoBeforeDisplay'
 			),
-			'nodeedit_on_load' => array(
+			'nodeedit_before_display' => array(
 				'class' => 'GponDasanNodeHandler',
-				'method' => 'NodeEditOnLoad'
+				'method' => 'nodeEditBeforeDisplay'
 			),
 			'nodescan_on_load' => array(
 				'class' => 'GponDasanNodeHandler',
-				'method' => 'NodeScanOnLoad'
+				'method' => 'nodeScanOnLoad'
 			),
 		);
 	 }

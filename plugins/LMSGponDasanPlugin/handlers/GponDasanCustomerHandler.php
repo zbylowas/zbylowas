@@ -30,14 +30,22 @@
  * @author Tomasz Chiliński <tomasz.chilinski@chilan.com>
  */
 class GponDasanCustomerHandler {
-	public function CustomerInfoOnLoad() {
-		global $SMARTY, $LMS, $GPON;
+	public function customerInfoBeforeDisplay(array $hook_data) {
+		global $LMS, $GPON;
+
+		$SMARTY = $hook_data['smarty'];
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+
+		return $hook_data;
 	}
 
-	public function CustomerEditOnLoad() {
-		global $SMARTY, $LMS, $GPON;
+	public function customerEditBeforeDisplay(array $hook_data) {
+		global $LMS, $GPON;
+
+		$SMARTY = $hook_data['smarty'];
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+
+		return $hook_data;
 	}
 }
 
