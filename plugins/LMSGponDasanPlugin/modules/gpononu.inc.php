@@ -40,9 +40,7 @@ function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
 	return $objResponse;
 }
 
-$LMS->InitXajax();
 $LMS->RegisterXajaxFunction('ONU_get_param_Xj');
-$SMARTY->assign('xajax', $LMS->RunXajax());
 
 /* end AJAX plugin stuff */
 $SMARTY->assign('netdevlist',$netdevconnected);
