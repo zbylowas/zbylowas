@@ -205,8 +205,6 @@ class GponDasanInitHandler {
 			AccessRights::FIRST_FORBIDDEN_PERMISSION);
 		$access->insertPermission(new Permission('gpon_auto_provisioning', trans('GPON - auto provisioning (new onu)'),
 			'^(gpononu(add|script|edit|check))$'), AccessRights::FIRST_FORBIDDEN_PERMISSION);
-		$access->insertPermission(new Permission('gpon_view_onu_passwords', trans('GPON - view onu passwords')),
-			AccessRights::FIRST_FORBIDDEN_PERMISSION);
 	}
 }
 
