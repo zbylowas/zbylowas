@@ -194,23 +194,19 @@ class GponDasanInitHandler {
     /**
      * Modifies access table
      * 
-     * @param array $hook_data contains access['table'] data
-     * @return array $hook_data with modified access['table']
      */
-	public function accessTableInit(array $hook_data = array()) {
-		$access['table'][120]['name']		= 'GPON - zarządzanie modułem';
-		$access['table'][120]['allow_reg']	= '^gpon.*$';
+	public function accessTableInit() {
+		$access = AccessRights::getInstance();
 
-		$access['table'][121]['name']		= 'GPON - podgląd infrormacji';
-		$access['table'][121]['allow_reg']	= '^((gponolt|gpononu|gpononumodels)(info|list|search|tvinfo|tvlist|signalimage)|gponoffline)$';
-
-		$access['table'][122]['name']		= 'GPON - Autoprovisioning (nowy onu)';
-		$access['table'][122]['allow_reg']	= '^(gpononu(add|script|edit|check))$';
-
-		$access['table'][123]['name']		= 'GPON - view onu passwords';
-		$access['table'][123]['privillege']	= 'view_onu_passwords';
-
-		return $hook_data;
+		$access->insertPermission(new Permission('gpon_full_access', trans('GPON - module management'), '^gpon.*$'),
+			AccessRights::FIRST_FORBIDDEN_PERMISSION);
+		$access->insertPermission(new Permission('gpon_read_only', trans('GPON - information review'),
+			'^((gponolt|gpononu|gpononumodels)(info|list|search|tvinfo|tvlist|signalimage)|gponoffline)$'),
+			AccessRights::FIRST_FORBIDDEN_PERMISSION);
+		$access->insertPermission(new Permission('gpon_auto_provisioning', trans('GPON - auto provisioning (new onu)'),
+			'^(gpononu(add|script|edit|check))$'), AccessRights::FIRST_FORBIDDEN_PERMISSION);
+		$access->insertPermission(new Permission('gpon_view_onu_passwords', trans('GPON - view onu passwords')),
+			AccessRights::FIRST_FORBIDDEN_PERMISSION);
 	}
 }
 
