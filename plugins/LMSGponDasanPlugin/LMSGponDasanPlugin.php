@@ -29,7 +29,7 @@
  *
  * @author Tomasz Chiliński <tomasz.chilinski@chilan.com>
  */
-class LMSGponZtePlugin extends LMSPlugin {
+class LMSGponDasanPlugin extends LMSPlugin {
 	const plugin_directory_name = 'LMSGponDasanPlugin';
 	const PLUGIN_DBVERSION = '2015072100';
 	const PLUGIN_NAME = 'GPON Dasan';
