@@ -49,7 +49,8 @@ $rrdtool = ConfigHelper::getConfig('gpon-dasan.rrdtool', '/usr/bin/rrdtool');
 if (!file_exists($rrdtool))
 	die("No rrdtool binary found on path $rrdtool!" . PHP_EOL);
 
-$GPON = new GPON($DB);
+$AUTH = null;
+$GPON = new GPON($DB, $AUTH);
 
 function update_signal_onu_rrd($onuid, $signal, $oltrx) {
 	global $rrdtool;

@@ -56,7 +56,8 @@ if (empty($_SERVER['SHELL'])) {
 
 require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'language.php');
 
-$GPON1 = new GPON($DB);
+$AUTH = null,
+$GPON1 = new GPON($DB, $AUTH);
 
 //-----------------------------------------//
 $gpon_onu_autoscript_debug = ConfigHelper::getConfig('gpon-dasan.onu_autoscript_debug', 0);
