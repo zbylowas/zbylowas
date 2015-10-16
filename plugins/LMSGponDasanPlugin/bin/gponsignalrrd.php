@@ -102,7 +102,7 @@ if (!empty($olts))
 				continue;
 			$onuid = $DB->GetOne("SELECT o.id  FROM gpononu o 
 				JOIN gpononu2olt p ON p.gpononuid=o.id
-				WHERE netdevicesid = ? AND numport =? AND onuid = ?", array($olt['netdevicesid'], $matchids[1], $matchids[2]));
+				WHERE netdevicesid = ? AND numport =? AND onuid = ?", array($olt['netdevid'], $matchids[1], $matchids[2]));
 			if (!$onuid)
 				continue;
 
