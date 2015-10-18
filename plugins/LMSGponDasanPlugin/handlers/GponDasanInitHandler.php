@@ -87,7 +87,7 @@ class GponDasanInitHandler {
 		$menu_gpon = array(
 			'GPON' => array(
 				'name' => 'GPON DASAN',
-				'img' =>'gponolt.gif',
+				'img' => LMSGponDasanPlugin::plugin_directory_name . '/gponolt.gif',
 				'link' =>'?m=gponoltlist',
 				'tip' => 'Zarządzanie GPON',
 				'accesskey' =>'k',
