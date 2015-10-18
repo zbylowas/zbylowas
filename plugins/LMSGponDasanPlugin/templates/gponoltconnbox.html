@@ -13,7 +13,7 @@
 	<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
 	<TR class="dark">
 		<TD class="fleftu" width="1%" rowspan="2">
-			<IMG src="img/gpononu.gif" ALT=""><br>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""><br>
 			<IMG src="img/customer.gif" ALT="">
 		</TD>
 		<TD class="fbt" width="37%" rowspan="2">
@@ -26,11 +26,11 @@
 		</TD>
 		<TD class="fbt" width="1%" align="right" rowspan="2" NOWRAP>
 			<A href="?m=gponoltinfo&id={$netdevinfo.id}&o=id{if $listdata.direction eq "asc" && $listdata.order eq "id"},desc{/if}">ID:</A> {if $listdata.order eq "id"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if} <br />
-				<IMG src="img/gpononu_takenports.gif" ALT="">
+				<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
 				<A href="?m=gponoltinfo&id={$netdevinfo.id}&o=onuid{if $listdata.direction eq "asc" && $listdata.order eq "onuid"},desc{/if}">ONU ID:</A> {if $listdata.order eq "onuid"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
 		</TD>
 		<TD class="fbt" width="1%" rowspan="2" NOWRAP>
-			<IMG src="img/gpononu_takenports.gif" ALT=""><A href="?m=gponoltinfo&id={$netdevinfo.id}&o=numport{if $listdata.direction eq "asc" && $listdata.order eq "numport"},desc{/if}">Port OLT:</A> {if $listdata.order eq "numport"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if} <BR>Filtr:
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT=""><A href="?m=gponoltinfo&id={$netdevinfo.id}&o=numport{if $listdata.direction eq "asc" && $listdata.order eq "numport"},desc{/if}">Port OLT:</A> {if $listdata.order eq "numport"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if} <BR>Filtr:
 			<FORM METHOD="GET" ACTION="?m={$layout.module}" NAME="choosefilter">
                             <INPUT type="submit" class="hiddenbtn">
                             <INPUT TYPE="HIDDEN" NAME="m" VALUE="gponoltinfo">
@@ -58,7 +58,7 @@
 	{section name=netdevlist loop=$netdevlist start=$start}
 	<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
 		<TD>
-                        <IMG src="img/gpononu.gif" ALT=""><br>
+                        <IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""><br>
                         <IMG src="img/customer.gif" ALT="">
                 </TD>
 
@@ -83,7 +83,7 @@
 			{if $netdevlist[netdevlist].linktype}
 				<A href="?m=gpononuedit&action=switchlinktype&linktype=0&id={$netdevinfo.id}&devid={$netdevlist[netdevlist].id}"><IMG SRC="img/wireless.gif" alt="[ {trans("Change connection type")} ]" title="[ {trans("Change connection type")} ]"></A> 
 			{else}
-				<A href="?m=gpononuedit&action=switchlinktype&linktype=1&id={$netdevinfo.id}&devid={$netdevlist[netdevlist].id}"><IMG SRC="img/gpononu_takenports.gif" alt="[ {trans("Change connection type")} ]" title="[ {trans("Change connection type")} ]"></A> 
+				<A href="?m=gpononuedit&action=switchlinktype&linktype=1&id={$netdevinfo.id}&devid={$netdevlist[netdevlist].id}"><IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" alt="[ {trans("Change connection type")} ]" title="[ {trans("Change connection type")} ]"></A> 
 			{/if}
 			[<b>{if $netdevlist[netdevlist].numport}
 				{if $netdevlist[netdevlist].numportf}{$netdevlist[netdevlist].numportf}

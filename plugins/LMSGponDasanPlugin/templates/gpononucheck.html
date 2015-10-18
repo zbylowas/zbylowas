@@ -5,12 +5,12 @@
 <TABLE CELLPADDING="3" width="100%" border="0">
 	<TR class="dark">
 		<TD class="fleftu" width="57%">
-			<IMG src="img/gpononu.gif" ALT="">&nbsp;<B>{trans("Name:")}</B><BR>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">&nbsp;<B>{trans("Name:")}</B><BR>
 			{trans("Model:")}<br />
 			{trans("Description:")}
 		</TD>
 		<TD class="fleftu" style="border-left:0px;" width="30%">
-		<img src="img/gponolt.gif" ALT="">OLT
+		<img src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT="">OLT
 		</TD>
 		<TD class="fbt" width="1%" align="right" valign="top">
 			
@@ -27,13 +27,13 @@
 	{section name=netdevlist loop=$netdevlist start=0 max=$listdata.total}
 	<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
 		<TD width="57%" class="fleft" VALIGN="TOP">
-			<IMG src="img/gpononu.gif" ALT=""> <B>{$netdevlist[netdevlist].onu_serial}</B><BR>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""> <B>{$netdevlist[netdevlist].onu_serial}</B><BR>
 			<IMG src="img/producer.gif" ALT=""> {if $netdevlist[netdevlist].onu_model}{$netdevlist[netdevlist].onu_model}{/if}
 			<BR>
 			{if $netdevlist[netdevlist].onu_description}{$netdevlist[netdevlist].onu_description}{/if}
 		</TD>
 		<TD width="30%" style="border-left:0px;" class="fleft" VALIGN="TOP">
-			<A href="?m=gponoltinfo&id={$netdevlist[netdevlist].olt_netdevicesid}"><img src="img/gponolt.gif" ALT=""> {$netdevlist[netdevlist].olt_name}</A><br />Port OLT: <b>{$netdevlist[netdevlist].olt_port}</b> / ONU id: <b>{$netdevlist[netdevlist].onu_id}</b>
+			<A href="?m=gponoltinfo&id={$netdevlist[netdevlist].olt_netdevicesid}"><img src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT=""> {$netdevlist[netdevlist].olt_name}</A><br />Port OLT: <b>{$netdevlist[netdevlist].olt_port}</b> / ONU id: <b>{$netdevlist[netdevlist].onu_id}</b>
 		</td>
 		<TD WIDTH="1%"  align="right" VALIGN="TOP">
 			

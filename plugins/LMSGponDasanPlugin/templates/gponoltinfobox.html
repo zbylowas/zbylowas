@@ -3,7 +3,7 @@
 <TABLE WIDTH="100%" CELLPADDING="3">
 	<TR{if $devicepanel} class="dark hand" onClick="showOrHide('devicepanel');"{else} class="dark"{/if}>
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gponolt.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT="">
 		</TD>
 		<TD WIDTH="99%" class="frightu">
 			<B>{$netdevinfo.name} ({$netdevinfo.id|string_format:"%04d"})</B>
@@ -31,7 +31,7 @@
 	{if $netdevinfo.model}
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_model.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_model.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%">
 		        <B>{trans("Model:")}</B>
@@ -100,7 +100,7 @@
 	</TR>
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP wersja:</B>
@@ -111,7 +111,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version eq 0} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP opis:</B>
@@ -122,7 +122,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version eq 0} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP IP host:</B>
@@ -133,7 +133,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version eq 3 or $netdevinfo.snmp_version eq 0} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP Community (v.2):</B>
@@ -144,7 +144,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version lt 3} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP Auth protocol (v.3):</B>
@@ -155,7 +155,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version lt 3} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP Username (v.3):</B>
@@ -166,7 +166,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version lt 3} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP Password (v.3):</B>
@@ -177,7 +177,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version lt 3} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP Security level (v.3):</B>
@@ -188,7 +188,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version lt 3} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP Privacy passphrase (v.3):</B>
@@ -199,7 +199,7 @@
 	</TR>
 	<TR CLASS="LIGHT{if $netdevinfo.snmp_version lt 3} blend{/if}">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gponolt_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 		        <B>SNMP Privacy protocol (v.3):</B>
@@ -356,7 +356,7 @@
         {/if}
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gpononu.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="99%" COLSPAN="2">
 			<a href="?m=gpononucheck&id={$netdevinfo.id}">Wykryj onu</a>
@@ -376,7 +376,7 @@
 	</TR>
         <TR class="light">
 		<TD WIDTH="1%" style="vertical-align:top;">
-                        <IMG SRC="img/gponolt.gif" ALT="">
+                        <IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT="">
                 </TD>
 		<TD WIDTH="99%" COLSPAN="2">
 		    <B>Dane z SNMP:</B><br><br>

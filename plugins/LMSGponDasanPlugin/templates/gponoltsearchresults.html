@@ -4,7 +4,7 @@
 <TABLE CELLPADDING="3" width="100%">
 	<TR class="dark" {tip text="Click on column name to change sorting order"}>
 		<TD class="fleftu" width="97%">
-			<IMG src="img/gponolt.gif" ALT="">&nbsp;<A href="?m=gponoltsearch&search&o=name{if $listdata.direction eq "asc" && $listdata.order eq "name"},desc{/if}"><B>{trans("Name:")}</B></A> {if $listdata.order eq "name"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}<BR>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT="">&nbsp;<A href="?m=gponoltsearch&search&o=name{if $listdata.direction eq "asc" && $listdata.order eq "name"},desc{/if}"><B>{trans("Name:")}</B></A> {if $listdata.order eq "name"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}<BR>
 			<IMG src="img/producer.gif" ALT="">&nbsp;<A href="?m=gponoltsearch&search&o=producer{if $listdata.direction eq "asc" && $listdata.order eq "producer"},desc{/if}">{trans("Manufacturer:")}</A> {if $listdata.order eq "producer"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if} / 
 			<A href="?m=gponoltsearch&search&o=model{if $listdata.direction eq "asc" && $listdata.order eq "model"},desc{/if}">{trans("Model:")}</A> {if $listdata.order eq "model"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if} /
 			<A href="?m=gponoltsearch&search&o=location{if $listdata.direction eq "asc" && $listdata.order eq "location"},desc{/if}">{trans("Location:")}</A> {if $listdata.order eq "location"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
@@ -32,7 +32,7 @@
 	{section name=netdevlist loop=$netdevlist start=$start max=$pagelimit}
 	<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
 		<TD width="97%" class="fleft" onClick="return self.location.href='?m=gponoltinfo&id={$netdevlist[netdevlist].id}';" VALIGN="TOP">
-			<IMG src="img/gponolt.gif" ALT=""> <a name="{$netdevlist[netdevlist].id}"><B>{$netdevlist[netdevlist].name}</B></A><BR>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT=""> <a name="{$netdevlist[netdevlist].id}"><B>{$netdevlist[netdevlist].name}</B></A><BR>
 			<IMG src="img/producer.gif" ALT=""> {$netdevlist[netdevlist].producer} {if $netdevlist[netdevlist].model}/ {$netdevlist[netdevlist].model}{/if}{if $netdevlist[netdevlist].location} / {$netdevlist[netdevlist].location}{/if}
 		</TD>
 		<TD WIDTH="1%" onClick="return self.location.href='?m=gponoltinfo&id={$netdevlist[netdevlist].id}';" align="right" VALIGN="TOP">

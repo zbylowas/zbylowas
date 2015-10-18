@@ -12,7 +12,7 @@
 			<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
 	<TR class="dark">
 		<TD class="fleftu" width="97%">
-			<IMG src="img/gponolt.gif" ALT=""> <B>{trans("Name")} / {trans("Producer")} / {trans("Model")}:</B><BR>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT=""> <B>{trans("Name")} / {trans("Producer")} / {trans("Model")}:</B><BR>
 			<IMG src="img/home.gif" ALT=""> {trans("Location:")}
 		</TD>
 		<TD class="fbt" width="1%" align="right" NOWRAP>
@@ -20,7 +20,7 @@
 			{trans("ID:")}
 		</TD>
 		<TD class="fbt" width="1%" NOWRAP>
-			<IMG src="img/gpononu_takenports.gif" ALT=""> Port OLT:<BR>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT=""> Port OLT:<BR>
 			<IMG src="img/port.gif" ALT=""> Liczba portów OLT:
 		</TD>
 		<TD class="frightu" width="1%">
@@ -31,7 +31,7 @@
 	{section name=netdevlist loop=$netdevlist start=$start}
 	<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
 		<TD width="97%" onClick="return self.location.href='?m=gponoltinfo&id={$netdevlist[netdevlist].id}';" VALIGN="TOP" NOWRAP>
-			<IMG src="img/gponolt.gif" ALT=""> <a name="{$netdevlist[netdevlist].id}"><B>{$netdevlist[netdevlist].name} {if $netdevlist[netdevlist].producer}/ {$netdevlist[netdevlist].producer}{/if} {if $netdevlist[netdevlist].model}/ {$netdevlist[netdevlist].model}{/if}</B></A><BR>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT=""> <a name="{$netdevlist[netdevlist].id}"><B>{$netdevlist[netdevlist].name} {if $netdevlist[netdevlist].producer}/ {$netdevlist[netdevlist].producer}{/if} {if $netdevlist[netdevlist].model}/ {$netdevlist[netdevlist].model}{/if}</B></A><BR>
 			<IMG src="img/home.gif" ALT=""> {$netdevlist[netdevlist].location}
 		</TD>
 		<TD width="1%" align="right" onClick="return self.location.href='?m=gpononuinfo&id={$netdevlist[netdevlist].id}';" NOWRAP>
@@ -39,7 +39,7 @@
 			({$netdevlist[netdevlist].id|string_format:"%04d"})
 		</TD>
 		<TD width="1%" onClick="return self.location.href='?m=gpononuinfo&id={$netdevlist[netdevlist].id}';" NOWRAP>
-				<IMG SRC="img/gpononu_takenports.gif" alt=""></A> 
+				<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" alt=""></A> 
 			[{if $netdevlist[netdevlist].numport}
 			    {if $netdevlist[netdevlist].numportf}{$netdevlist[netdevlist].numportf}
 			    {else}{$netdevlist[netdevlist].numport}{/if}

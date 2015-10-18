@@ -3,7 +3,7 @@
 <TABLE WIDTH="100%" CELLPADDING="3">
 	<TR {if $devicepanel} class="dark hand" onClick="showOrHide('devicepanel');"{else} class="dark"{/if}>
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gpononu.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="99%" class="frightu">
 			<B>{$netdevinfo.name} ({$netdevinfo.id|string_format:"%04d"})</B>
@@ -18,7 +18,7 @@
 						<TABLE WIDTH="100%" CELLPADDING="3">
 						<TR class="light">
 		<TD WIDTH="1%">
-			 <IMG SRC="img/gpononu.gif" ALT="">
+			 <IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%">
 		        <B>ONU ID:</B>
@@ -66,7 +66,7 @@
 	{if $netdevinfo.model}
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gpononu_model.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_model.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%">
 		        <B>{trans("Model:")}</B>
@@ -89,7 +89,7 @@
 	</TR>
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gpononu.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%">
 			<B>ONU description:</B>
@@ -126,7 +126,7 @@
 	{if $onuports}
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gpononu_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 			<B>Porty wyłaczone:</B>

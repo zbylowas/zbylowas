@@ -1,14 +1,14 @@
 {include file="header.html"}
 <!--// $Id$ //-->
 {include file="calendar_js.html"}
-<SCRIPT TYPE="text/javascript" SRC="img/gpon.js""></SCRIPT>
+<SCRIPT TYPE="text/javascript" SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpon.js""></SCRIPT>
 <H1>{$layout.pagetitle}</H1>
 <FORM NAME="netdevadd" METHOD="POST" ACTION="?m=gpononumodelsadd">
 <INPUT type="submit" class="hiddenbtn">
 <TABLE WIDTH="100%" CELLPADDING="3">
 	<TR class="dark">
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gpononumodels.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononumodels.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" class="fbt">
 			<B>{t}Name:{/t}</B>

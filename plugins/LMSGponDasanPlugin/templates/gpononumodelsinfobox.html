@@ -2,7 +2,7 @@
 <TABLE WIDTH="100%" CELLPADDING="3">
 	<TR{if $devicepanel} class="dark hand" onClick="showOrHide('devicepanel');"{else} class="dark"{/if}>
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gpononumodels.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononumodels.gif" ALT="">
 		</TD>
 		<TD WIDTH="99%" class="frightu">
 			<B>{$netdevinfo.name} ({$netdevinfo.id|string_format:"%04d"})</B>

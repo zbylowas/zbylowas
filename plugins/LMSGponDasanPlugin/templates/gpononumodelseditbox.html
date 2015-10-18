@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 {include file="calendar_js.html"}
-<SCRIPT TYPE="text/javascript" SRC="img/gpon.js""></SCRIPT>
+<SCRIPT TYPE="text/javascript" SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpon.js""></SCRIPT>
 <FORM NAME="netdevedit" METHOD="POST" ACTION="?m=gpononumodelsedit&id={$netdevinfo.id}">
 	<INPUT type="submit" class="hiddenbtn">
 	<INPUT TYPE="HIDDEN" NAME="netdev[gpononumodelsid]" VALUE="{$netdevinfo.gpononumodelsid}">
@@ -8,7 +8,7 @@
 	
 	<TR class="dark">
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gpononumodels.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononumodels.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" class="fbt">
 			<B>{trans("Name:")}</B>

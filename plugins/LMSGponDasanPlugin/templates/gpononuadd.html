@@ -2,7 +2,7 @@
 <!--// $Id$ //-->
 {include file="calendar_js.html"}
 {$xajax}
-<SCRIPT TYPE="text/javascript" SRC="img/gpon.js""></SCRIPT>
+<SCRIPT TYPE="text/javascript" SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpon.js""></SCRIPT>
 <H1>{$layout.pagetitle}</H1>
 <FORM NAME="netdevadd" METHOD="POST" ACTION="?m=gpononuadd&onu_check_add={$onu_check_add}">
 <INPUT type="submit" class="hiddenbtn">
@@ -15,7 +15,7 @@
 {if $onu_check_add}
 	<TR class="dark">
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gponolt.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" class="fbt">
 		<b>OLT:</b>
@@ -25,7 +25,7 @@
 {/if}
 	<TR class="dark">
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gpononu.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" class="fbt">
 			<B>{trans("Name:")}</B>
@@ -47,7 +47,7 @@
 	{if $onu_check_add}
 	<TR class="light">
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gponolt.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" class="fbt">
 		<b>ONU ID:</b>
@@ -136,7 +136,7 @@
 	
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gpononu.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%">
 			<B>ONU description:</B>

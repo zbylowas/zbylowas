@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 {include file="calendar_js.html"}
-<SCRIPT TYPE="text/javascript" SRC="img/gpon.js""></SCRIPT>
+<SCRIPT TYPE="text/javascript" SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpon.js""></SCRIPT>
 <FORM NAME="netdevedit" METHOD="POST" ACTION="?m=gpononuedit&id={$netdevinfo.id}">
 	<INPUT type="submit" class="hiddenbtn">
 	<INPUT TYPE="hidden" NAME="voipaccountsid1" ID="pots_1_phone" VALUE="{$netdevinfo.voipaccountsid1}"> 
@@ -11,7 +11,7 @@
 	
 	<TR class="dark">
 		<TD WIDTH="1%" class="fleftu">
-			<IMG SRC="img/gpononu.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" class="fbt">
 			<B>{trans("Name:")}</B>
@@ -28,7 +28,7 @@
 		                                <TABLE WIDTH="100%" CELLPADDING="3">
 		                                <TR class="light">
 		<TD WIDTH="1%">
-			 <IMG SRC="img/gpononu.gif" ALT="">
+			 <IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%">
 		        <B>ONU ID:</B>
@@ -75,7 +75,7 @@
 	
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gpononu_model.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_model.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%" NOWRAP>
 			<B>{trans("Model:")}</B>
@@ -102,7 +102,7 @@
 	</TR>
 	<TR class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gpononu.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
 		<TD WIDTH="1%">
 			<B {tip text="Pole możliwe do zmiany przy nowym, jeszcze nie podłączonym onu"}>ONU description:</B>
@@ -286,7 +286,7 @@ document.getElementById('customersid_{$smarty.section.foo.index}').onchange();
 	{if ConfigHelper::getConfig('phpui.default_editor')}
 	<tr class="light">
 		<TD WIDTH="1%">
-			<IMG SRC="img/gpononu_takenports.gif" ALT="">
+			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
 		</td>
 		<TD WIDTH="1%" NOWRAP>
 			<B>{trans("Ports:")}<br>(radius)</B>
