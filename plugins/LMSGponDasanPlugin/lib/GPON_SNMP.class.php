@@ -1896,11 +1896,11 @@ class GPON_SNMP {
 			{
 				if($this->clean_snmp_value($v)=='ok(1)')
 				{
-					$PowerS[]='<img src="img/green.png" /> (ok)';
+					$PowerS[]='<img src="img/' . LMSGponDasanPlugin::plugin_directory_name . '/green.png" /> (ok)';
 				}
 				else 
 				{
-					$PowerS[]='<img src="img/red.png" /> (fail)';
+					$PowerS[]='<img src="img/' . LMSGponDasanPlugin::plugin_directory_name . '/red.png" /> (fail)';
 				}
 			}
 			if(is_array($PowerS) && count($PowerS)>0)
@@ -1915,11 +1915,11 @@ class GPON_SNMP {
 			{
 				if($this->clean_snmp_value($v)=='ok(1)')
 				{
-					$FanU[]='<img src="img/green.png" /> (ok)';
+					$FanU[]='<img src="img/' . LMSGponDasanPlugin::plugin_directory_name . '/green.png" /> (ok)';
 				}
 				else 
 				{
-					$FanU[]='<img src="img/red.png" /> (fail)';
+					$FanU[]='<img src="img/' . LMSGponDasanPlugin::plugin_directory_name . '/red.png" /> (fail)';
 				}
 			}
 			if(is_array($FanU) && count($FanU)>0)
