@@ -12,5 +12,5 @@ Instalacja:
 2. Utworzyć dowiązanie symboliczne w katalogu img LMS-a o nazwie LMSGponDasanPlugin
    do katalogu ../plugins/LMSGponDasanPlugin/img.
 3. W pliku /etc/snmp/snmp.conf wskazać katalog <lms-path>/plugins/LMSGponDasanPlugin/mibs:
-   mibdirs +<lms-path>/plugins/LMSGponDasanPlugin/mibs
+   mibdirs +<lms-path>/plugins/LMSGponDasanPlugin/mibs:<lms-path>/plugins/LMSGponDasanPlugin/mibs/SLE:<lms-path>/plugins/LMSGponDasanPlugin/mibs/DSSHE
 4. Zrestartować serwer www.
