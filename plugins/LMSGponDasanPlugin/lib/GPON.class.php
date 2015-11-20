@@ -411,7 +411,7 @@ class GPON {
 	}
 	function GetGponOnu2Customers($gpononuid)
 	{
-		return $this->DB->GetAll("SELECT g2c.id,c.id as customersid, " . $this->DB->Concat('c.lastname', "' '", 'c.name') . ") as customersname 
+		return $this->DB->GetAll("SELECT g2c.id,c.id as customersid, (" . $this->DB->Concat('c.lastname', "' '", 'c.name') . ") as customersname 
 			FROM gpononu2customers g2c
 			INNER JOIN customers c On c.id=g2c.customersid
 			WHERE g2c.gpononuid=? ORDER BY g2c.id ASC", array($gpononuid));
@@ -488,7 +488,7 @@ class GPON {
 		$result=array();
 		if($ownerid>0)
 		{
-			$result = $this->DB->GetAll("SELECT n.id, " . $this->DB->Concat('n.name', "' / '", 'INET_NTOA(ipaddr)') . ") AS host
+			$result = $this->DB->GetAll("SELECT n.id, (" . $this->DB->Concat('n.name', "' / '", 'INET_NTOA(ipaddr)') . ") AS host
 			FROM nodes n
 			INNER JOIN customers c ON c.id = n.ownerid
 			WHERE c.id=?", array($ownerid));
@@ -498,7 +498,7 @@ class GPON {
 	}
 	function GetHostForNetdevices()
 	{
-	    return $this->DB->GetAll("SELECT n.id, " . $this->DB->Concat('n.name', "' / '", 'INET_NTOA(ipaddr)') . ") AS host
+	    return $this->DB->GetAll("SELECT n.id, (" . $this->DB->Concat('n.name', "' / '", 'INET_NTOA(ipaddr)') . ") AS host
 		FROM nodes n 
 		LEFT JOIN gpononu g1 ON g1.host_id1 = n.id
 		LEFT JOIN gpononu g2 ON g2.host_id2 = n.id
@@ -611,8 +611,8 @@ class GPON {
 		    (SELECT gop.name FROM gponoltprofiles gop WHERE gop.id=g.gponoltprofilesid) AS profil_olt,
 		    (SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid1) AS voipaccountsid1_phone,
 		    (SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid2) AS voipaccountsid2_phone,
-		    (SELECT " . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id1) AS host_id1_host,
-		    (SELECT " . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id2) AS host_id2_host
+		    (SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id1) AS host_id1_host,
+		    (SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id2) AS host_id2_host
 		FROM gpononu g
 		INNER JOIN gpononumodels gom on gom.id=g.gpononumodelsid
 		WHERE g.id = ?", array($id));
@@ -636,8 +636,8 @@ class GPON {
 		    (SELECT gop.name FROM gponoltprofiles gop WHERE gop.id=g.gponoltprofilesid) AS profil_olt,
 		    (SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid1) AS voipaccountsid1_phone,
 		    (SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid2) AS voipaccountsid2_phone,
-		    (SELECT " . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id1) AS host_id1_host,
-		    (SELECT " . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id2) AS host_id2_host
+		    (SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id1) AS host_id1_host,
+		    (SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id2) AS host_id2_host
 			FROM gpononu g
 			WHERE g.name = ?", array($name));
 		
