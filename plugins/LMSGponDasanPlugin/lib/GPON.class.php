@@ -504,7 +504,7 @@ class GPON {
 		LEFT JOIN gpononu g2 ON g2.host_id2 = n.id
 		WHERE g1.host_id1 IS NULL
 		  AND g2.host_id2 IS NULL
-		  AND ownerid=0 ORDER BY host");
+		  AND n.ownerid=0 ORDER BY host");
 	}
 	function IsNodeIdNetDevice($id)
 	{
