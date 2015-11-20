@@ -70,7 +70,7 @@ CREATE TABLE gpononu (
 	onuid smallint NOT NULL,
 	autoprovisioning smallint DEFAULT NULL,
 	onudescription varchar(32) DEFAULT NULL,
-	gponoltprofilesid int(11) DEFAULT NULL,
+	gponoltprofilesid integer DEFAULT NULL,
 	voipaccountsid1 integer DEFAULT NULL,
 	voipaccountsid2 integer DEFAULT NULL,
 	autoscript smallint NOT NULL,
@@ -78,10 +78,10 @@ CREATE TABLE gpononu (
 		REFERENCES nodes (id) ON DELETE SET NULL ON UPDATE CASCADE,
 	host_id2 integer DEFAULT NULL
 		REFERENCES nodes (id) ON DELETE SET NULL ON UPDATE CASCADE,
-	creationdate int(11) NOT NULL DEFAULT '0',
-	moddate int(11) NOT NULL DEFAULT '0',
-	creatorid int(11) NOT NULL DEFAULT '0',
-	modid int(11) NOT NULL DEFAULT '0',
+	creationdate integer NOT NULL DEFAULT 0,
+	moddate integer NOT NULL DEFAULT 0,
+	creatorid integer NOT NULL DEFAULT 0,
+	modid integer NOT NULL DEFAULT 0,
 	PRIMARY KEY (id),
 	UNIQUE (name)
 );
@@ -139,7 +139,7 @@ CREATE TABLE gpononuport (
 	typeid integer DEFAULT NULL
 		REFERENCES gpononuportstype (id) ON DELETE SET NULL ON UPDATE CASCADE,
 	portid integer DEFAULT NULL,
-	portdisable tinyint(4),
+	portdisable smallint,
 	PRIMARY KEY (id),
 	UNIQUE KEY onu_type_port (onuid, typeid, portid)
 );
