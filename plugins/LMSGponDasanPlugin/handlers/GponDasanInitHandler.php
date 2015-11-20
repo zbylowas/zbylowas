@@ -171,6 +171,16 @@ class GponDasanInitHandler {
 						'tip' => 'Dodaj kanał TV',
 						'prio' => 100,
 					),
+					array(
+						'name' => '------------',
+						'prio' => 110,
+					),
+					array(
+						'name' => trans('Configuration'),
+						'link' => '?m=configlist&s=gpon-dasan',
+						'tip' => trans('Configuration'),
+						'prio' => 120,
+					),
 				),
 			),
 		);
