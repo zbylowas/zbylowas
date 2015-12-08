@@ -98,7 +98,7 @@ if (!$quiet)
 	echo "Using file " . $CONFIG_FILE . " as config." . PHP_EOL;
 
 if (!is_readable($CONFIG_FILE))
-	die('Unable to read configuration file ['.$CONFIG_FILE.']!'); 
+	die('Unable to read configuration file [' . $CONFIG_FILE . ']!' . PHP_EOL);
 
 define('CONFIG_FILE', $CONFIG_FILE);
 
@@ -140,6 +140,26 @@ $config_ownergid = ConfigHelper::getConfig($config_section . '.config_ownergid',
 $config_permission = ConfigHelper::getConfig($config_section . '.config_permission', '0644');
 $config_file = ConfigHelper::getConfig($config_section . '.config_file', '/etc/raddb/radius_users');
 
+$xml_provisioning_url = ConfigHelper::getConfig($config_section . '.xml_provisioning_url');
+if (!empty($xml_provisioning_url)) {
+	$data = parse_url($xml_provisioning_url);
+	if ($data === false)
+		die("Fatal error: malformed xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
+	if (!array_key_exists('scheme', $data) || !in_array($data['scheme'], array('ftp', 'tftp')))
+		die("Fatal error: missed or invalid url scheme in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
+	if (!array_key_exists('host', $data))
+		die("Fatal error: missed host in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
+	if (!array_key_exists('user', $data))
+		die("Fatal error: missed user name in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
+	if (!array_key_exists('pass', $data))
+		die("Fatal error: missed password in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
+	if (!array_key_exists('path', $data))
+		die("Fatal error: missed path in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
+	list ($xml_scheme, $xml_host, $xml_user, $xml_pass, $xml_path) = array(
+		$data['scheme'], $data['host'], $data['user'], $data['pass'], preg_replace('/^\//', '', $data['path'])
+	);
+}
+
 $query = "SELECT o.name, m.name AS model, p.name AS profile, o.onudescription AS description,
 		host1.ip AS ip1, host2.ip AS ip2,
 		phone1.phone AS sipnumber1, phone1.auth AS sipauth1,
@@ -179,8 +199,8 @@ if ($fh == NULL)
 
 if (!empty($onus))
 	foreach ($onus as $onu) {
-		$contents = sprintf("%s\tCleartext-Password := \"%s\"" . PHP_EOL,
-			$onu['name'], $onu['model'], $onu['model']);
+		$contents = sprintf("%s\tCleartext-Password := \"%s\", Dasan-Gpon-Onu-Serial-Num == \"%s\"" . PHP_EOL,
+			$onu['name'], $onu['model'], $onu['name']);
 		$contents .= sprintf("\tDasan-Gpon-Onu-Profile = \"%s\"," . PHP_EOL . "\tDasan-Gpon-Onu-Description += \"%s\"",
 			$onu['profile'], preg_replace("/(\r)?" . PHP_EOL . "/", ', ', $onu['description']));
 		for ($i = 1; $i <= 2; $i++)
@@ -194,6 +214,13 @@ if (!empty($onus))
 				$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Voip-Sip-Auth += \"%d %s\"",
 					$i, $onu["sipauth$i"]);
 			}
+		if (!empty($xml_provisioning_url)) {
+			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Mgmt-Mode-Ip-Path-Ftp += \"id %s password %s\"",
+				$xml_user, $xml_pass);
+			$file = str_replace('%sn%', $onu['name'], $xml_path);
+			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Mgmt-Mode-Ip-Path-Uri += \"uri %s file %s\"",
+				$xml_host, $file);
+		}
 		if (!empty($onu['portids'])) {
 			$portids = explode(',', $onu['portids']);
 			$portnames = explode(',', $onu['portnames']);
