@@ -93,7 +93,7 @@ CREATE TABLE gpononu2customers (
 	id integer DEFAULT nextval('gpononu2customers_id_seq'::text) NOT NULL,
 	gpononuid integer NOT NULL
 		REFERENCES gpononu (id) ON DELETE CASCADE ON UPDATE CASCADE,
-	customersid integer NOT NULL,
+	customersid integer NOT NULL
 		REFERENCES customers (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id)
 );
@@ -108,7 +108,7 @@ CREATE TABLE gpononu2olt (
 	gpononuid integer NOT NULL,
 	numport smallint NOT NULL,
 	PRIMARY KEY (id),
-	UNIQUE KEY gpononuid (gpononuid),
+	UNIQUE (gpononuid)
 );
 CREATE INDEX gpononu2olt_netdevicesid_idx ON gpononu2olt (netdevicesid);
 
@@ -141,7 +141,7 @@ CREATE TABLE gpononuport (
 	portid integer DEFAULT NULL,
 	portdisable smallint,
 	PRIMARY KEY (id),
-	UNIQUE KEY onu_type_port (onuid, typeid, portid)
+	UNIQUE (onuid, typeid, portid)
 );
 
 /* gpononuportstype2models */
