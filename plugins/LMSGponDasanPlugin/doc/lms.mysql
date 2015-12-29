@@ -59,13 +59,13 @@ CREATE TABLE gpononu (
 	purchasetime int(11) NOT NULL DEFAULT '0',
 	guaranteeperiod tinyint(3) unsigned NOT NULL DEFAULT '0',
 	password varchar(100) NOT NULL,
-	onuid smallint(11) NOT NULL,
+	onuid smallint(11) NOT NULL DEFAULT '0',
 	autoprovisioning tinyint(4) DEFAULT NULL,
 	onudescription varchar(32) DEFAULT NULL,
 	gponoltprofilesid int(11) DEFAULT NULL,
 	voipaccountsid1 int(11) DEFAULT NULL,
 	voipaccountsid2 int(11) DEFAULT NULL,
-	autoscript tinyint(4) NOT NULL,
+	autoscript tinyint(4) NOT NULL DEFAULT '0',
 	host_id1 int(11),
 	host_id2 int(11),
 	creationdate int(11) NOT NULL DEFAULT '0',
@@ -179,4 +179,4 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 
 INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2015072100');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2015122900');
