@@ -1,93 +1,94 @@
 <!--// $Id$ //-->
 {$xajax}
-<TABLE WIDTH="100%" CELLPADDING="3" border="1">
-        <TR class="dark">
-	        <TD width="100%" class="fall hand" align="left" nowrap="nowrap" onClick="showOrHide('devicedevices');">
+<TABLE class="lmsbox">
+	<THEAD>
+	<TR>
+		<TD style="width: 100%;" class="fall hand text-left bold nobr" onClick="showOrHide('devicedevices');">
 			<IMG SRC="img/mac.gif" alt="">
-			<B>{t a=$netdevlist|@count}ONU ($a):{/t}</B>
+			{t a=$netdevlist|@count}ONU ($a):{/t}
 		</TD>
 	</TR>
-	<TR id="devicedevices" style="display:none;">
-	        <TD WIDTH="100%" class="fall">
+	</THEAD>
+	<TBODY>
+	<TR id="devicedevices" style="display: none;">
+		<TD style="width: 100%;" class="fall">
 			<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
 	<TR class="dark">
-		<TD class="fleftu" width="57%">
-			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""> <B>{trans("Name")} / {trans("Profil")} / {trans("Model")}:</B><BR>
+		<TD class="fleftu" style="width: 57%;">
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""> <span class="bold">{trans("Name")} / {trans("Profile")} / {trans("Model")}:</span><BR>
 			<IMG src="img/home.gif" ALT=""> {trans("Location:")}
-			<br />ONU description:
+			<br>{trans("ONU description:")}
 		</TD>
-		<TD class="fleftu" style="border-left:0px;" width="10%">
-		&nbsp;
+		<TD class="fleftu" style="border-left:0px; width: 10%;">
+			&nbsp;
 		</TD>
-		<TD class="fleftu" style="border-left:0px;" width="10%">
-		<img src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT=""> <A href="?m=gpononulist&o=gponolt{if $listdata.direction eq "asc" && $listdata.order eq "gponolt"},desc{/if}">OLT</A>{if $listdata.order eq "gponolt"} <IMG SRC="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
+		<TD class="fleftu" style="border-left:0px; width: 10%;">
+			<img src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT=""> <A href="?m=gpononulist&o=gponolt{if $listdata.direction == "asc" && $listdata.order == "gponolt"},desc{/if}">OLT</A>{if $listdata.order == "gponolt"} <IMG SRC="img/{if $listdata.direction == "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
 		</TD>
-		<TD class="fbt" width="1%" align="right" NOWRAP>
-			{trans("ID:")}<br />
-			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT=""> ONU ID:
+		<TD class="fbt text-right nobr" style="width: 1%;">
+			{trans("ID:")}<br>
+			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT=""> {trans("ONU ID:")}
 		</TD>
-		<TD class="fbt" width="1%" NOWRAP>
-			<IMG src="img/port.gif" ALT=""> Liczba portów ONU:
+		<TD class="fbt nobr" style="width: 1%;">
+			<IMG src="img/port.gif" ALT=""> {trans("ONU Port Count:")}
 		</TD>
-		<TD class="frightu" width="1%">
+		<TD class="frightu" style="width: 1%;">
 			&nbsp;
 		</TD>
 	</TR>
 	{cycle values="light,lucid" print=false}
 	{section name=netdevlist loop=$netdevlist start=$start}
 	<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
-		<TD width="57%" onClick="return self.location.href='?m=gpononuinfo&id={$netdevlist[netdevlist].id}';" VALIGN="TOP" NOWRAP>
+		<TD style="width: 57%;" onClick="return self.location.href='?m=gpononuinfo&id={$netdevlist[netdevlist].id}';" class="valign-top nobr">
 			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""> <a name="{$netdevlist[netdevlist].id}"><B>{$netdevlist[netdevlist].name} {if $netdevlist[netdevlist].producer}/ {$netdevlist[netdevlist].producer}{/if} {if $netdevlist[netdevlist].model}/ {$netdevlist[netdevlist].model}{/if}</B></A><BR>
 			<IMG src="img/home.gif" ALT=""> {$netdevlist[netdevlist].location}
-			<br />{if $netdevlist[netdevlist].onudescription}{$netdevlist[netdevlist].onudescription}{/if}
+			<br>{if $netdevlist[netdevlist].onudescription}{$netdevlist[netdevlist].onudescription}{/if}
 		</TD>
-		<TD width="10%" VALIGN="TOP" style="border-left:0px;" align="center" NOWRAP>
-		{if $netdevlist[netdevlist].gponoltnetdevicesid gt 0}
-		<input type="button" value="Pokaż parametry" id="pokaz_parametry_{$netdevlist[netdevlist].id}" OnClick="xajax_ONU_get_param_Xj({$netdevlist[netdevlist].gponoltid},{$netdevlist[netdevlist].gponoltnumport},{$netdevlist[netdevlist].onuid},{$netdevlist[netdevlist].id},'{$netdevlist[netdevlist].name}');" />
+		<TD style="width: 10%; border-left: 0px;" class="valign-top text-center nobr">
+			{if $netdevlist[netdevlist].gponoltnetdevicesid gt 0}
+			<input type="button" value="{trans("Show parameters")}" id="pokaz_parametry_{$netdevlist[netdevlist].id}" OnClick="xajax_ONU_get_param_Xj({$netdevlist[netdevlist].gponoltid},{$netdevlist[netdevlist].gponoltnumport},{$netdevlist[netdevlist].onuid},{$netdevlist[netdevlist].id},'{$netdevlist[netdevlist].name}');">
 			{/if}
 		</TD>
-		<TD width="30%" style="border-left:0px;" VALIGN="TOP" NOWRAP>
-		{if $netdevlist[netdevlist].gponoltnetdevicesid gt 0}
-		<A href="?m=gponoltinfo&id={$netdevlist[netdevlist].gponoltnetdevicesid}"><img src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT=""> {$netdevlist[netdevlist].gponolt}</A><br />
-		Port OLT: <b>{if $netdevlist[netdevlist].gponoltnumportf}{$netdevlist[netdevlist].gponoltnumportf}{else}{$netdevlist[netdevlist].gponoltnumport}{/if}, {$netdevlist[netdevlist].onuid}</b>
-		{/if}
+		<TD style="width: 30%; border-left: 0px;" class="valign-top nobr">
+			{if $netdevlist[netdevlist].gponoltnetdevicesid gt 0}
+			<A href="?m=gponoltinfo&id={$netdevlist[netdevlist].gponoltnetdevicesid}"><img src="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT=""> {$netdevlist[netdevlist].gponolt}</A><br>
+			{trans("OLT Port:")} <span class="bold">{if $netdevlist[netdevlist].gponoltnumportf}{$netdevlist[netdevlist].gponoltnumportf}{else}{$netdevlist[netdevlist].gponoltnumport}{/if}, {$netdevlist[netdevlist].onuid}</span>
+			{/if}
 		</TD>
-		<TD width="1%" align="right" onClick="return self.location.href='?m=gpononuinfo&id={$netdevlist[netdevlist].id}';" NOWRAP>
+		<TD style="width: 1%;" class="text-right nobr" onClick="return self.location.href='?m=gpononuinfo&id={$netdevlist[netdevlist].id}';">
 			<IMG src="img/empty.gif" height="16"><BR>
 			({$netdevlist[netdevlist].id|string_format:"%04d"})
-			<br />
-			<b>{$netdevlist[netdevlist].onuid}</b>
+			<br>
+			<span class="bold">{$netdevlist[netdevlist].onuid}</span>
 		</TD>
-		<TD width="1%" onClick="return self.location.href='?m=gpononuinfo&id={$netdevlist[netdevlist].id}';" NOWRAP>
-
+		<TD style="width: 1%;" onClick="return self.location.href='?m=gpononuinfo&id={$netdevlist[netdevlist].id}';" class="nobr">
 			<BR><IMG SRC="img/port.gif" ALT=""> {$netdevlist[netdevlist].ports}
 		</TD>
-		<TD WIDTH="1%" class="fright" align="right">
-			<nobr>
+		<TD style="width: 1%;" class="fright text-right nobr">
 			<a href="?m=gpononuedit&id={$netdevlist[netdevlist].id}"><IMG src="img/edit.gif" alt="[ {trans("Edit")} ]" title="[ {trans("Edit")} ]"></A>
 			<a href="?m=gpononuinfo&id={$netdevlist[netdevlist].id}"><IMG src="img/info.gif" alt="[ {trans("Info")} ]" title="[ {trans("Info")} ]"></A>
-			</nobr>
 		</TD>
 	</TR>
 	<TR>
-		<TD colspan="6" class="fall" align="center" id="ONU_param_{$netdevlist[netdevlist].id}" style="text-align:center;"></TD>
+		<TD colspan="6" class="fall text-center" id="ONU_param_{$netdevlist[netdevlist].id}"></TD>
 	</TR>
 	{sectionelse}
 	<TR>
-		<TD colspan="6" align="center">
+		<TD colspan="6" class="text-center">
 			<P>&nbsp;</P>
-			<P><B>{trans("No such connected devices.")}</B></P>
+			<P><span class="bold">{trans("No such connected devices.")}</span></P>
 			<P>&nbsp;</P>
 		</TD>
 	</TR>
 	{/section}
 </TABLE>
-               </TD>
-       </TR>
+		</TD>
+	</TR>
+	</TBODY>
 </TABLE>
 <SCRIPT type="text/javascript">
 <!--
-if(getCookie('devicedevices')=='1')
+if (getCookie('devicedevices')=='1')
 	document.getElementById('devicedevices').style.display = '';
 //-->
 </SCRIPT>
