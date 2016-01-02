@@ -145,7 +145,7 @@ CREATE TABLE gpononuportstype2models (
 CREATE TABLE gpononutv (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	ipaddr int(16) unsigned NOT NULL,
-	canal varchar(100) NOT NULL,
+	channel varchar(100) NOT NULL,
 	PRIMARY KEY (id),
 	UNIQUE KEY ipaddr (ipaddr)
 ) ENGINE=InnoDB;

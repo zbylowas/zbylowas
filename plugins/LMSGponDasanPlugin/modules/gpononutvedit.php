@@ -56,9 +56,9 @@ if(strlen($netdevdata['ipaddr'])==0)
 	elseif ($GPON->GponOnuTvIpExists($netdevdata['ipaddr'],$_GET['id']))
 		$error['ipaddr'] = 'Ten adres jest już używany przez inny kanał TV';
 	
-	$netdevdata['canal']=trim($netdevdata['canal']);
-	if(strlen($netdevdata['canal'])==0)
-		$error['canal'] = 'Podaj nazwę kanału TV';
+	$netdevdata['channel'] = trim($netdevdata['channel']);
+	if (!strlen($netdevdata['channel']))
+		$error['channel'] = 'Podaj nazwę kanału TV';
 	
 
 	if(!$error)
@@ -82,7 +82,7 @@ unset($netdevlist['direction']);
 
 
 
-$layout['pagetitle'] = 'GPON-ONU-TV: '.trans('$a ($b)', $netdevdata['ipaddr'], $netdevdata['canal']);
+$layout['pagetitle'] = 'GPON-ONU-TV: '.trans('$a ($b)', $netdevdata['ipaddr'], $netdevdata['channel']);
 
 if($subtitle) $layout['pagetitle'] .= ' - '.$subtitle;
 

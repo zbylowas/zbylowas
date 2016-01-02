@@ -37,9 +37,9 @@ if(strlen($netdevdata['ipaddr'])==0)
 	elseif ($GPON->GponOnuTvIpExists($netdevdata['ipaddr']))
 		$error['ipaddr'] = 'Ten adres jest już używany przez inny kanał TV';
 	
-	$netdevdata['canal']=trim($netdevdata['canal']);
-	if(strlen($netdevdata['canal'])==0)
-		$error['canal'] = 'Podaj nazwę kanału TV';
+	$netdevdata['channel'] = trim($netdevdata['channel']);
+	if (!strlen($netdevdata['channel']))
+		$error['channel'] = 'Podaj nazwę kanału TV';
 
         if(!$error)
         {

@@ -33,7 +33,7 @@ $netdevinfo = $GPON->GetGponOnuTv($_GET['id']);
 
 $SESSION->save('backto', $_SERVER['QUERY_STRING']);
 
-$layout['pagetitle'] = 'GPON-ONU-TV: '.trans('$a ($b)', $netdevinfo['ipaddr'], $netdevinfo['canal']);
+$layout['pagetitle'] = 'GPON-ONU-TV: '.trans('$a ($b)', $netdevinfo['ipaddr'], $netdevinfo['channel']);
 
 $netdevinfo['id'] = $_GET['id'];
 

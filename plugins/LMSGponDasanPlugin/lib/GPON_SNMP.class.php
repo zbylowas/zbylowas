@@ -608,8 +608,8 @@ class GPON_SNMP {
 					$num=intval($this->clean_snmp_value($v));
 					$DstIPAddr=$this->get('sleGponIgmpGroupDstIPAddr.'.$OLT_id.'.'.$ONU_id.'.'.$num);
 					$RptIPAddr=$this->get('sleGponIgmpGroupRptIPAddr.'.$OLT_id.'.'.$ONU_id.'.'.$num);
-					$tv=$this->GPON->GetGponOnuTvCanal($DstIPAddr);
-					$canal=$tv['canal'];
+					$tv = $this->GPON->GetGponOnuTvChannel($DstIPAddr);
+					$channel = $tv['channel'];
 					$result.='<tr>
 					<td>'.$num.'</td>
 					<td>'.$this->get('sleGponIgmpGroupUniId.'.$OLT_id.'.'.$ONU_id.'.'.$num).'</td>
@@ -617,7 +617,7 @@ class GPON_SNMP {
 					<td>'.$this->get('sleGponIgmpGroupSrcIPAddr.'.$OLT_id.'.'.$ONU_id.'.'.$num).'</td>
 					<td>'.$DstIPAddr.'</td>
 					<td>'.$RptIPAddr.'</td>
-					<td>'.$canal.'</td>
+					<td>' . $channel . '</td>
 					<td>'.$this->get('sleGponIgmpGroupJoinTime.'.$OLT_id.'.'.$ONU_id.'.'.$num).'</td>
 					<td>'.$this->get('sleGponIgmpGroupVlanId.'.$OLT_id.'.'.$ONU_id.'.'.$num).'</td>
 					</tr>';

@@ -1492,11 +1492,11 @@ class GPON {
 				$sqlord = ' ORDER BY ipaddr';
 			break;		
 			default:
-				$sqlord = ' ORDER BY canal';
+				$sqlord = ' ORDER BY channel';
 			break;
 		}
 		$where=' WHERE 1=1 ';
-		$netdevlist = $this->DB->GetAll('SELECT  g.id,inet_ntoa(g.ipaddr) AS ipaddr,g.canal
+		$netdevlist = $this->DB->GetAll('SELECT  g.id,inet_ntoa(g.ipaddr) AS ipaddr,g.channel
 			FROM gpononutv g '.$where
 			.($sqlord != '' ? $sqlord.' '.$direction : ''));
 
@@ -1508,33 +1508,33 @@ class GPON {
 	}
 	function GetGponOnuTv($id)
 	{
-		$result = $this->DB->GetRow('SELECT g.id,inet_ntoa(g.ipaddr) AS ipaddr,g.canal
+		$result = $this->DB->GetRow('SELECT g.id,inet_ntoa(g.ipaddr) AS ipaddr,g.channel
 			FROM gpononutv g
 			WHERE g.id = ?', array($id));
 		return $result;
 	}
 	function GponOnuTvUpdate($gpononutvdata)
 	{
-		$this->DB->Execute('UPDATE gpononutv SET ipaddr=inet_aton(?),canal=?
+		$this->DB->Execute('UPDATE gpononutv SET ipaddr=inet_aton(?),channel=?
 				WHERE id=?', 
 				array( 
 					$gpononutvdata['ipaddr'],
-					$gpononutvdata['canal'],
+					$gpononutvdata['channel'],
 					$gpononutvdata['id']
 				));
-		$this->Log(4, 'gpononutv', $gpononutvdata['id'], 'updated: '.$gpononutvdata['canal'].' - '.$gpononutvdata['ipaddr']);
+		$this->Log(4, 'gpononutv', $gpononutvdata['id'], 'updated: '.$gpononutvdata['channel'].' - '.$gpononutvdata['ipaddr']);
 	}
 	function GponOnuTvAdd($gpononutvdata)
 	{
-		if ($this->DB->Execute('INSERT INTO gpononutv (ipaddr,canal) 
+		if ($this->DB->Execute('INSERT INTO gpononutv (ipaddr,channel) 
 				VALUES (inet_aton(?), ?)', 
 				array(
 					$gpononutvdata['ipaddr'],
-					$gpononutvdata['canal']
+					$gpononutvdata['channel']
 		))) {
 		
 			$id = $this->DB->GetLastInsertID('gpononutv');
-			$this->Log(4, 'gpononutv', $id, 'added: '.$gpononutvdata['canal'].' - '.$gpononutvdata['ipaddr']);
+			$this->Log(4, 'gpononutv', $id, 'added: '.$gpononutvdata['channel'].' - '.$gpononutvdata['ipaddr']);
 			return $id;
 		}
 		else
@@ -1562,10 +1562,10 @@ class GPON {
 	{
 		return ($this->DB->GetOne('SELECT * FROM gpononutv WHERE id=?', array($id)) ? TRUE : FALSE);
 	}
-	function GetGponOnuTvCanal($ipaddr)
+	function GetGponOnuTvChannel($ipaddr)
 	{
 		$ipaddr=trim($ipaddr);
-		$result = $this->DB->GetRow("SELECT g.canal
+		$result = $this->DB->GetRow("SELECT g.channel
 			FROM gpononutv g
 			WHERE g.ipaddr = inet_aton(?)", array($ipaddr));
 		return $result;

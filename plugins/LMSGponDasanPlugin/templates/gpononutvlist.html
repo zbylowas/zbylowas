@@ -5,7 +5,7 @@
 	<TR class="dark" {tip text="Click on column name to change sorting order"}>
 		<TD class="fleftu" width="97%">
 			<IMG src="img/ip.gif" ALT="">&nbsp;<A href="?m=gpononutvlist&o=ipaddr{if $listdata.direction eq "asc" && $listdata.order eq "ipaddr"},desc{/if}"><B>Ip Address</B></A> {if $listdata.order eq "ipaddr"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}<BR>
-			<IMG src="img/desc.gif" ALT="">&nbsp;<A href="?m=gpononutvlist&o=canal{if $listdata.direction eq "asc" && $listdata.order eq "canal"},desc{/if}">Kanał TV</A> {if $listdata.order eq "canal"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
+			<IMG src="img/desc.gif" ALT="">&nbsp;<A href="?m=gpononutvlist&o=channel{if $listdata.direction eq "asc" && $listdata.order eq "channel"},desc{/if}">Kanał TV</A> {if $listdata.order eq "channel"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
 		</TD>
 		<TD class="fbt" width="1%" align="right" valign="top">
 			<A href="?m=gpononutvlist&o=id{if $listdata.direction eq "asc" && $listdata.order eq "id"},desc{/if}">ID:</A> {if $listdata.order eq "id"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if}
@@ -29,7 +29,7 @@
 	<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
 		<TD width="97%" class="fleft" onClick="return self.location.href='?m=gpononutvinfo&id={$netdevlist[netdevlist].id}';" VALIGN="TOP">
 			<IMG src="img/ip.gif" ALT=""> <a name="{$netdevlist[netdevlist].id}"><B>{$netdevlist[netdevlist].ipaddr}</B></A><BR>
-			<IMG src="img/desc.gif" ALT=""> {$netdevlist[netdevlist].canal}
+			<IMG src="img/desc.gif" ALT=""> {$netdevlist[netdevlist].channel}
 		</TD>
 		<TD WIDTH="1%" onClick="return self.location.href='?m=gpononutvinfo&id={$netdevlist[netdevlist].id}';" align="right" VALIGN="TOP">
 			({$netdevlist[netdevlist].id|string_format:"%04d"})
