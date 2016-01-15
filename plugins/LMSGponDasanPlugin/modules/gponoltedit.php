@@ -292,7 +292,7 @@ case 'formaddip':
 
 	if (check_mac($nodeipdata['mac'])) {
 		if ($nodeipdata['mac'] != '00:00:00:00:00:00' && !ConfigHelper::checkValue(ConfigHelper::getConfig('phpui.allow_mac_sharing', false))
-			&& $LMS->GetNodeIDByMAC($nodeipdata['mac']))
+			&& ($nodeid = $LMS->GetNodeIDByMAC($nodeipdata['mac'])) != null && $nodeid != $_GET['ip'])
 			$error['mac'] = trans('MAC address is in use!');
 	} elseif ($value != '')
 		$error['mac'] = trans('Incorrect MAC address!');
