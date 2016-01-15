@@ -82,7 +82,7 @@
 		<TD WIDTH="99%" NOWRAP>
 			<A HREF="javascript:checkElement('chkmac')">{trans("MAC checking")}:</A><INPUT TYPE="checkbox" NAME="ipadd[chkmac]" VALUE="1" ID="chkmac" {tip text="Enable/disable MAC address checking" trigger="chkmac"}{if $nodeipdata.chkmac} checked{/if}>&nbsp;
 			<A HREF="javascript:checkElement('chkduplex')">{trans("Half duplex")}:</A><INPUT TYPE="checkbox" NAME="ipadd[halfduplex]" VALUE="1" ID="chkduplex" {tip text="Select transmission mode" trigger="halfduplex"}{if $nodeipdata.halfduplex} checked{/if}>
-			{if ConfigHelper::checkConfig('phpui.radius)}
+			{if ConfigHelper::checkConfig('phpui.radius')}
 			&nbsp;
 			<A HREF="javascript:checkElement('chknas')">{trans("NAS")}:</A><INPUT TYPE="checkbox" NAME="ipadd[nas]" VALUE="1" ID="chknas" {tip text="Select NAS on or off" trigger="nas"}{if $nodeipdata.nas} checked{/if}>
 			{/if}
