@@ -31,7 +31,7 @@
  */
 class LMSGponDasanPlugin extends LMSPlugin {
 	const plugin_directory_name = 'LMSGponDasanPlugin';
-	const PLUGIN_DBVERSION = '2015122900';
+	const PLUGIN_DBVERSION = '2016012000';
 	const PLUGIN_NAME = 'GPON Dasan';
 	const PLUGIN_DESCRIPTION = 'GPON Dasan Hardware Support';
 	const PLUGIN_AUTHOR = 'AP-Media,<br>Tomasz Chiliński &lt;tomasz.chilinski@chilan.com&gt;';

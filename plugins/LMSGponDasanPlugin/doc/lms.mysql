@@ -133,7 +133,7 @@ CREATE TABLE gpononuport (
 
 -- gpononuportstype2models --
 CREATE TABLE gpononuportstype2models (
-	gpononuportstypeid int(11) NOT NULL,
+	gpononuportstypeid int(11) DEFAULT NULL,
 	gpononumodelsid int(11) NOT NULL,
 	portscount int(11) NOT NULL,
 	KEY gpononuportstypeid (gpononuportstypeid, gpononumodelsid),
@@ -179,4 +179,4 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 
 INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2015122900');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016012000');

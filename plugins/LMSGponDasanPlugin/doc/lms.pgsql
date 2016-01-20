@@ -146,7 +146,7 @@ CREATE TABLE gpononuport (
 
 /* gpononuportstype2models */
 CREATE TABLE gpononuportstype2models (
-	gpononuportstypeid integer NOT NULL
+	gpononuportstypeid integer DEFAULT NULL
 		REFERENCES gpononuportstype (id) ON DELETE SET NULL ON UPDATE CASCADE,
 	gpononumodelsid integer NOT NULL
 		REFERENCES gpononumodels (id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -196,4 +196,4 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 
 INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2015122900');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016012000');
