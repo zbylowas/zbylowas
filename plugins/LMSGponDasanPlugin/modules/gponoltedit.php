@@ -309,9 +309,6 @@ elseif(isset($_POST['netdev']))
 		$error['name'] =  trans('Specified name is too long (max.$a characters)!','32');
 
 	$netdevdata['ports'] = intval($netdevdata['ports']);
-	
-	if($netdevdata['ports'] < $LMS->CountNetDevLinks($_GET['id']))
-		$error['ports'] = trans('Connected devices number exceeds number of ports!');
 
 	if(empty($netdevdata['clients']))
                 $netdevdata['clients'] = 0;
@@ -346,12 +343,10 @@ elseif(isset($_POST['netdev']))
 	{
 		$error['purchasedate'] = trans('Purchase date cannot be empty when guarantee period is set!');
 	}
-	//---PORTKI
-	if(intval($netdevdata['ports'])==0)
-	{
+	//---PORTS
+	if (!intval($netdevdata['ports']))
 		$error['ports'] = 'Podaj liczbę portów';
-	}
-	//----PORTKI
+	//----PORTS
 	//-GPON-OLT
 	//walidacja parametrów SNMP
 	if(intval($netdevdata['snmp_version'])>0 && strlen(trim($netdevdata['snmp_host']))==0)
@@ -388,21 +383,23 @@ elseif(isset($_POST['netdev']))
 	        if(!isset($netdevdata['community'])) $netdevdata['community'] = '';
 	        if(!isset($netdevdata['nastype'])) $netdevdata['nastype'] = 0;
 
-		$LMS->NetDevUpdate($netdevdata);
+		$netdev = $LMS->GetNetDev($_GET['id']);
+		unset($netdevdata['ports']);
+		$netdev = array_merge($netdev, $netdevdata);
+		$LMS->NetDevUpdate($netdev);
+
 		if ($_POST['dev2nagios'] && method_exists('LMS', 'SaveDev2Nagios'))
-		    $LMS->SaveDev2Nagios($_POST['dev2nagios'],$_GET['id']);  
+			$LMS->SaveDev2Nagios($_POST['dev2nagios'],$_GET['id']);
 
 		//-GPON-OLT
 		//Update OLT
 		$GPON->GponOltUpdate($netdevdata);
 		$gponoltportsdata=$_POST['gponoltports'];
-		if($netdevdata['gponoltid']>0 && is_array($gponoltportsdata) && count($gponoltportsdata)>0)
-		{
-			foreach($gponoltportsdata as $k=>$v)
-			{
-				$gponoltports[$k]['gponoltid']=$netdevdata['gponoltid'];
-				$gponoltports[$k]['numport']=$k;
-				$gponoltports[$k]['maxonu']=$v;
+		if ($netdevdata['gponoltid']>0 && is_array($gponoltportsdata) && !empty($gponoltportsdata)) {
+			foreach ($gponoltportsdata as $k => $v) {
+				$gponoltports[$k]['gponoltid'] = $netdevdata['gponoltid'];
+				$gponoltports[$k]['numport'] = $k;
+				$gponoltports[$k]['maxonu'] = $v;
 			}
 			$GPON->GponOltPortsUpdate($gponoltports);
 		}
