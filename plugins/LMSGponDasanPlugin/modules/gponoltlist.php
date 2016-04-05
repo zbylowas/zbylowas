@@ -32,7 +32,7 @@ else
 	$o = $_GET['o'];
 $SESSION->save('ndlo', $o);
 
-$netdevlist = $LMS->GetNetDevList($o, array('gponoltid' => 1));
+$netdevlist = $GPON->GetGponOltList($o);
 $listdata['total'] = $netdevlist['total'];
 $listdata['order'] = $netdevlist['order'];
 $listdata['direction'] = $netdevlist['direction'];

@@ -41,7 +41,7 @@
 			({$netdevlist[netdevlist].id|string_format:"%04d"})
 		</TD>
 		<TD width="1%" onClick="return self.location.href='?m=gponoltinfo&id={$netdevlist[netdevlist].id}';" NOWRAP>
-			<IMG src="img/port.gif" ALT=""> {$netdevlist[netdevlist].ports} {if $netdevlist[netdevlist].gponoltid gt 0} {else}({$netdevlist[netdevlist].takenports}){/if}<BR>
+			<IMG src="img/port.gif" ALT=""> {$netdevlist[netdevlist].gponports}<BR>
 			<IMG src="img/serialnumber.gif" ALT=""> {$netdevlist[netdevlist].serialnumber}
 		</TD>
 		<TD WIDTH="1%" class="fright" align="right">

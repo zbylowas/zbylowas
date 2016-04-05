@@ -96,6 +96,26 @@ class GPON {
 		return $result;
 	}
 
+	public function GetGponOltList($o) {
+		global $LMS;
+
+		$devs = $LMS->GetNetDevList($o, array('gponoltid' => 1));
+		if (empty($devs))
+			return null;
+
+		$olts = $this->DB->GetAllByKey('SELECT go.id, COUNT(gp.*) AS ports FROM gponolt go
+			LEFT JOIN gponoltports gp ON gp.gponoltid = go.id
+			GROUP BY go.id', 'id');
+		if (empty($olts))
+			return $devs;
+
+		foreach ($devs as &$dev)
+			if (is_array($dev))
+				$dev['gponports'] = array_key_exists($dev['gponoltid'], $olts) ? $olts[$dev['gponoltid']]['ports'] : 0;
+
+		return $devs;
+	}
+
 	public function GponOltUpdate($gponoltdata) {
 		$dump = var_export($gponoltdata, true);
 		$this->Log(4, 'gponolt', $gponoltdata['gponoltid'], 'updated '. $gponoltdata['snmp_host'], $dump);
