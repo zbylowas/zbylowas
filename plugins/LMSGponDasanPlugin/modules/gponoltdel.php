@@ -3,7 +3,7 @@
 /*
  * LMS version 1.11-git
  *
- *  (C) Copyright 2001-2015 LMS Developers
+ *  (C) Copyright 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -24,31 +24,27 @@
  *  $Id$
  */
 
-if(! $LMS->NetDevExists($_GET['id']))
-{
+if (!$LMS->NetDevExists($_GET['id']))
 	$SESSION->redirect('?m=gponoltlist');
-}		
 
 $layout['pagetitle'] = 'GPON-OLT-'.trans('Deletion of Device with ID: $a',sprintf('%04d',$_GET['id']));
 $SMARTY->assign('netdevid',$_GET['id']);
 
-if(count($GPON->GetGponOnuConnectedNames($_GET['id']))>0)
-{
+if (count($GPON->GetGponOnuConnectedNames($_GET['id'])))
 	$body = '<P>Do OLT podłączone są ONU. Nie można usunąć OLT.</P>';
-}else{
-    if($_GET['is_sure']!=1)
-    {
-	    $body = '<P>'.trans('Are you sure, you want to delete that device?').'</P>'; 
-	    $body .= '<P><A HREF="?m=gponoltlist&id='.$_GET['id'].'&is_sure=1">'.trans('Yes, I am sure.').'</A></P>';
-    }else{
-	    header('Location: ?m=gponoltlist');
-	    $body = '<P>'.trans('Device has been deleted.').'</P>';
-	    $GPON->DeleteGponOlt($_GET['id']);
-	    $LMS->DeleteNetDev($_GET['id']);
-	   
-    }
+else {
+	if ($_GET['is_sure'] != 1) {
+		$body = '<P>'.trans('Are you sure, you want to delete that device?').'</P>'; 
+		$body .= '<P><A HREF="?m=gponoltlist&id='.$_GET['id'].'&is_sure=1">'.trans('Yes, I am sure.').'</A></P>';
+	} else {
+		header('Location: ?m=gponoltlist');
+		$body = '<P>'.trans('Device has been deleted.').'</P>';
+		$GPON->DeleteGponOlt($_GET['id']);
+		if (isset($_GET['netdev']))
+			$LMS->DeleteNetDev($_GET['id']);
+	}
 }
-	
+
 $SMARTY->assign('body',$body);
 $SMARTY->display('dialog.html');
 

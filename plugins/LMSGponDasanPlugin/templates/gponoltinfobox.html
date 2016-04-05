@@ -231,6 +231,7 @@
 {/if}
 			<A href="?m=gponoltedit&id={$netdevinfo.id}" ACCESSKEY="E">{trans("Edit")} <IMG src="img/edit.gif" ALT="[ {trans("Edit")} ]"></A>
 			<A href="?m=gponoltdel&id={$netdevinfo.id}" OnClick="return confirmLink(this, '{t a=$netdevinfo.name}Are you sure, you want to remove device \'$a\' from database?{/t}');">{trans("Delete")} <img src="img/delete.gif" ALT=""></A>
+			<A href="?m=gponoltdel&id={$netdevinfo.id}&netdev=1" OnClick="return confirmLink(this, '{t a=$netdevinfo.name}Are you sure, you want to remove device \'$a\' from database?{/t}');">{trans("Delete with network device")} <img src="img/delete.gif" ALT=""></A>
 		</TD>
 	</TR>
 </TABLE>

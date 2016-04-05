@@ -47,6 +47,7 @@
 		<TD WIDTH="1%" class="fright" align="right">
 			<nobr>
 			<a href="?m=gponoltdel&id={$netdevlist[netdevlist].id}" onClick="return confirmLink(this, '{t a=$netdevlist[netdevlist].name}Are you sure, you want to remove device \'$a\' from database?{/t}')"><IMG src="img/delete.gif" alt="[ {trans("Delete")} ]" title="[ {trans("Delete")} ]"></A>
+			<a href="?m=gponoltdel&id={$netdevlist[netdevlist].id}&netdev=1" onClick="return confirmLink(this, '{t a=$netdevlist[netdevlist].name}Are you sure, you want to remove device \'$a\' from database?{/t}')"><IMG src="img/delete.gif" alt="[ {trans("Delete with network device")} ]" title="[ {trans("Delete with network device")} ]"></A>
 			<a href="?m=gponoltedit&id={$netdevlist[netdevlist].id}"><IMG src="img/edit.gif" alt="[ {trans("Edit")} ]" title="[ {trans("Edit")} ]"></A>
 			<a href="?m=gponoltinfo&id={$netdevlist[netdevlist].id}"><IMG src="img/info.gif" alt="[ {trans("Info")} ]" title="[ {trans("Info")} ]"></A>
 			</nobr>

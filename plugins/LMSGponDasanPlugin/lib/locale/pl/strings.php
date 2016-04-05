@@ -10,6 +10,6 @@ $_LANG['ONU description:'] = 'Opis ONU:';
 $_LANG['ONU ID:'] = 'Id ONU:';
 $_LANG['Select assigned network device'] = 'Wybierz powiązane urządzenie sieciowe';
 $_LANG['Network device:'] = 'Urządzenie sieciowe:';
-$_LANG['- new network device -'] = '- nowe urządzenie sieciowe -';
+$_LANG['Delete with network device'] = 'Usuń wraz z urządzeniem sieciowym';
 
 ?>
