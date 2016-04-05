@@ -88,11 +88,6 @@ class GPON {
 			return false;
 	}
 
-	public function NetDevUpdate($netdevdata) {
-		$this->DB->Execute('UPDATE netdevices SET gponoltid = ? WHERE id = ?',
-			array($netdevdata['gponoltid'], $netdevdata['id']));
-	}
-
 	function GetGponOlt($id)
 	{
 		$result = $this->DB->GetRow('SELECT g.*
@@ -122,9 +117,11 @@ class GPON {
 				));
 		if ($gponoltdata['id'] != $gponoltdata['oldid']) {
 			$this->DB->Execute('UPDATE netdevices SET gponoltid = NULL WHERE id = ?', array($gponoltdata['oldid']));
-			$this->DB->Execute('UPDATE netdevices SET gponoltid = ? WHERE id = ?', array($gponoltdata['gponoltid'], $gponoltdata['id']));
+			$this->DB->Execute('UPDATE netdevices SET name = ?, gponoltid = ? WHERE id = ?',
+				array($gponoltdata['name'], $gponoltdata['gponoltid'], $gponoltdata['id']));
 			$this->DB->Execute('UPDATE gpononu2olt SET netdevicesid = ? WHERE netdevicesid = ?', array($gponoltdata['id'], $gponoltdata['oldid']));
-		}
+		} else
+			$this->DB->Execute('UPDATE netdevices SET name = ? WHERE id = ?', array($gponoltdata['name'], $gponoltdata['id']));
 	}
 
 	function DeleteGponOlt($id)
@@ -156,23 +153,24 @@ class GPON {
 			$this->Log(4, 'gponolt', $logolt, 'ports added', $dump);
 		}
 	}
-	function GetGponOltPorts($gponoltid)
-	{
-		if($result = $this->DB->GetAll('SELECT gp.*, nd.model,
-		    (SELECT COUNT(go2o.gpononuid) FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE nd.gponoltid=gp.gponoltid AND go2o.numport=gp.numport) AS countlinkport
+
+	public function GetGponOltPorts($gponoltid) {
+		if ($result = $this->DB->GetAll('SELECT gp.*, nd.model,
+			(SELECT COUNT(go2o.gpononuid) FROM gpononu2olt go2o
+				JOIN netdevices nd ON nd.id=go2o.netdevicesid
+				WHERE nd.gponoltid = gp.gponoltid AND go2o.numport = gp.numport
+			) AS countlinkport
 			FROM gponoltports gp
 			JOIN netdevices nd ON nd.gponoltid=gp.gponoltid
-			WHERE gp.gponoltid = ? ORDER BY gp.numport ASC', array($gponoltid)))
-		{
-		    foreach($result as $idx => $row)
-		    {
-			if(preg_match('/8240/', $row['model']))
-				$result[$idx]['numportf'] = $this->OLT8240_format($row['numport']);
-		    }
-		}
+			WHERE gp.gponoltid = ? ORDER BY gp.numport ASC',
+			array($gponoltid)))
+			foreach ($result as $idx => $row)
+				if (preg_match('/8240/', $row['model']))
+					$result[$idx]['numportf'] = $this->OLT8240_format($row['numport']);
 
 		return $result;
 	}
+
 	function GponOltPortsUpdate($gponoltportsdata)
 	{
 		$this->DB->BeginTrans();

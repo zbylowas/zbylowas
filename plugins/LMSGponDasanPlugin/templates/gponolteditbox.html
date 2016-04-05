@@ -8,8 +8,9 @@
 		<COL style="width: 1%;">
 		<COL style="width: 1%;">
 		<COL style="width: 98%;">
+	</COLGROUP>
 	<THEAD>
-	<TR class="dark">
+	<TR>
 		<TD>
 			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gponolt.gif" ALT="">
 		</TD>
@@ -23,11 +24,11 @@
 	</THEAD>
 	<TBODY>
 	<TR>
-                <TD WIDTH="100%" COLSPAN="3" class="flr">
-		        <TABLE WIDTH="100%" CELLPADDING="0">
-		                <TR class="light">
-		                        <TD style="width: 50%;" class="valign-top">
-		                                <TABLE WIDTH="100%" CELLPADDING="3">
+		<TD style="width: 100%;" COLSPAN="3" class="flr">
+			<TABLE WIDTH="100%" CELLPADDING="0">
+				<TR>
+					<TD WIDTH="50%" style="vertical-align:top;">
+						<TABLE WIDTH="100%" CELLPADDING="3">
 	<TR class="light">
 		<TD style="width: 1%;">
 			<IMG SRC="img/netdev.gif" ALT="">
@@ -82,8 +83,8 @@ function UpdateGponPorts(countPorts) {
 }
 //-->
 </SCRIPT>
-<INPUT TYPE="HIDDEN" NAME="ports_temp" ID="ports_temp" VALUE="{if $netdevinfo.ports}{$netdevinfo.ports}{/if}">
-		<INPUT TYPE="TEXT" NAME="netdev[ports]" ID="netdev[ports]" VALUE="{if $netdevinfo.ports}{$netdevinfo.ports}{/if}" {tip trigger="ports" text="Enter number of ports (optional)"} onkeyup="ZamienNaLiczbe(this);UpdateGponPorts(this.value);">
+			<INPUT TYPE="HIDDEN" NAME="ports_temp" ID="ports_temp" VALUE="{if count($gponoltportsinfo)}{count($gponoltportsinfo)}{/if}">
+			<INPUT TYPE="TEXT" NAME="netdev[ports]" ID="netdev[ports]" VALUE="{if count($gponoltportsinfo)}{count($gponoltportsinfo)}{/if}" {tip trigger="ports" text="Enter number of ports (optional)"} onkeyup="ZamienNaLiczbe(this);UpdateGponPorts(this.value);">
 		</TD>
 	</TR>
 	<TR class="light">
@@ -97,11 +98,11 @@ function UpdateGponPorts(countPorts) {
 			<div id="GponPorts">
 			</div>
 			<SCRIPT type="text/javascript">
-<!--
-ShowGponPorts({$netdevinfo.ports},{ConfigHelper::getConfig('gpon-dasan.max_onu_to_olt', 64)});
-SetGponPorts();
-//-->
-</SCRIPT>
+			<!--
+				ShowGponPorts({count($gponoltportsinfo)},{ConfigHelper::getConfig('gpon-dasan.max_onu_to_olt', 64)});
+				SetGponPorts();
+			//-->
+			</SCRIPT>
 		</TD>
 	</TR>
 	<TR class="light">
@@ -117,11 +118,11 @@ SetGponPorts();
 			SNMP wersja:
 		</TD>
 		<TD WIDTH="98%">
-		    <SELECT NAME="netdev[snmp_version]" {tip text="Wybierz wersję SNMP" trigger="snmp_version"}>
-			    <OPTION VALUE="0"></OPTION>
-			    {section name=snmp_v start=2 loop=4}
-			    <OPTION VALUE="{$smarty.section.snmp_v.index}" {if $netdevinfo.snmp_version eq $smarty.section.snmp_v.index} SELECTED{/if}>Version {$smarty.section.snmp_v.index}</OPTION>
-			{/section}
+			<SELECT NAME="netdev[snmp_version]" {tip text="Wybierz wersję SNMP" trigger="snmp_version"}>
+				<OPTION VALUE="0"></OPTION>
+				{section name=snmp_v start=2 loop=4}
+				<OPTION VALUE="{$smarty.section.snmp_v.index}" {if $netdevinfo.snmp_version eq $smarty.section.snmp_v.index} SELECTED{/if}>Version {$smarty.section.snmp_v.index}</OPTION>
+				{/section}
 			</SELECT>
 		</TD>
 	</TR>
@@ -234,12 +235,11 @@ SetGponPorts();
 			</SELECT>
 		</TD>
 	</TR>
-                                        </TABLE>
-				</TD>
-			        <TD WIDTH="50%" style="vertical-align:top;">
-			                <TABLE WIDTH="100%" CELLPADDING="3">
-
-<TR class="light">
+						</TABLE>
+					</TD>
+					<TD style="width: 50%;" class="valign-top">
+						<TABLE WIDTH="100%" CELLPADDING="3">
+	<TR class="light">
 		<TD colspan="3">
 		{$error_snmp}
 
@@ -307,15 +307,14 @@ SetGponPorts();
 	    </TD>
 	</TR>
 	{/if}
-	
-	</TABLE>
-                            		</TD>
-                    		</TR>
-            		</TABLE>
-        	</TD>
+						</TABLE>
+					</TD>
+				</TR>
+			</TABLE>
+		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN="3" class="text-right">
+		<TD COLSPAN="3" class="fbottomu text-right">
 			<A HREF="javascript:document.netdevedit.submit();" ACCESSKEY="S">{trans("Submit")} <IMG SRC="img/save.gif" alt=""></A>
 			<A HREF="?m=gponoltinfo&id={$netdevinfo.id}">{trans("Cancel")} <IMG SRC="img/cancel.gif" alt=""></A>
 		</TD>

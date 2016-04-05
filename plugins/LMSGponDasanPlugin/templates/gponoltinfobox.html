@@ -30,11 +30,11 @@
 		<TD WIDTH="1%">
 			<IMG SRC="img/port.gif" ALT="">
 		</TD>
-		<TD WIDTH="1%" NOWRAP>
-		        <B>{trans("Number of ports:")}</B>
+		<TD WIDTH="1%" class="bold nobr">
+			{trans("Number of ports:")}
 		</TD>
 		<TD WIDTH="98%">
-		        {$netdevinfo.ports}
+			{count($gponoltportsinfo)}
 		</TD>
 	</TR>
 		<TR class="light">

@@ -303,50 +303,18 @@ elseif(isset($_POST['netdev']))
 	$netdevdata['oldid'] = $_GET['id'];
 	$netdevdata['id'] = $netdevdata['netdevid'];
 
-	if($netdevdata['name'] == '')
+	if ($netdevdata['name'] == '')
 		$error['name'] = trans('Device name is required!');
-	elseif(strlen($netdevdata['name']) > 32)
+	elseif (strlen($netdevdata['name']) > 32)
 		$error['name'] =  trans('Specified name is too long (max.$a characters)!','32');
 
 	$netdevdata['ports'] = intval($netdevdata['ports']);
 
-	if(empty($netdevdata['clients']))
-                $netdevdata['clients'] = 0;
-	else
-	        $netdevdata['clients'] = intval($netdevdata['clients']);
-						
-	$netdevdata['purchasetime'] = 0;
-	if($netdevdata['purchasedate'] != '')
-	{
-		// date format 'yyyy/mm/dd'
-		if(!preg_match('/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/', $netdevdata['purchasedate'])) 
-		{
-			$error['purchasedate'] = trans('Invalid date format!');
-		}
-		else
-		{
-			$date = explode('/', $netdevdata['purchasedate']);
-			if(checkdate($date[1], $date[2], (int)$date[0]))
-			{
-				$tmpdate = mktime(0, 0, 0, $date[1], $date[2], $date[0]);
-				if(mktime(0,0,0) < $tmpdate)
-					$error['purchasedate'] = trans('Date from the future not allowed!');
-				else
-					$netdevdata['purchasetime'] = $tmpdate;
-			}
-			else
-				$error['purchasedate'] = trans('Invalid date format!');
-		}
-	}
-
-	if($netdevdata['guaranteeperiod'] != 0 && $netdevdata['purchasedate'] == '')
-	{
-		$error['purchasedate'] = trans('Purchase date cannot be empty when guarantee period is set!');
-	}
 	//---PORTS
 	if (!intval($netdevdata['ports']))
 		$error['ports'] = 'Podaj liczbę portów';
 	//----PORTS
+
 	//-GPON-OLT
 	//walidacja parametrów SNMP
 	if(intval($netdevdata['snmp_version'])>0 && strlen(trim($netdevdata['snmp_host']))==0)
@@ -373,29 +341,15 @@ elseif(isset($_POST['netdev']))
 	}
 	//-GPON-OLT
 
-	if(!$error)
-	{
-		if($netdevdata['guaranteeperiod'] == -1)
-			$netdevdata['guaranteeperiod'] = NULL;
-
-		if(!isset($netdevdata['shortname'])) $netdevdata['shortname'] = '';
-	        if(!isset($netdevdata['secret'])) $netdevdata['secret'] = '';
-	        if(!isset($netdevdata['community'])) $netdevdata['community'] = '';
-	        if(!isset($netdevdata['nastype'])) $netdevdata['nastype'] = 0;
-
-		$netdev = $LMS->GetNetDev($_GET['id']);
-		unset($netdevdata['ports']);
-		$netdev = array_merge($netdev, $netdevdata);
-		$LMS->NetDevUpdate($netdev);
-
+	if (!$error) {
 		if ($_POST['dev2nagios'] && method_exists('LMS', 'SaveDev2Nagios'))
 			$LMS->SaveDev2Nagios($_POST['dev2nagios'],$_GET['id']);
 
 		//-GPON-OLT
 		//Update OLT
 		$GPON->GponOltUpdate($netdevdata);
-		$gponoltportsdata=$_POST['gponoltports'];
-		if ($netdevdata['gponoltid']>0 && is_array($gponoltportsdata) && !empty($gponoltportsdata)) {
+		$gponoltportsdata = $_POST['gponoltports'];
+		if ($netdevdata['gponoltid'] > 0 && is_array($gponoltportsdata) && !empty($gponoltportsdata)) {
 			foreach ($gponoltportsdata as $k => $v) {
 				$gponoltports[$k]['gponoltid'] = $netdevdata['gponoltid'];
 				$gponoltports[$k]['numport'] = $k;
@@ -406,14 +360,8 @@ elseif(isset($_POST['netdev']))
 		//-GPON-OLT
 		$SESSION->redirect('?m=gponoltinfo&id=' . ($netdevdata['oldid'] != $netdevdata['id'] ? $netdevdata['id'] : $_GET['id']));
 	}
-}
-else 
-{
+} else
 	$netdevdata = $LMS->GetNetDev($_GET['id']);
-	
-	if($netdevdata['purchasetime'])
-		$netdevdata['purchasedate'] = date('Y/m/d', $netdevdata['purchasetime']);
-}
 
 
 $netdevdata['id'] = $_GET['id'];
