@@ -15,6 +15,17 @@
 				<TR class="light">
 					<TD WIDTH="50%" style="vertical-align:top;">
 						<TABLE WIDTH="100%" CELLPADDING="3">
+	<TR class="light">
+		<TD style="width: 1%;">
+			<IMG SRC="img/netdev.gif" ALT="">
+		</TD>
+		<TD style="width: 1%;" class="bold">
+			{trans("Network device:")}
+		</TD>
+		<TD style="width: 98%;">
+			<A href="?m=netdevinfo&id={$netdevinfo.id}">{$netdevinfo.name}</A>
+		</TD>
+	</TR>
         {if $netdevinfo.producer}
 	<TR class="light">
 		<TD WIDTH="1%">

@@ -928,9 +928,6 @@ $SMARTY->assign('nastype', $LMS->GetNAStypes());
 switch($edit)
 {
     case 'data':
-	if (ConfigHelper::checkConfig('phpui.ewx_support'))
-    		$SMARTY->assign('channels', $DB->GetAll('SELECT id, name FROM ewx_channels ORDER BY name'));
-	
 	$SMARTY->display('gpononuedit.html');
     break;
     case 'ip':

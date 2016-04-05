@@ -250,7 +250,6 @@ if(isset($_POST['snmpsend']) && $_POST['snmpsend'] == 1)
 
 if(isset($_POST['gponprofileadd']) && intval($_POST['gponprofileadd'])>0)
 {
-	//var_dump($_POST);
 	$netdevdata = $LMS->GetNetDev($_GET['id']);
 	
 	if($netdevdata['purchasetime'])
@@ -301,7 +300,8 @@ if(isset($_POST['gponprofileadd']) && intval($_POST['gponprofileadd'])>0)
 elseif(isset($_POST['netdev']))
 {
 	$netdevdata = $_POST['netdev'];
-	$netdevdata['id'] = $_GET['id'];
+	$netdevdata['oldid'] = $_GET['id'];
+	$netdevdata['id'] = $netdevdata['netdevid'];
 
 	if($netdevdata['name'] == '')
 		$error['name'] = trans('Device name is required!');
@@ -407,7 +407,7 @@ elseif(isset($_POST['netdev']))
 			$GPON->GponOltPortsUpdate($gponoltports);
 		}
 		//-GPON-OLT
-		$SESSION->redirect('?m=gponoltinfo&id='.$_GET['id']);
+		$SESSION->redirect('?m=gponoltinfo&id=' . ($netdevdata['oldid'] != $netdevdata['id'] ? $netdevdata['id'] : $_GET['id']));
 	}
 }
 else 
@@ -422,9 +422,7 @@ else
 $netdevdata['id'] = $_GET['id'];
 
 $netdevips = $LMS->GetNetDevIPs($_GET['id']);
-$nodelist = $LMS->GetUnlinkedNodes();
 $netdevconnected = $GPON->GetGponOnuConnectedNames($_GET['id']);
-$netcomplist = $LMS->GetNetDevLinkedNodes($_GET['id']);
 $netdevlist = $GPON->GetNotConnectedOnu();
 
 //-GPON-OLT
@@ -437,13 +435,6 @@ $gponoltportsdata=$GPON->GetGponOltPorts($netdevdata['gponoltid']);
 unset($netdevlist['total']);
 unset($netdevlist['order']);
 unset($netdevlist['direction']);
-
-$replacelist = $LMS->GetNetDevList();
-
-$replacelisttotal = $replacelist['total'];
-unset($replacelist['order']);
-unset($replacelist['total']);
-unset($replacelist['direction']);
 
 
 /* Using AJAX plugins */
@@ -494,7 +485,6 @@ $LMS->InitXajax();
 $LMS->RegisterXajaxFunction(array('OLT_ONU_walk_Xj', 'OLT_get_param_Xj'));
 $SMARTY->assign('xajax', $LMS->RunXajax());
 
-//$SMARTY->assign('xajax', $xajax->getJavascript('img/', 'xajax.js'));
 /* end AJAX plugin stuff */
 
 
@@ -542,15 +532,10 @@ if(method_exists('LMS', 'GetDev2Nagios')) //nie wszyscy maja naszego nagiosa
 }
 
 $SMARTY->assign('netdevlist',$netdevconnected);
-$SMARTY->assign('netcomplist',$netcomplist);
-$SMARTY->assign('nodelist',$nodelist);
 $SMARTY->assign('netdevips',$netdevips);
 $SMARTY->assign('restnetdevlist',$netdevlist);
-$SMARTY->assign('replacelist',$replacelist);
-$SMARTY->assign('replacelisttotal',$replacelisttotal);
-$SMARTY->assign('devlinktype',$SESSION->get('devlinktype'));
-$SMARTY->assign('nodelinktype',$SESSION->get('nodelinktype'));
 $SMARTY->assign('nastype', $LMS->GetNAStypes());
+$SMARTY->assign('notgponoltdevices', $GPON->GetNotGponOltDevices($netdevdata['gponoltid']));
 
 switch ($edit) {
 	case 'data':

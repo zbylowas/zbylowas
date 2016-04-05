@@ -63,10 +63,11 @@ class GPON {
 	}
 
 	//--------------OLT----------------
-	function GponOltAdd($gponoltdata)
-	{
-		if ($this->DB->Execute('INSERT INTO gponolt (snmp_version,snmp_description,snmp_host,snmp_community,snmp_auth_protocol,snmp_username,snmp_password,snmp_sec_level,snmp_privacy_passphrase,snmp_privacy_protocol) 
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+	public function GponOltAdd($gponoltdata) {
+		if ($this->DB->Execute('INSERT INTO gponolt (snmp_version, snmp_description, snmp_host,
+				snmp_community, snmp_auth_protocol, snmp_username, snmp_password, snmp_sec_level,
+				snmp_privacy_passphrase, snmp_privacy_protocol)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 				array(
 					$gponoltdata['snmp_version'],
 					$gponoltdata['snmp_description'],
@@ -78,17 +79,20 @@ class GPON {
 					$gponoltdata['snmp_sec_level'],
 					$gponoltdata['snmp_privacy_passphrase'],
 					$gponoltdata['snmp_privacy_protocol']
-		))) {
-		
-			$id = $this->DB->GetLastInsertID('gponolt');			
+			))) {
+			$id = $this->DB->GetLastInsertID('gponolt');
 			$dump = var_export($gponoltdata, true);
-			$this->Log(4, 'gponolt', $id, 'added '. $gponoltdata['snmp_host'], $dump);
+			$this->Log(4, 'gponolt', $id, 'added ' . $gponoltdata['snmp_host'], $dump);
 			return $id;
-		}
-		else
-			return FALSE;
+		} else
+			return false;
 	}
-	
+
+	public function NetDevUpdate($netdevdata) {
+		$this->DB->Execute('UPDATE netdevices SET gponoltid = ? WHERE id = ?',
+			array($netdevdata['gponoltid'], $netdevdata['id']));
+	}
+
 	function GetGponOlt($id)
 	{
 		$result = $this->DB->GetRow('SELECT g.*
@@ -96,15 +100,14 @@ class GPON {
 			WHERE g.id = ?', array($id));
 		return $result;
 	}
-	
-	function GponOltUpdate($gponoltdata)
-	{
+
+	public function GponOltUpdate($gponoltdata) {
 		$dump = var_export($gponoltdata, true);
 		$this->Log(4, 'gponolt', $gponoltdata['gponoltid'], 'updated '. $gponoltdata['snmp_host'], $dump);
 
-		$this->DB->Execute('UPDATE gponolt SET snmp_version=?,snmp_description=?,snmp_host=?,snmp_community=?,snmp_auth_protocol=?,snmp_username=?,snmp_password=?,snmp_sec_level=?,snmp_privacy_passphrase=?,snmp_privacy_protocol=?
-				WHERE id=?', 
-				array( 
+		$this->DB->Execute('UPDATE gponolt SET snmp_version=?, snmp_description=?, snmp_host=?, snmp_community=?,
+			snmp_auth_protocol=?, snmp_username=?, snmp_password=?, snmp_sec_level=?, snmp_privacy_passphrase=?,
+			snmp_privacy_protocol=? WHERE id = ?',array(
 					$gponoltdata['snmp_version'],
 					$gponoltdata['snmp_description'],
 					$gponoltdata['snmp_host'],
@@ -117,7 +120,13 @@ class GPON {
 					$gponoltdata['snmp_privacy_protocol'],
 					$gponoltdata['gponoltid']
 				));
+		if ($gponoltdata['id'] != $gponoltdata['oldid']) {
+			$this->DB->Execute('UPDATE netdevices SET gponoltid = NULL WHERE id = ?', array($gponoltdata['oldid']));
+			$this->DB->Execute('UPDATE netdevices SET gponoltid = ? WHERE id = ?', array($gponoltdata['gponoltid'], $gponoltdata['id']));
+			$this->DB->Execute('UPDATE gpononu2olt SET netdevicesid = ? WHERE netdevicesid = ?', array($gponoltdata['id'], $gponoltdata['oldid']));
+		}
 	}
+
 	function DeleteGponOlt($id)
 	{
 		$this->DB->BeginTrans();
@@ -275,6 +284,13 @@ class GPON {
 			}
 		}
 	}
+
+	public function GetNotGponOltDevices($gponoltid = null) {
+		return $this->DB->GetAll('SELECT id, name FROM netdevices
+			WHERE gponoltid IS NULL OR gponoltid = ?
+			ORDER BY name', array($gponoltid));
+	}
+
 	//--------------ONU----------------
 	function DeleteGponOnu($id)
 	{

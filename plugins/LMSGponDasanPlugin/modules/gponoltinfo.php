@@ -57,10 +57,8 @@ else
 $SESSION->save('goltif', $f);
 
 $netdevconnected = $GPON->GetGponOnuConnectedNames($_GET['id'], $o, $f);
-$netcomplist = $LMS->GetNetdevLinkedNodes($_GET['id']);
 $netdevlist = $GPON->GetNotConnectedOnu();
 
-$nodelist = $LMS->GetUnlinkedNodes();
 $netdevips = $LMS->GetNetDevIPs($_GET['id']);
 
 $SESSION->save('backto', $_SERVER['QUERY_STRING']);
@@ -159,26 +157,11 @@ if(method_exists('LMS','GetDev2Nagios')) //nie wszyscy maja nagiosa
     $SMARTY->assign("nagiosON", 1); // tell template nagios is avaliable
 }
 $SMARTY->assign('netdevlist',$netdevconnected);
-$SMARTY->assign('netcomplist',$netcomplist);
 $SMARTY->assign('restnetdevlist',$netdevlist);
 $SMARTY->assign('netdevips',$netdevips);
-$SMARTY->assign('nodelist',$nodelist);
 $SMARTY->assign('devlinktype',$SESSION->get('devlinktype'));
-$SMARTY->assign('nodelinktype',$SESSION->get('nodelinktype'));
 $SMARTY->assign('listdata',$listdata);
 
-if(isset($_GET['ip']))
-{
-	$nodeipdata = $LMS->GetNode($_GET['ip']);
-	$nodeipdata['mac'] = $nodeipdata['macs'][0]['mac'];
-	if (isset($nodeipdata['macs'][0]['producer']))
-		$nodeipdata['producer'] = $nodeipdata['macs'][0]['producer'];
-	$SMARTY->assign('nodeipdata', $nodeipdata);
-	$SMARTY->display('gponoltipinfo.html');
-}
-else
-{
-	$SMARTY->display('gponoltinfo.html');
-}
+$SMARTY->display('gponoltinfo.html');
 
 ?>

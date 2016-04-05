@@ -128,8 +128,13 @@ if(isset($_POST['netdev']))
 			$GPON->GponOltPortsAdd($gponoltports);
 		}
 		//-GPON-OLT
-		$netdevid = $LMS->NetDevAdd($netdevdata);
-		$SESSION->redirect('?m=gponoltinfo&id='.$netdevid);
+		if (empty($netdevdata['netdevid']))
+			$netdevid = $LMS->NetDevAdd($netdevdata);
+		else {
+			$netdevid = $netdevdata['netdevid'];
+			$GPON->NetDevUpdate(array('id' => $netdevid, 'gponoltid' => $netdevdata['gponoltid']));
+		}
+		$SESSION->redirect('?m=gponoltinfo&id=' . $netdevid);
         }
 	
 	$SMARTY->assign('error', $error);
@@ -139,9 +144,7 @@ if(isset($_POST['netdev']))
 $layout['pagetitle'] = trans('New Device').': GPON - OLT';
 
 $SMARTY->assign('nastype', $LMS->GetNAStypes());
-
-if (ConfigHelper::checkConfig('phpui.ewx_support'))
-	$SMARTY->assign('channels', $DB->GetAll('SELECT id, name FROM ewx_channels ORDER BY name'));
+$SMARTY->assign('notgponoltdevices', $GPON->GetNotGponOltDevices());
 
 $SMARTY->display('gponoltadd.html');
 

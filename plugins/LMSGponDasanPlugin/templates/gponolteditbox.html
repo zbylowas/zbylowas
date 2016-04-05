@@ -24,6 +24,21 @@
 		                        <TD WIDTH="50%" style="vertical-align:top;">
 		                                <TABLE WIDTH="100%" CELLPADDING="3">
 	<TR class="light">
+		<TD style="width: 1%;">
+			<IMG SRC="img/netdev.gif" ALT="">
+		</TD>
+		<TD style="width: 1%;" class="bold nobr">
+			{trans("Network device:")}
+		</TD>
+		<TD style="width: 98%;">
+			<SELECT name="netdev[netdevid]" {tip text="Select assigned network device"}>
+				{foreach $notgponoltdevices as $device}
+				<OPTION value="{$device.id}"{if $netdevinfo.id == $device.id} selected{/if}>{$device.name}</OPTION>
+				{/foreach}
+			</SELECT>
+		</TD>
+	</TR>
+	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/producer.gif" ALT="">
 		</TD>
