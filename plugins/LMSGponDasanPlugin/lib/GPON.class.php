@@ -88,6 +88,11 @@ class GPON {
 			return false;
 	}
 
+	public function NetDevUpdate($netdevdata) {
+		$this->DB->Execute('UPDATE netdevices SET gponoltid = ? WHERE id = ?',
+			array($netdevdata['gponoltid'], $netdevdata['id']));
+	}
+
 	function GetGponOlt($id)
 	{
 		$result = $this->DB->GetRow('SELECT g.*
