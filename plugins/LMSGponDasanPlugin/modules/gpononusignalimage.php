@@ -63,7 +63,7 @@ if($_GET['ext'] == 1) {
       "GPRINT:signal:MIN:".$quote."Min\: %.1lfdBm\g".$quote,
       "GPRINT:signal:MAX:".$quote."Max\: %.1lfdBm\g".$quote,
       "GPRINT:signal:LAST:".$quote."Last\: %.1lfdBm".$quote,
-      "LINE2:oltrx#00c080:OLT:",
+      "LINE2:oltrx#00c080:OLT",
       "GPRINT:oltrx:MIN:".$quote."Min\: %.1lfdBm\g".$quote,
       "GPRINT:oltrx:MAX:".$quote."Max\: %.1lfdBm\g".$quote,
       "GPRINT:oltrx:LAST:".$quote."Last\: %.1lfdBm".$quote,
