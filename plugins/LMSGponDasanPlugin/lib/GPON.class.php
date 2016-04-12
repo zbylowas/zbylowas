@@ -928,8 +928,8 @@ class GPON {
 												$this->GponOnuUpdateOnuId($gpon_onu_in_db['id'],$onu_id);
 												$this->GponOnuLink($olt_netdevicesid,$olt_port,$gpon_onu_in_db['id']);
 												$this->snmp->ONU_set_description($olt_port,$onu_id,$gpon_onu_in_db['onudescription']);
-												$gponoltprofiles_temp=$this->FlatArrayFromDB($this->GetGponOltProfiles(),'id','name');
-												$this->snmp->ONU_SetProfile($olt_port,$onu_id,$gponoltprofiles_temp[$gpon_onu_in_db['gponoltprofilesid']]);
+												$gponoltprofiles_temp = $this->GetGponOltProfiles($gponoltid);
+												$this->snmp->ONU_SetProfile($olt_port,$onu_id, $gponoltprofiles_temp[$gpon_onu_in_db['gponoltprofilesid']]['name']);
 												
 												$phone_data=$this->GetPhoneVoip($gpon_onu_in_db['voipaccountsid1']);
 												$VoIP1=$this->snmp->ONU_SetPhoneVoip($olt_port,$onu_id,2,1,$phone_data);
