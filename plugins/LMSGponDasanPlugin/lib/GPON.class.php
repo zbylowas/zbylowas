@@ -3,7 +3,7 @@
 /*
  * LMS version 1.11-git
  *
- *  (C) Copyright 2001-2015 LMS Developers
+ *  (C) Copyright 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -285,26 +285,34 @@ class GPON {
 		}
 		return $list;
 	}
-	function GetGponOltProfiles()
-	{
-		$result = $this->DB->GetAll('SELECT gop.id,gop.name 
-		FROM  gponoltprofiles gop
-		ORDER BY gop.name ASC');
-		
+
+	public function GetGponOltProfiles($gponoltid) {
+		$result = $this->DB->GetAll('SELECT p.id, p.name
+			FROM gponoltprofiles p
+			WHERE gponoltid IS NULL OR gponoltid = ?
+			ORDER BY p.name ASC', array($gponoltid));
+
 		return $result;
 	}
-	function AddGponOltProfiles($name)
-	{
-		$name=trim($name);
-		if(strlen($name)>0)
-		{
-			if($this->DB->GetOne('SELECT COUNT(id) as id FROM gponoltprofiles 
-			WHERE name=?',array($name))==false)
-			{
-				$this->DB->Execute('INSERT INTO gponoltprofiles (name) VALUES (?)',array($name));
-				$pid = $this->DB->GetLastInsertID('gponoltprofiles');
-				$this->Log(4, 'gponoltprofile', $pid, 'added '.$name);
-			}
+
+	public function AddGponOltProfile($name, $gponoltid) {
+		$name = trim($name);
+		if (!strlen($name))
+			return;
+
+		if ($pid = $this->DB->GetOne('SELECT id FROM gponoltprofiles
+			WHERE name = ? AND (gponoltid IS NULL OR gponoltid = ?) LIMIT 1',
+				array($name, $gponoltid))) {
+			$this->DB->Execute('UPDATE gponoltprofiles SET name = ?, gponoltid = ?
+				WHERE id = ?', array($name, $gponoltid, $pid));
+			$this->Log(4, 'gponoltprofile', $pid, 'updated ' . $name
+				. ' oltid ' . $gponoltid);
+		} else {
+			$this->DB->Execute('INSERT INTO gponoltprofiles (name, gponoltid)
+				VALUES (?, ?)', array($name, $gponoltid));
+			$pid = $this->DB->GetLastInsertID('gponoltprofiles');
+			$this->Log(4, 'gponoltprofile', $pid, 'added ' . $name
+				. ' oltid ' . $gponoltid);
 		}
 	}
 
@@ -839,22 +847,20 @@ class GPON {
 		$dump = var_export($gpononudata, true);
 		$this->Log(4, 'gpononu', $gpononudata['id'], 'updated '.$gpononudata['name'], $dump);
 	}
-	function GetGponOnuCheckList($devid=0)
-	{
-		$onu_list=array();
-		$olts=$this->GetGponAllOlt($devid);
-		if(is_array($olts) && count($olts)>0)
-		{
-			$i=0;
-			foreach($olts as $k=>$v)
-			{
+
+	public function GetGponOnuCheckList($devid = 0) {
+		$onu_list = array();
+		$olts = $this->GetGponAllOlt($devid);
+		if (is_array($olts) && !empty($olts)) {
+			$i = 0;
+			foreach ($olts as $k => $v) {
 				$this->snmp->clear_options();
-				if(is_array($v) && count($v)>0)
-				{
+				$gponoltid = null;
+				if (is_array($v) && !empty($v)) {
 					$this->snmp->set_options($v);
-					$olt_name=$v['name'];
-					$olt_netdevicesid=$v['netdevicesid'];
-					$gponoltid=$v['id'];
+					$olt_name = $v['name'];
+					$olt_netdevicesid = $v['netdevicesid'];
+					$gponoltid = $v['id'];
 				}
 				$error_snmp=$this->snmp->get_correct_connect_snmp();
 				if(strlen($error_snmp)>0)
@@ -876,7 +882,7 @@ class GPON {
 						foreach($profiles_olt as $k_p=>$v_p)
 						{
 							$v_p=$this->snmp->clean_snmp_value($v_p);
-							$this->AddGponOltProfiles($v_p);
+							$this->AddGponOltProfile($v_p, $gponoltid);
 						}
 					}
 					foreach($olts_walk as $k1=>$v1)
@@ -945,6 +951,7 @@ class GPON {
 		}
 		return $onu_list;
 	}
+
 	function GetDuplicateOnu($devid=0)
 	{
 		$onu_list=array();
@@ -1000,30 +1007,26 @@ class GPON {
 		}
 		return $result;
 	}
-	function GetGponAutoScript($debug)
-	{
-		$output='';
-		$output.=$this->GetDuplicateOnu();
-		$onu_list=array();
-		$olts=$this->GetGponAllOlt();
-		
-		$podlaczam=0;
-		if($debug==1)
-		{
-			$output.='<br />OLT## Wczytanie wszystkich OLT z bazy danych';
-		}
-		if(is_array($olts) && count($olts)>0)
-		{
-			$i=0;
-			foreach($olts as $k=>$v)
-			{
+
+	public function GetGponAutoScript($debug) {
+		$output = '';
+		$output .= $this->GetDuplicateOnu();
+		$onu_list = array();
+		$olts = $this->GetGponAllOlt();
+
+		$podlaczam = 0;
+		if ($debug == 1)
+			$output .= '<br />OLT## Wczytanie wszystkich OLT z bazy danych';
+		if (is_array($olts) && !empty($olts)) {
+			$i = 0;
+			foreach ($olts as $k => $v) {
 				$this->snmp->clear_options();
-				if(is_array($v) && count($v)>0)
-				{
+				$gponoltid = null;
+				if (is_array($v) && !empty($v)) {
 					$this->snmp->set_options($v);
-					$olt_name=$v['name'];
-					$olt_netdevicesid=$v['netdevicesid'];
-					$gponoltid=$v['id'];
+					$olt_name = $v['name'];
+					$olt_netdevicesid = $v['netdevicesid'];
+					$gponoltid = $v['id'];
 				}
 				$error_snmp=$this->snmp->get_correct_connect_snmp();
 				if(strlen($error_snmp)>0)
@@ -1045,7 +1048,7 @@ class GPON {
 						foreach($profiles_olt as $k_p=>$v_p)
 						{
 							$v_p=$this->snmp->clean_snmp_value($v_p);
-							$this->AddGponOltProfiles($v_p);
+							$this->AddGponOltProfile($v_p, $gponoltid);
 						}
 					}
 					foreach($olts_walk as $k1=>$v1)

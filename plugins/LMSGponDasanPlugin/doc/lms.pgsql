@@ -52,6 +52,8 @@ CREATE SEQUENCE gponoltprofiles_id_seq;
 CREATE TABLE gponoltprofiles (
 	id integer DEFAULT nextval('gponoltprofiles_id_seq'::text) NOT NULL,
 	name varchar(100) NOT NULL,
+	gponoltid integer DEFAULT NULL
+		REFERENCES gponolt (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id)
 );
 
@@ -196,4 +198,4 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 
 INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016012000');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016041200');

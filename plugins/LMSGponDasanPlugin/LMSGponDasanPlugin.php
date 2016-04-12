@@ -3,7 +3,7 @@
 /*
  *  LMS version 1.11-git
  *
- *  Copyright (C) 2001-2015 LMS Developers
+ *  Copyright (C) 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -31,7 +31,7 @@
  */
 class LMSGponDasanPlugin extends LMSPlugin {
 	const plugin_directory_name = 'LMSGponDasanPlugin';
-	const PLUGIN_DBVERSION = '2016012000';
+	const PLUGIN_DBVERSION = '2016041200';
 	const PLUGIN_NAME = 'GPON Dasan';
 	const PLUGIN_DESCRIPTION = 'GPON Dasan Hardware Support';
 	const PLUGIN_AUTHOR = 'AP-Media,<br>Tomasz Chiliński &lt;tomasz.chilinski@chilan.com&gt;';

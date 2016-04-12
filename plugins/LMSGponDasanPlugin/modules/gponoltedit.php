@@ -248,57 +248,44 @@ if(isset($_POST['snmpsend']) && $_POST['snmpsend'] == 1)
 	}
 }
 
-if(isset($_POST['gponprofileadd']) && intval($_POST['gponprofileadd'])>0)
-{
+if (isset($_POST['gponprofileadd']) && intval($_POST['gponprofileadd'])) {
 	$netdevdata = $LMS->GetNetDev($_GET['id']);
-	
-	if($netdevdata['purchasetime'])
-		$netdevdata['purchasedate'] = date('Y/m/d', $netdevdata['purchasetime']);
-		
+
 	$temp_post=$_POST;
-	if($temp_post['profile_name'] == '')
+	if ($temp_post['profile_name'] == '')
 		$error['profile_name'] = 'Nazwa profilu jest wymagana';
-	elseif(strlen($temp_post['name']) > 63)
-		$error['profile_name'] =  trans('Specified name is too long (max.$a characters)!','63');	
-	for($s=1;$s<5;$s++)
-	{
-		/*if(strlen(trim($temp_post['downstream_'.$s])) == 0)
-		$error['downstream_'.$s] = 'Downstream jest wymagany';
-		else*/
-		if($temp_post['downstream_'.$s]%64>0)
-		$error['downstream_'.$s] =  'Downstream musi się dzielić przez 64';
-		
-		if(strlen(trim($temp_post['vlan_id_'.$s])) == 0)
-		$error['vlan_id_'.$s] = 'VLAN ID jest wymagany';
-		elseif($temp_post['vlan_id_'.$s]<1 || $temp_post['vlan_id_'.$s]>4096)
-		$error['vlan_id_'.$s] =  'VLAN ID musi być z zakresu od 1 do 4096';
-		
-		if(strlen(trim($temp_post['cos_'.$s])) == 0)
-		$error['cos_'.$s] = 'VLAN ID jest wymagany';
-		elseif($temp_post['cos_'.$s]<0 || $temp_post['cos_'.$s]>7)
-		$error['cos_'.$s] =  'COS musi być z zakresu od 0 do 7';
+	elseif (strlen($temp_post['name']) > 63)
+		$error['profile_name'] =  trans('Specified name is too long (max.$a characters)!','63');
+	for ($s = 1; $s < 5; $s++) {
+		if ($temp_post['downstream_' . $s] % 64)
+			$error['downstream_' . $s] =  'Downstream musi się dzielić przez 64';
+
+		$vlanid = intval($temp_post['vlan_id_' . $s]);
+		if ($vlanid && ($vlanid < 1 || $vlanid > 4095))
+			$error['vlan_id_' . $s] =  'VLAN ID musi być z zakresu od 1 do 4095';
+
+		if ($vlanid) {
+			$cos = intval($temp_post['cos_' . $s]);
+			if ($cos && ($cos < 0 || $cos > 7))
+				$error['cos_' . $s] =  'COS musi być z zakresu od 0 do 7';
+		}
 	}
-	
-	if(!$error)
-	{
-		$options_snmp=$GPON->GetGponOlt($netdevdata['gponoltid']);
+
+	if (!$error) {
+		$options_snmp = $GPON->GetGponOlt($netdevdata['gponoltid']);
 		$GPON->snmp->set_options($options_snmp);
-		if(intval($temp_post['profile_edit']) == 0)
-		{
-			$GPON->snmp->OLT_AddProfile($temp_post['profile_name'],$temp_post['trafficprofiles']);
-			$GPON->AddGponOltProfiles($temp_post['profile_name']);
-		}
-		for($eth=1;$eth<5;$eth++)
-		{
-			$GPON->snmp->OLT_ModifyProfile($temp_post['profile_name'],$eth,$temp_post['downstream_'.$eth],$temp_post['vlan_id_'.$eth],$temp_post['cos_'.$eth],$temp_post['status_'.$eth]);
-		}
-		$temp_post=array();
+		if (intval($temp_post['profile_edit']) == 0)
+			$GPON->snmp->OLT_AddProfile($temp_post['profile_name'], $temp_post['trafficprofiles']);
+		$GPON->AddGponOltProfile($temp_post['profile_name'], $netdevdata['gponoltid']);
+		for ($eth = 1; $eth < 5; $eth++)
+			if (!empty($temp_post['vlan_id_' . $eth]))
+				$GPON->snmp->OLT_ModifyProfile($temp_post['profile_name'],$eth,
+					$temp_post['downstream_' . $eth], $temp_post['vlan_id_' . $eth],
+					$temp_post['cos_' . $eth], $temp_post['status_' . $eth]);
+		$temp_post = array();
 	}
 	$SMARTY->assign('temp_post',$temp_post);
-	
-}
-elseif(isset($_POST['netdev']))
-{
+} elseif(isset($_POST['netdev'])) {
 	$netdevdata = $_POST['netdev'];
 	$netdevdata['oldid'] = $_GET['id'];
 	$netdevdata['id'] = $netdevdata['netdevid'];
