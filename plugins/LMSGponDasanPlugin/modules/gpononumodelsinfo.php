@@ -31,7 +31,7 @@ if(! $GPON->GponOnuModelsExists($_GET['id']))
 
 $netdevinfo = $GPON->GetGponOnuModels($_GET['id']);
 $portstype = $GPON->GetGponOnuPortsType();
-$portstype2models = $GPON->FlatArrayFromDB($GPON->GetGponOnuPortsType2Models($_GET['id']),'gpononuportstypeid','portscount');
+$portstype2models = $GPON->GetGponOnuPortsType2Models($_GET['id']);
 
 $SESSION->save('backto', $_SERVER['QUERY_STRING']);
 

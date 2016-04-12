@@ -53,10 +53,10 @@
 		</TD>
 		<TD WIDTH="98%" align="left">
 			<table width="200" cellpadding="2" cellspacing="1" border="1">
-			{foreach from=$portstype item=item key=key}
-			<TR CLASS="LIGHT{if $portstype2models[$item.id] eq 0} blend{/if}">
-			<td align="right"><b>{$item.name}:</b></td>
-			<td width="30%" align="right">{$portstype2models[$item.id]}</td>
+			{foreach $portstype as $type}
+			<TR CLASS="LIGHT{if $portstype2models[$type.id].portscount == 0} blend{/if}">
+			<td align="right"><b>{$type.name}:</b></td>
+			<td width="30%" align="right">{$portstype2models[$type.id].portscount}</td>
 			</tr>
 			{/foreach}
 			</table>

@@ -70,7 +70,7 @@ else
 
 
 $portstype = $GPON->GetGponOnuPortsType();
-$portstype2models = $GPON->FlatArrayFromDB($GPON->GetGponOnuPortsType2Models($_GET['id']),'gpononuportstypeid','portscount');
+$portstype2models = $GPON->GetGponOnuPortsType2Models($_GET['id']);
 
 
 unset($netdevlist['total']);

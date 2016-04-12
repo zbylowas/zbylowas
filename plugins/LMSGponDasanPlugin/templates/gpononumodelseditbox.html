@@ -54,10 +54,10 @@
 		</TD>
 		<TD WIDTH="98%">
 			<table cellpadding="1" cellspacing="1" border="0">
-			{foreach from=$portstype item=item key=key}
+			{foreach $portstype as $type}
 			<tr>
-			<td><b>{$item.name}</b></td>
-			<td><INPUT TYPE="TEXT" NAME="portstype[{$item.id}]" VALUE="{$portstype2models[$item.id]}" onkeyup="ZamienNaLiczbe(this)" {tip text="Wprowadź liczbę portów"}></td>
+			<td><b>{$type.name}</b></td>
+			<td><INPUT TYPE="TEXT" NAME="portstype[{$type.id}]" VALUE="{$portstype2models[$type.id].portscount}" onkeyup="ZamienNaLiczbe(this)" {tip text="Wprowadź liczbę portów"}></td>
 			</tr>
 			{/foreach}
 			</table>

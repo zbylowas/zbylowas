@@ -39,22 +39,6 @@ class GPON {
 		$this->snmp = new GPON_SNMP($options, $this);
 	}
 
-	public function FlatArrayFromDB($arraydata,$keyname,$valuename)
-	{
-		$result=array();
-		if(is_array($arraydata) && count($arraydata)>0)
-		{
-			foreach ($arraydata as $k=>$v)
-			{
-				if(is_array($v) && key_exists($keyname,$v) && key_exists($valuename,$v))
-				{
-					$result[$v[$keyname]]=$v[$valuename];
-				}
-			}
-		}
-		return $result;
-	}
-
 	public function Log($loglevel = 0, $what = NULL, $xid = NULL, $message = NULL, $detail = NULL) {
 		$detail = str_replace("'", '"', $detail);
 		if (ConfigHelper::getConfig('gpon-dasan.syslog'))
@@ -1483,13 +1467,15 @@ class GPON {
 			 ORDER BY gpt.id ASC');
 		return $result;
 	}
-	function GetGponOnuPortsType2Models($gpononumodelsid)
-	{
-		$result = $this->DB->GetAll('SELECT gpt2m.*
-			FROM gpononuportstype2models gpt2m
-			WHERE gpt2m.gpononumodelsid=? ORDER BY gpt2m.gpononuportstypeid ASC', array($gpononumodelsid));
+
+	public function GetGponOnuPortsType2Models($gpononumodelid) {
+		$result = $this->DB->GetAllByKey('SELECT gpt2m.* FROM gpononuportstype2models gpt2m
+			WHERE gpt2m.gpononumodelsid = ?
+			ORDER BY gpt2m.gpononuportstypeid ASC', 'gpononuportstypeid',
+			array($gpononumodelid));
 		return $result;
 	}
+
 	function SetGponOnuPortsType2Models($gpononumodelsid,$portstypedata)
 	{
 		if($gpononumodelsid>0)
