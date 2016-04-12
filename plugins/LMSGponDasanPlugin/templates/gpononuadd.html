@@ -86,7 +86,7 @@
 			<SELECT {tip trigger="gponoltprofiles"} SIZE="1" NAME="netdev[gponoltprofilesid]" {tip text="Wybierz profil"}>
 			<option value="">Wybierz</option>
 				{foreach $gponoltprofiles as $profile}
-				<OPTION VALUE="{$profile.id}"{if $netdev.gponoltprofilesid == $profile.id} selected{/if}>{$profile.name}{if array_key_exists('oltname', $profile)}({$profile.oltname}){/if}</OPTION>
+				<OPTION VALUE="{$profile.id}"{if $netdev.gponoltprofilesid == $profile.id} selected{/if}>{$profile.name}{if array_key_exists('oltname', $profile)} ({$profile.oltname}){/if}</OPTION>
 				{/foreach}
 			</SELECT>
 		</TD>

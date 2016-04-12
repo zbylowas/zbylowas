@@ -348,7 +348,7 @@ if($onu_check_add==1)
 	
 }
 
-$gponoltprofiles = $GPON->GetGponOltProfiles(array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
+$gponoltprofiles = $GPON->GetGponOltProfiles(is_array($netdev) && array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
 $SMARTY->assign('gponoltprofiles', $gponoltprofiles);
 
 $netdev_temp=is_array($netdev)?$netdev:array();

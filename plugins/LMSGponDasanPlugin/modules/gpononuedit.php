@@ -668,7 +668,7 @@ if (is_array($netdevlist) && !empty($netdevlist))
 	$numports = $GPON->GetFreeOltPort($netdevlist[0]['id']);
 
 $SMARTY->assign('snmponudata', $snmponudata);
-$gponoltprofiles = $GPON->GetGponOltProfiles(empty($netdevconnected) ? null : $netdevconnected['gponoltid']);
+$gponoltprofiles = $GPON->GetGponOltProfiles(empty($netdevconnected) ? null : $netdevconnected[0]['gponoltid']);
 $SMARTY->assign('gponoltprofiles', $gponoltprofiles);
 
 $gpononumodels = $GPON->FlatArrayFromDB($GPON->GetGponOnuModelsList(), 'id', 'name');
