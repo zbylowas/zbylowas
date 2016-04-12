@@ -1511,30 +1511,31 @@ class GPON_SNMP {
 
 		return $result;
 	}
-	function OLT_set_autoupgrade_model($model,$fwname,$ipaddr,$user,$pass,$version,$exclude)
-	{
+
+	public function OLT_set_autoupgrade_model($model, $fwname, $ipaddr, $method, $user, $pass, $version, $exclude) {
 		$model = trim($model);
 		$fwname = trim($fwname);
 		$user = trim($user);
 		$pass = trim($pass);
 		$version = trim($version);
 
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlRequest', 'i', 1); //setOnuFWAutoUpgradeModelProfile(1)
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlName', 's', $model);
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlFWName', 's', $fwname);
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlMethod', 'i', 1); // ftp(1)
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlServerAddress', 'a', $ipaddr);
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlUser', 's', $user);
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlPasswd', 's', $pass);
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlTimer', 'u', 0);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlRequest', 'i', 1); //setOnuFWAutoUpgradeModelProfile(1)
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlName', 's', $model);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlFWName', 's', $fwname);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlMethod', 'i', intval($method)); // ftp(1), tftp(2)
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlServerAddress', 'a', $ipaddr);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlUser', 's', $user);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlPasswd', 's', $pass);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlTimer', 'u', 0);
 
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlRequest', 'i', 3); //modifyOnuAutoUpgradeTargetVer(3)
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlName', 's', $model);
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlFWTargetVersion', 's', $version);
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlExclude', 'i', $exclude);
-		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlTimer', 'u', 0);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlRequest', 'i', 3); //modifyOnuAutoUpgradeTargetVer(3)
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlName', 's', $model);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlFWTargetVersion', 's', $version);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlExclude', 'i', $exclude);
+		$result[] = $this->set('sleGponOnuFWAutoUpgradeModelControlTimer', 'u', 0);
 		return $result;
 	}
+
 	function OLT_del_autoupgrade_model($model)
 	{
 		$result[]=$this->set('sleGponOnuFWAutoUpgradeModelControlRequest', 'i', 2);//destroyOnuAutoUpgradeFirmware(2)
@@ -1641,7 +1642,7 @@ class GPON_SNMP {
 		if(is_array($snmp_result) && count($snmp_result)>0)
 		{
 			$result.='
-			<FORM ID="oltedit" name="oltedit" METHOD="POST" ACTION="?m=gponoltedit&id='.$id.'">
+			<FORM ID="oltedit" name="oltedit" METHOD="POST" ACTION="?m=gponoltedit&id='.$OLT_id.'">
 			<input type="hidden" name="snmpsend" id="snmpsend" value="1" />
 			<input type="hidden" name="save" id="save" value="1" />
 			<table cellspacing="3" cellpadding="1" border="1" width="99%" rules="none">';
@@ -1775,9 +1776,9 @@ class GPON_SNMP {
 		if(is_array($autoupgrade_array) && count($autoupgrade_array)>0)
 		{
 
-			$result.='<br /><table cellspacing="3" cellpadding="1" border="1" width="99%" rules="rows">
-			    <tr class="dark"><td colspan="8" align="center"> Auto-upgrade firmware</td></tr>
-			    <tr><td><b> Usuń </b></td> <td><b>Model </b></td><td><b>FW</b></td><td><b>Serwer ftp</b></td><td><b>User</b></td><td><b>Passwd</b></td><td><b>Wersja</b></td><td><b>Wyklucz</b></td></tr>';
+			$result .= '<br><table cellspacing="3" cellpadding="1" border="1" width="99%" rules="rows">
+			    <tr class="dark"><td colspan="9" align="center"> Auto-upgrade firmware</td></tr>
+			    <tr><td><b> Usuń </b></td> <td><b>Model </b></td><td><b>FW</b></td><td><b>Serwer</b></td><td><b>Metoda</b></td><td><b>User</b></td><td><b>Passwd</b></td><td><b>Wersja</b></td><td><b>Wyklucz</b></td></tr>';
 			foreach($autoupgrade_array as $k=>$v)
 			{
 				if($k=='Model')
@@ -1792,6 +1793,7 @@ class GPON_SNMP {
 							<td>'.$modelname.'</td>
 							<td>'.$this->clean_snmp_value($autoupgrade_array['FWName'][$this->path_OID.'sleGponOnuFWAutoUpgradeModelFWName.'.$idx]).'</td>
 							<td>'.$this->clean_snmp_value($autoupgrade_array['Address'][$this->path_OID.'sleGponOnuFWAutoUpgradeModelServerAddress.'.$idx]).'</td>
+							<td>'.$this->clean_snmp_value($autoupgrade_array['Method'][$this->path_OID.'sleGponOnuFWAutoUpgradeModelMethod.'.$idx]).'</td>
 							<td>'.$this->clean_snmp_value($autoupgrade_array['User'][$this->path_OID.'sleGponOnuFWAutoUpgradeModelUser.'.$idx]).'</td>
 							<td>'.$this->clean_snmp_value($autoupgrade_array['Passwd'][$this->path_OID.'sleGponOnuFWAutoUpgradeModelPasswd.'.$idx]).'</td>
 							<td>'.$this->clean_snmp_value($autoupgrade_array['TargetVersion'][$this->path_OID.'sleGponOnuFWAutoUpgradeModelFWTargetVersion.'.$idx]).'</td>
@@ -1803,7 +1805,8 @@ class GPON_SNMP {
 			$result .= '<tr><td>Nowy: </td>
 			    <td><input onmouseover="popup(\'Nazwa modelu\')" onmouseout="pophide()" type="text" name="new_autoupgrade_ModelName" id="new_autoupgrade_ModelName" size="7" '.$onchange.' /></td>
 			    <td><input onmouseover="popup(\'Nazwa pliku z firmwarem\')" onmouseout="pophide()" type="text" name="new_autoupgrade_FW" id="new_autoupgrade_FW" size="25" '.$onchange.' /></td>
-			    <td><input onmouseover="popup(\'Adres serwera ftp\')" onmouseout="pophide()" type="text" name="new_autoupgrade_address" id="new_autoupgrade_address" size="10" '.$onchange.' /></td>
+			    <td><input onmouseover="popup(\'Adres serwera\')" onmouseout="pophide()" type="text" name="new_autoupgrade_address" id="new_autoupgrade_address" size="10" '.$onchange.' /></td>
+			    <td><SELECT onmouseover="popup(\'Metoda\')" onmouseout="pophide()" name="new_autoupgrade_method" id="new_autoupgrade_method" '.$onchange.'><OPTION value="1">ftp(1)</OPTION><OPTION value="2">tftp(2)</OPTION></SELECT></td>
 			    <td><input onmouseover="popup(\'Nazwa użytkownika ftp\')" onmouseout="pophide()" type="text" name="new_autoupgrade_user" id="new_autoupgrade_user" size="7" '.$onchange.' /></td>
 			    <td><input onmouseover="popup(\'Hasło ftp\')" onmouseout="pophide()" type="text" name="new_autoupgrade_passwd" id="new_autoupgrade_passwd" size="8" '.$onchange.' /></td>
 			    <td><input onmouseover="popup(\'Wersja\')" onmouseout="pophide()" type="text" name="new_autoupgrade_version" id="new_autoupgrade_version" size="8" '.$onchange.' /></td>
@@ -1817,7 +1820,7 @@ class GPON_SNMP {
 		$param_array=$this->OLT_get_param_array();
 		if(is_array($param_array) && count($param_array)>0)
 		{
-			$result.='<br /><table cellspacing="3" cellpadding="1" border="1" width="99%" rules="rows">';
+			$result.='<br><table cellspacing="3" cellpadding="1" border="1" width="99%" rules="rows">';
 			$result.='<tr class="dark"><td><b>Port OLT</b></td>
 			    <td onmouseover="popup(\'Automatyczne usuwanie ONT z OLT, gdy będzie NIEAKTYWNE przez zdefiniowaną liczbę dni, 0 - wyłączone\')" onmouseout="pophide()"><b>Aging Time</b></td>
 			    <td><b>Auto Upgrade</b></td>

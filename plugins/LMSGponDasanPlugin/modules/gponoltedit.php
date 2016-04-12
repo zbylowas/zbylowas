@@ -180,8 +180,8 @@ if(isset($_POST['snmpsend']) && $_POST['snmpsend'] == 1)
 		if(check_ip($_POST['new_autoupgrade_address']) && $_POST['new_autoupgrade_ModelName'] && $_POST['new_autoupgrade_FW'])
 		{
 		    $GPON->snmp->OLT_set_autoupgrade_model($_POST['new_autoupgrade_ModelName'], $_POST['new_autoupgrade_FW'],
-					$_POST['new_autoupgrade_address'], $_POST['new_autoupgrade_user'], $_POST['new_autoupgrade_passwd'],
-					$_POST['new_autoupgrade_version'], $_POST['new_autoupgrade_exclude']);
+					$_POST['new_autoupgrade_address'], $_POST['new_autoupgrade_method'], $_POST['new_autoupgrade_user'],
+					$_POST['new_autoupgrade_passwd'], $_POST['new_autoupgrade_version'], $_POST['new_autoupgrade_exclude']);
 		}
 
 		foreach($_POST as $k => $v)
@@ -450,7 +450,7 @@ $GPON->snmp->set_options($options_snmp);
 $error_snmp=$GPON->snmp->get_correct_connect_snmp();
 $trafficprofiles=$GPON->snmp->OLT_GetTrafficProfiles();
 $gponoltprofiles=$GPON->snmp->OLT_GetProfiles();
-$snmpoltdata=$GPON->snmp->OLT_get_param_edit();
+$snmpoltdata=$GPON->snmp->OLT_get_param_edit($netdevdata['gponoltid']);
 $SMARTY->assign('trafficprofiles',$trafficprofiles);
 $SMARTY->assign('gponoltprofiles',$gponoltprofiles);
 $SMARTY->assign('snmpoltdata',$snmpoltdata);
