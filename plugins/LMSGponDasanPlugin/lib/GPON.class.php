@@ -1369,9 +1369,9 @@ class GPON {
 			break;
 		}
 		$where=' WHERE 1=1 ';
-		$netdevlist = $this->DB->GetAll('SELECT *
+		$netdevlist = $this->DB->GetAllByKey('SELECT *
 			FROM gpononumodels g '.$where
-			.($sqlord != '' ? $sqlord.' '.$direction : ''));
+			.($sqlord != '' ? $sqlord.' '.$direction : ''), 'id');
 
 		$netdevlist['total'] = sizeof($netdevlist);
 		$netdevlist['order'] = $order;

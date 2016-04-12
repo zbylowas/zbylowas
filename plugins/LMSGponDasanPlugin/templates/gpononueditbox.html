@@ -82,8 +82,8 @@
 		</TD>
 		<TD WIDTH="98%">
 			<SELECT SIZE="1" NAME="netdev[gpononumodelsid]" {tip text="Wybierz model ONU"}>
-				{foreach from=$gpononumodels key=key item=qname}
-				<OPTION VALUE="{$key}"{if $netdevinfo.gpononumodelsid eq $key} SELECTED{/if}>{$qname}</OPTION>
+				{foreach $gpononumodels as $model}
+				<OPTION VALUE="{$model.id}"{if $netdevinfo.gpononumodelsid == $model.id} selected{/if}>{$model.name}</OPTION>
 				{/foreach}
 			</SELECT>
 		</TD>

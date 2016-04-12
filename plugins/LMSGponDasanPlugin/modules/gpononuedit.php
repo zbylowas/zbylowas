@@ -671,7 +671,8 @@ $SMARTY->assign('snmponudata', $snmponudata);
 $gponoltprofiles = $GPON->GetGponOltProfiles(empty($netdevconnected) ? null : $netdevconnected[0]['gponoltid']);
 $SMARTY->assign('gponoltprofiles', $gponoltprofiles);
 
-$gpononumodels = $GPON->FlatArrayFromDB($GPON->GetGponOnuModelsList(), 'id', 'name');
+$gpononumodels = $GPON->GetGponOnuModelsList();
+unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['direction']);
 
 $customerid = intval($netdevdata['ownerid']);
 if ($customerid)

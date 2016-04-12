@@ -1695,30 +1695,27 @@ class GPON_SNMP {
 		}
 
 		$models = $this->GPON->GetGponOnuModelsList();
+		unset($models['total'], $models['order'], $models['direction']);
+
 		$profiles = $this->GPON_get_profiles();
 		$snmp_profile = $this->OLT_GetServiceProfiles();
 
 		$result.='<br /><table cellspacing="3" cellpadding="1" border="1" width="99%" rules="rows">
-		    <tr class="dark"><td><b>Model</b></td><td><b>Service Profile</b></td></tr>';
-		foreach($models as $m)
-		{
-		    if (is_array($m))
-		    {
-			$result .= '<tr><td>'.$m['name'].'</td><td><select name="modelProfile_'.$m['name'].'" '.$onchange.'>
-			    <option value="">-- wybierz/usuń --</option>';
-			foreach($profiles as $p)
-			{
-				$result.='<option value="'.$p.'" ';
-				if($snmp_profile[$m['name']] == $p)
-				{
-					$result.='selected="selected"';
+			<tr class="dark"><td><b>Model</b></td><td><b>Service Profile</b></td></tr>';
+
+		if (!empty($models))
+			foreach ($models as $m) {
+				$result .= '<tr><td>' . $m['name'] . '</td><td><select name="modelProfile_' . $m['name'] . '" ' . $onchange . '>
+					<option value="">-- wybierz/usuń --</option>';
+				foreach ($profiles as $p) {
+					$result .= '<option value="' . $p . '" ';
+					if ($snmp_profile[$m['name']] == $p)
+						$result .= 'selected="selected"';
+					$result .= ' >' . $p . '</option>';
 				}
-				$result.=' >'.$p.'</option>';
+				$result .= '</td></tr>';
 			}
-			$result .= '</td></tr>';
-		    }
-		}
-		$result.= '</table>';
+		$result .= '</table>';
 
 		$autoupgrade_time=$this->OLT_get_autoupgrade_times();
 		if(is_array($autoupgrade_time) && count($autoupgrade_time)>0)

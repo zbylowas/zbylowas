@@ -320,9 +320,12 @@ $SMARTY->assign('xajax', $LMS->RunXajax());
 
 $layout['pagetitle'] = trans('New Device').': GPON-ONU';
 $SMARTY->assign('onu_customerlimit',$onu_customerlimit);
-$gpononumodels=$GPON->FlatArrayFromDB($GPON->GetGponOnuModelsList(),'id','name');
+
+$gpononumodels = $GPON->GetGponOnuModelsList();
+unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['direction']);
+$SMARTY->assign('gpononumodels', $gpononumodels);
+
 $SMARTY->assign('onu_check_add',$onu_check_add);
-$SMARTY->assign('gpononumodels',$gpononumodels);
 $SMARTY->assign('customers', $LMS->GetCustomerNames());
 if($onu_check_add==1)
 {
