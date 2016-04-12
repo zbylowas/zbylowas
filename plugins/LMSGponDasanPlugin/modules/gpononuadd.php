@@ -3,7 +3,7 @@
 /*
  * LMS version 1.11-git
  *
- *  (C) Copyright 2001-2015 LMS Developers
+ *  (C) Copyright 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -162,8 +162,9 @@ if(isset($_POST['netdev']))
 					$options_snmp=$GPON->GetGponOlt($_POST['gponoltid']);
 					$GPON->snmp->set_options($options_snmp);
 					$GPON->snmp->ONU_set_description($_POST['olt_port'],$_POST['onu_id'],$netdevdata['onu_description']);
-					$gponoltprofiles_temp=$GPON->FlatArrayFromDB($GPON->GetGponOltProfiles(),'id','name');
-					$GPON->snmp->ONU_SetProfile($_POST['olt_port'],$_POST['onu_id'],$gponoltprofiles_temp[$netdevdata['gponoltprofilesid']]);
+					$gponoltprofiles_temp = $GPON->GetGponOltProfiles($_POST['gponoltid']);
+					$GPON->snmp->ONU_SetProfile($_POST['olt_port'], $_POST['onu_id'],
+						$gponoltprofiles_temp[$netdevdata['gponoltprofilesid']]['name']);
 				//}
 				$SESSION->redirect('?m=gpononucheck&id='.$_POST['netdevicesid']);
 			}
@@ -317,10 +318,6 @@ $SMARTY->assign('xajax', $LMS->RunXajax());
 
 /* end AJAX plugin stuff */
 
-$gponoltprofiles=$GPON->FlatArrayFromDB($GPON->GetGponOltProfiles(),'id','name');
-$SMARTY->assign('gponoltprofiles',$gponoltprofiles);
-
-
 $layout['pagetitle'] = trans('New Device').': GPON-ONU';
 $SMARTY->assign('onu_customerlimit',$onu_customerlimit);
 $gpononumodels=$GPON->FlatArrayFromDB($GPON->GetGponOnuModelsList(),'id','name');
@@ -350,6 +347,10 @@ if($onu_check_add==1)
 	$SMARTY->assign('netdevicesid', $_GET['netdevicesid']);
 	
 }
+
+$gponoltprofiles = $GPON->GetGponOltProfiles(array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
+$SMARTY->assign('gponoltprofiles', $gponoltprofiles);
+
 $netdev_temp=is_array($netdev)?$netdev:array();
 if(isset($_POST['netdev']))
 {

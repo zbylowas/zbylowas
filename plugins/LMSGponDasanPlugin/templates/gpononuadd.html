@@ -85,8 +85,8 @@
 		<TD WIDTH="98%">
 			<SELECT {tip trigger="gponoltprofiles"} SIZE="1" NAME="netdev[gponoltprofilesid]" {tip text="Wybierz profil"}>
 			<option value="">Wybierz</option>
-				{foreach from=$gponoltprofiles key=key item=qname}
-				<OPTION VALUE="{$key}"{if $netdev.gponoltprofilesid eq $key} SELECTED{/if}>{$qname}</OPTION>
+				{foreach $gponoltprofiles as $profile}
+				<OPTION VALUE="{$profile.id}"{if $netdev.gponoltprofilesid == $profile.id} selected{/if}>{$profile.name}{if array_key_exists('oltname', $profile)}({$profile.oltname}){/if}</OPTION>
 				{/foreach}
 			</SELECT>
 		</TD>

@@ -63,11 +63,11 @@
 		<TD WIDTH="98%">
 			<SELECT {tip trigger="gponoltprofiles"} SIZE="1" NAME="netdev[gponoltprofilesid]" {tip text="Wybierz profil ktory ma byc skonfigurowany na nowym ONU"} {if $netdevinfo.autoscript eq 1} disabled="disabled" {/if}>
 			<option value="">Wybierz</option>
-				{foreach from=$gponoltprofiles key=key item=qname}
-				<OPTION VALUE="{$key}"{if $netdevinfo.gponoltprofilesid eq $key} SELECTED{/if}>{$qname}</OPTION>
+				{foreach $gponoltprofiles as $profile}
+				<OPTION VALUE="{$profile.id}"{if $netdevinfo.gponoltprofilesid == $profile.id} selected{/if}>{$profile.name}{if array_key_exists('oltname', $profile)}({$profile.oltname}){/if}</OPTION>
 				{/foreach}
 			</SELECT>
-			{if $netdevinfo.autoscript eq 1}
+			{if $netdevinfo.autoscript == 1}
 		<INPUT TYPE="hidden" NAME="netdev[gponoltprofilesid]" ID="netdev[gponoltprofilesid]" VALUE="{$netdevinfo.gponoltprofilesid}"> 
 		{/if}
 		</TD>

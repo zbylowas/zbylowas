@@ -255,13 +255,15 @@ class GPON {
 		inner join netdevices nd on nd.gponoltid=gop.gponoltid
 		WHERE nd.id=? AND gop.numport=?', array($netdevicesid,$numport));
 	}
-	function GetNotConnectedOlt()
-	{
-		return $this->DB->GetAll('SELECT distinct nd.id,nd.name
-		FROM netdevices nd
-		inner join gponoltports gop on gop.gponoltid=nd.gponoltid
-		where gop.maxonu>(select count(id) from gpononu2olt where netdevicesid=nd.id and numport=gop.numport) ORDER BY nd.name ASC');
+
+	public function GetNotConnectedOlt() {
+		return $this->DB->GetAll('SELECT DISTINCT nd.id, nd.name
+			FROM netdevices nd
+			JOIN gponoltports p ON p.gponoltid = nd.gponoltid
+			WHERE p.maxonu > (SELECT COUNT(id) FROM gpononu2olt WHERE netdevicesid = nd.id AND numport = p.numport)
+			ORDER BY nd.name ASC');
 	}
+
 	function GetFreeOltPort($netdevicesid)
 	{
 		return $this->DB->GetAll('SELECT distinct nd.id, gop.numport
@@ -269,28 +271,25 @@ class GPON {
 		inner join gponoltports gop on gop.gponoltid=nd.gponoltid
 		where gop.maxonu>(select count(id) from gpononu2olt where netdevicesid=nd.id and numport=gop.numport) and nd.id=?',array($netdevicesid));
 	}
-	function GetGponOltConnectedNames($gponoltid)
-	{
-		if($list = $this->DB->GetAll('SELECT nd.*,go2o.numport
-			FROM gponolt g 
-			inner join netdevices nd on nd.gponoltid=g.id
-			inner join gpononu2olt go2o on go2o.netdevicesid=nd.id
-		    WHERE go2o.gpononuid=?', array($gponoltid)))
-		{
-		    foreach($list as $idx => $row)
-		    {
-			if(preg_match('/8240/', $row['model']))
-				$list[$idx]['numportf'] = $this->OLT8240_format($row['numport']);
-		    }
-		}
+
+	public function GetGponOltConnectedNames($gpononuid) {
+		if ($list = $this->DB->GetAll('SELECT nd.*, go2o.numport
+			FROM gponolt g
+			JOIN netdevices nd ON nd.gponoltid = g.id
+			JOIN gpononu2olt go2o ON go2o.netdevicesid = nd.id
+			WHERE go2o.gpononuid = ?', array($gpononuid)))
+			foreach ($list as &$row)
+				if (preg_match('/8240/', $row['model']))
+					$row['numportf'] = $this->OLT8240_format($row['numport']);
 		return $list;
 	}
 
-	public function GetGponOltProfiles($gponoltid) {
-		$result = $this->DB->GetAll('SELECT p.id, p.name
+	public function GetGponOltProfiles($gponoltid = null) {
+		$result = $this->DB->GetAllByKey('SELECT p.id, p.name' . (empty($gponoltid) ? ', nd.name AS oltname' : '') . '
 			FROM gponoltprofiles p
-			WHERE gponoltid IS NULL OR gponoltid = ?
-			ORDER BY p.name ASC', array($gponoltid));
+			LEFT JOIN netdevices nd ON nd.gponoltid = p.gponoltid
+			WHERE ' . (empty($gponoltid) ? 'p.gponoltid IS NULL' : 'p.gponoltid = ' . intval($gponoltid)) . '
+			ORDER BY p.name ASC', 'id');
 
 		return $result;
 	}
