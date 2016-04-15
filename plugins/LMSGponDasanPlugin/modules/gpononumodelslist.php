@@ -3,7 +3,7 @@
 /*
  * LMS version 1.11-git
  *
- *  (C) Copyright 2001-2015 LMS Developers
+ *  (C) Copyright 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -26,35 +26,35 @@
 
 $layout['pagetitle'] = 'GPON-ONU-MODELE';
 
-if(!isset($_GET['o']))
-	$SESSION->restore('ndlo', $o);
+if (!isset($_GET['o']))
+	$SESSION->restore('mlo', $o);
 else
 	$o = $_GET['o'];
-$SESSION->save('ndlo', $o);
+$SESSION->save('mlo', $o);
 
-$netdevlist = $GPON->GetGponOnuModelsList($o);
-$listdata['total'] = $netdevlist['total'];
-$listdata['order'] = $netdevlist['order'];
-$listdata['direction'] = $netdevlist['direction'];
-unset($netdevlist['total']);
-unset($netdevlist['order']);
-unset($netdevlist['direction']);
+$modellist = $GPON->GetGponOnuModelsList($o);
+$listdata['total'] = $modellist['total'];
+$listdata['order'] = $modellist['order'];
+$listdata['direction'] = $modellist['direction'];
+unset($modellist['total']);
+unset($modellist['order']);
+unset($modellist['direction']);
 
-if(!isset($_GET['page']))
-        $SESSION->restore('ndlp', $_GET['page']);
-	
+if (!isset($_GET['page']))
+	$SESSION->restore('mlp', $_GET['page']);
+
 $page = (! $_GET['page'] ? 1 : $_GET['page']);
 $pagelimit = ConfigHelper::getConfig('gpon-dasan.onumodels_pagelimit', $listdata['total']);
 $start = ($page - 1) * $pagelimit;
 
-$SESSION->save('ndlp', $page);
+$SESSION->save('mlp', $page);
 
 $SESSION->save('backto', $_SERVER['QUERY_STRING']);
 
 $SMARTY->assign('page',$page);
 $SMARTY->assign('pagelimit',$pagelimit);
 $SMARTY->assign('start',$start);
-$SMARTY->assign('netdevlist',$netdevlist);
+$SMARTY->assign('modellist',$modellist);
 $SMARTY->assign('listdata',$listdata);
 $SMARTY->display('gpononumodelslist.html');
 
