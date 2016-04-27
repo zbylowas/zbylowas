@@ -272,7 +272,7 @@ class GPON {
 		$result = $this->DB->GetAllByKey('SELECT p.id, p.name' . (empty($gponoltid) ? ', nd.name AS oltname' : '') . '
 			FROM gponoltprofiles p
 			LEFT JOIN netdevices nd ON nd.gponoltid = p.gponoltid '
-			. (empty($gponoltid) ? '' : 'WHERE p.gponoltid = ' . intval($gponoltid)) . '
+			. (empty($gponoltid) ? '' : 'WHERE p.gponoltid IS NULL OR p.gponoltid = ' . intval($gponoltid)) . '
 			ORDER BY p.name ASC', 'id');
 
 		return $result;
