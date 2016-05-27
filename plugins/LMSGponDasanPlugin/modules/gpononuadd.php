@@ -47,20 +47,16 @@ if(isset($_POST['netdev']))
 		$netdevdata['host_id2'] = $_POST['devhost_id2'];
 	else
 		$netdevdata['host_id2'] = $_POST['hostid_2'];
-			
-	if($netdevdata['name'] == '')
+
+	if ($netdevdata['name'] == '')
 		$error['name'] = trans('Device name is required!');
-	elseif(strlen($netdevdata['name'])>8)
-		$error['name'] = 'Nazwa zbyt długa (powinna mieć dokładnie 8 znaków)';
-	elseif(strlen($netdevdata['name'])<8)
-		$error['name'] = 'Nazwa zbyt krótka (powinna mieć dokładnie 8 znaków)';
-	elseif(!preg_match('/^[a-fA-F0-9]{8}$/D',$netdevdata['name']))
-	$error['name'] = 'Nazwa musi składać się z 8 znaków i może zawierać jedynie cyfry od 0-9 i litery od a-f';
-	else 
-	{
-		$netdevdata['name']='DSNW'.$netdevdata['name'];
-	}
-	
+	elseif (strlen($netdevdata['name']) < 8)
+		$error['name'] = 'Nazwa zbyt krótka (powinna mieć co najmniej 8 znaków)';
+	elseif (!preg_match('/^.+[a-fA-F0-9]{8}$/D', $netdevdata['name']))
+		$error['name'] = 'Nazwa musi składać się z co najmniej 8 znaków i kończyć się ośmioma cyframi lub literami a-f';
+	else
+		$netdevdata['name'] = $netdevdata['name'];
+
 	if($GPON->GponOnuNameExists($netdevdata['name']))
 	{
 		$error['name'] = 'Nazwa musi być unikalna. Taka nazwa już istnieje.';
@@ -338,7 +334,7 @@ if($onu_check_add==1)
 		}
 	}
 	$netdev['olt_data']='<A href="?m=gponoltinfo&id='.$_POST['onucheck']['netdevicesid'].'">'.$_POST['onucheck']['olt_name'].'</A>  Port: <b>'.$_POST['onucheck']['olt_port'].'</b>';
-	$netdev['name']=str_replace('DSNW','',$_POST['onucheck']['onu_serial']);
+	$netdev['name'] = $_POST['onucheck']['onu_serial'];
 	$netdev['onu_description_old']=$_POST['onucheck']['onu_description'];
 	
 	$netdev['onu_passwordResult']=$netdev['onu_password'];
@@ -361,7 +357,7 @@ if(isset($_POST['netdev']))
 	$netdev_temp['name']=isset($netdev['name'])?$netdev['name']:$netdev_temp['name'];
 }
 
-$netdev_temp['name']=str_replace('DSNW','',$netdev_temp['name']);
+$netdev_temp['name'] = $netdev_temp['name'];
 $SMARTY->assign('netdev', $netdev_temp);
 $SMARTY->assign('netdevhosts', $GPON->GetHostForNetdevices());
 $SMARTY->assign('onucheck', $onucheck);

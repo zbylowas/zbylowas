@@ -12,4 +12,6 @@ $_LANG['Select assigned network device'] = 'Wybierz powiązane urządzenie sieci
 $_LANG['Network device:'] = 'Urządzenie sieciowe:';
 $_LANG['Delete with network device'] = 'Usuń wraz z urządzeniem sieciowym';
 
+$_LANG['Enter ONU device name (for Dasan ONUs it should begin with \'DSNW\')'] = 'Podaj nazwę urządzenia ONU (dla urządzeń ONU firmy Dasan powinna zaczynać się od \'DSNW\')';
+
 ?>

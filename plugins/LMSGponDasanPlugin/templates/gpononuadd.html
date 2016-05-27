@@ -31,7 +31,7 @@
 			<B>{trans("Name:")}</B>
 		<TD WIDTH="98%" class="frightu">
 		{if $onu_check_add}
-		DSNW<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdev.name}" {tip trigger="name" text="Enter device name" bold=1} readonly="readonly">  
+		<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdev.name}" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1} readonly="readonly">
 		<INPUT TYPE="hidden" NAME="olt_port" VALUE="{$netdev.olt_port}"> 
 		<INPUT TYPE="hidden" NAME="netdevicesid" VALUE="{$netdev.olt_netdevicesid}"> 
 		<INPUT TYPE="hidden" NAME="onu_id" VALUE="{$netdev.onu_id}"> 
@@ -40,7 +40,7 @@
 		<INPUT TYPE="hidden" NAME="gponoltid" VALUE="{$netdev.gponoltid}"> 
 		
 		{else}
-		DSNW<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdev.name}" MAXLENGTH="8" {tip trigger="name" text="Enter device name" bold=1}> 
+		<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdev.name}" MAXLENGTH="8" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1}>
 		{/if}
 		</TD>
 	</TR>
