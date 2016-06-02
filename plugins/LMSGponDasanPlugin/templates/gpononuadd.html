@@ -40,7 +40,7 @@
 		<INPUT TYPE="hidden" NAME="gponoltid" VALUE="{$netdev.gponoltid}"> 
 		
 		{else}
-		<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdev.name}" MAXLENGTH="8" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1}>
+		<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdev.name}" MAXLENGTH="20" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1}>
 		{/if}
 		</TD>
 	</TR>
