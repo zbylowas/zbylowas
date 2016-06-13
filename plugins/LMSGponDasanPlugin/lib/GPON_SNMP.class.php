@@ -1171,6 +1171,7 @@ class GPON_SNMP {
 					<tr><td><b>Port Id:</b></td><td><b>Admin Status:</b></td><td><b>AutoNego:</b></td><td><b>Medium:</b></td><td><b>Speed:</b></td><td><b>Duplex:</b></td><td><b>Voip:</b></td></tr>';
 				$snmp_ports_id=$this->walk('sleGponOnuPortId.'.$OLT_id.'.'.$ONU_id);
 				$snmp_ports_status=$this->walk('sleGponOnuPortOperStatus.'.$OLT_id.'.'.$ONU_id);
+				$snmp_ports_admin_status=$this->walk('sleGponOnuPortAdminStatus.'.$OLT_id.'.'.$ONU_id);
 				$snmp_ports_autonego=$this->walk('sleGponOnuPortAutoNego.'.$OLT_id.'.'.$ONU_id);
 				$snmp_ports_mediummode=$this->walk('sleGponOnuPortMediumMode.'.$OLT_id.'.'.$ONU_id);
 				$snmp_ports_portspeed=$this->walk('sleGponOnuPortConfSpeed.'.$OLT_id.'.'.$ONU_id);
@@ -1181,7 +1182,7 @@ class GPON_SNMP {
 					foreach($snmp_ports_id as $k1=>$v1)
 					{
 						$portid=str_replace($this->path_OID.'sleGponOnuPortId.'.$OLT_id.'.'.$ONU_id.'.','',$k1);
-						$portstatus=$this->clean_snmp_value($snmp_ports_status[$this->path_OID.'sleGponOnuPortAdminStatus.'.$OLT_id.'.'.$ONU_id.'.'.$portid]);
+						$portstatus=$this->clean_snmp_value($snmp_ports_admin_status[$this->path_OID.'sleGponOnuPortAdminStatus.'.$OLT_id.'.'.$ONU_id.'.'.$portid]);
 						$result.='<tr><td>'.$portid.'</td>';
 						
 						$result.='<td>
