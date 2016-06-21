@@ -552,7 +552,7 @@ if(isset($_POST['netdev']) && !isset($_POST['snmpsend']))
 		
 	}
 }
-else 
+elseif (!isset($_POST['xjxfun']))
 {
 	$netdevdata = $GPON->GetGponOnu($_GET['id']);
 	
@@ -662,21 +662,23 @@ if($netdevdata['purchasetime'])
 		
 }
 
-$netdevconnected = $GPON->GetGponOltConnectedNames($_GET['id']);
-$netdevlist = $GPON->GetNotConnectedOlt($netdevconnected['gponoltid']);
-if (is_array($netdevlist) && !empty($netdevlist))
-	$numports = $GPON->GetFreeOltPort($netdevlist[0]['id']);
+if (!isset($_POST['xjxfun'])) {
+	$netdevconnected = $GPON->GetGponOltConnectedNames($_GET['id']);
+	$netdevlist = $GPON->GetNotConnectedOlt($netdevconnected['gponoltid']);
+	if (is_array($netdevlist) && !empty($netdevlist))
+		$numports = $GPON->GetFreeOltPort($netdevlist[0]['id']);
 
-$SMARTY->assign('snmponudata', $snmponudata);
-$gponoltprofiles = $GPON->GetGponOltProfiles(empty($netdevconnected) ? null : $netdevconnected[0]['gponoltid']);
-$SMARTY->assign('gponoltprofiles', $gponoltprofiles);
+	$SMARTY->assign('snmponudata', $snmponudata);
+	$gponoltprofiles = $GPON->GetGponOltProfiles(empty($netdevconnected) ? null : $netdevconnected[0]['gponoltid']);
+	$SMARTY->assign('gponoltprofiles', $gponoltprofiles);
 
-$gpononumodels = $GPON->GetGponOnuModelsList();
-unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['direction']);
+	$gpononumodels = $GPON->GetGponOnuModelsList();
+	unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['direction']);
 
-$customerid = intval($netdevdata['ownerid']);
-if ($customerid)
-	include(MODULES_DIR . DIRECTORY_SEPARATOR .'customer.inc.php');
+	$customerid = intval($netdevdata['ownerid']);
+	if ($customerid)
+		include(MODULES_DIR . DIRECTORY_SEPARATOR .'customer.inc.php');
+}
 
 /* Using AJAX plugins */
 function GetFreeOltPort_Xj($netdevicesid)
