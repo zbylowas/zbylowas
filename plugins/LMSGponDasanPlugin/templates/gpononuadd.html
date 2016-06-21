@@ -177,12 +177,12 @@
 		<TABLE>
 		<SCRIPT type="text/javascript">
 		<!--
-			var select_elems = [];
+			var input_elems = [];
 
-			function customerlist_reload() {
+			function customerlist_change() {
 				customerids = '';
-				for (i = 0; i < select_elems.length; i++)
-					customerids += select_elems[i].value + ';'
+				for (i = 0; i < input_elems.length; i++)
+					customerids += input_elems[i].value + ';'
 				customerids += '0;';
 				xajax_ONU_Voip_Phone_Xj(customerids,
 					document.getElementById('pots_1_phone').value,
@@ -200,10 +200,10 @@
 			</TD>
 			<TD>
 				{$cid="customersid_"|cat:$index}
-				{customerlist form="netdevadd" customers=$customers selected=$netdev.$cid selectname="netdev[customersid_$index]" inputname="netdev[cid_$index]" customOnChange="customerlist_reload();"}
+				{customerlist form="netdevadd" customers=$customers selected=$netdev.$cid selectname="netdev[customersid_$index]" inputname="netdev[cid_$index]" customOnChange="customerlist_change();"}
 				<SCRIPT type="text/javascript">
 				<!--
-					select_elems.push(document.forms['netdevadd'].elements['netdev[customersid_{$index}]']);
+					input_elems.push(document.forms['netdevadd'].elements['netdev[cid_{$index}]']);
 				//-->
 				</SCRIPT>
 			</TD>
@@ -211,7 +211,7 @@
 		{/for}
 		<SCRIPT type="text/javascript">
 		<!--
-			customerlist_reload();
+			customerlist_change();
 		//-->
 		</SCRIPT>
 		</TABLE>
