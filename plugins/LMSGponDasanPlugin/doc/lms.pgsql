@@ -62,12 +62,7 @@ CREATE SEQUENCE gpononu_id_seq;
 CREATE TABLE gpononu (
 	id integer DEFAULT nextval('gpononu_id_seq'::text) NOT NULL,
 	name varchar(100) NOT NULL,
-	location varchar(255) NOT NULL,
 	gpononumodelsid integer NOT NULL,
-	description text NOT NULL,
-	serialnumber varchar(32) NOT NULL,
-	purchasetime integer NOT NULL DEFAULT '0',
-	guaranteeperiod smallint NOT NULL DEFAULT '0',
 	password varchar(100) NOT NULL,
 	onuid smallint NOT NULL DEFAULT 0,
 	autoprovisioning smallint DEFAULT NULL,
@@ -84,6 +79,8 @@ CREATE TABLE gpononu (
 	moddate integer NOT NULL DEFAULT 0,
 	creatorid integer NOT NULL DEFAULT 0,
 	modid integer NOT NULL DEFAULT 0,
+	netdevid integer DEFAULT NULL
+		REFERENCES netdevices (id) ON DELETE SET NULL ON UPDATE CASCADE,
 	PRIMARY KEY (id),
 	UNIQUE (name)
 );
@@ -198,4 +195,4 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 
 INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016041200');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016062200');

@@ -146,29 +146,21 @@
 		</TD>
 	</TR>
 	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/serialnumber.gif" ALT="">
+		<TD style="width: 1%;">
+			<IMG SRC="img/netdev.gif" ALT="">
 		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>{trans("Serial number:")}</B>
+		<TD style="width: 1%;" class="bold nobr">
+			{trans("Network device:")}
 		</TD>
-		<TD WIDTH="98%">
-			<INPUT TYPE="TEXT" NAME="netdev[serialnumber]" VALUE="{$netdev.serialnumber}" {tip text="Enter device serial number (optional)"}>
-		</TD>
-	</TR>
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/home.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>{trans("Location:")}</B>
-		</TD>
-		<TD WIDTH="98%">
-			<INPUT TYPE="TEXT" NAME="netdev[location]" VALUE="{$netdev.location}" {tip text="Enter device location (optional)"}>
+		<TD style="width: 98%;">
+			<SELECT name="netdev[netdevid]" {tip text="Select assigned network device"}>
+				<OPTION value="0">{trans("- none -")}</OPTION>
+				{foreach $notgpononudevices as $device}
+				<OPTION value="{$device.id}"{if $netdev.netdevid == $device.id} selected{/if}>{$device.name}</OPTION>
+				{/foreach}
+			</SELECT>
 		</TD>
 	</TR>
-	
-	
 	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/customer.gif" ALT="{trans("Customer:")}">
@@ -267,43 +259,6 @@
 				</TD>
 				<TD WIDTH="50%" style="vertical-align:top;">
 					<TABLE WIDTH="100%" CELLPADDING="3">
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/calendar.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>{trans("Purchase date:")}</B>
-		</TD>
-		<TD WIDTH="98%">
-			<INPUT TYPE="TEXT" NAME="netdev[purchasedate]" VALUE="{if $netdev.purchasedate}{$netdev.purchasedate}{/if}" SIZE="10" MAXSIZE="10" OnClick="javascript:cal1.popup();" {tip trigger="purchasedate" text="Enter device purchase date in 'yyyy/mm/dd' format or click to choose date from calendar (optional)"}>
-		</TD>
-	</TR>
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/guarantee.png" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>{trans("Guarantee period:")}</B>
-		</TD>
-		<TD WIDTH="98%">
-			<SELECT SIZE="1" NAME="netdev[guaranteeperiod]" {tip text="Select device guarantee period (optional)"}>
-				{foreach from=$_GUARANTEEPERIODS key=key item=period}
-				<OPTION VALUE="{$key}"{if $netdev.guaranteeperiod eq $key} SELECTED{/if}>{$period}</OPTION>
-				{/foreach}
-			</SELECT>
-		</TD>
-	</TR>
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/desc.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>{trans("Description:")}</B>
-		</TD>
-		<TD WIDTH="98%">
-			<TEXTAREA NAME="netdev[description]" COLS="40" ROWS="5" {tip text="Enter additional information (optional)"}>{$netdev.description}</TEXTAREA>
-		</TD>
-	</TR>
 	                                        </TABLE>
 					</TD>
 				</TR>
@@ -321,8 +276,6 @@
 <SCRIPT type="text/javascript">
 <!--
 document.forms['netdevadd'].elements['netdev[name]'].focus();
-BUL_TIMECOMPONENT = false;
-var cal1 = new calendar(document.forms['netdevadd'].elements['netdev[purchasedate]']);
 //-->
 </SCRIPT>
 {include file="footer.html"}

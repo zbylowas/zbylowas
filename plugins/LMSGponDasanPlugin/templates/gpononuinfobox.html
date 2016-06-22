@@ -87,6 +87,7 @@
 		        {if $netdevinfo.password eq ''}(auto-learning){else}{$netdevinfo.password}{/if}
 		</TD>
 	</TR>
+	{if $netdevinfo.onudescription}
 	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
@@ -97,32 +98,22 @@
 		{$netdevinfo.onudescription}
 		</TD>
 	</TR>
-	{if $netdevinfo.serialnumber}
+	{/if}
 	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/serialnumber.gif" ALT="">
+		<TD style="width: 1%;">
+			<IMG SRC="img/netdev.gif" ALT="">
 		</TD>
-		<TD WIDTH="1%" NOWRAP>
-		        <B>{trans("Serial number:")}</B>
+		<TD style="width: 1%;" class="bold nobr">
+			{trans("Network device:")}
 		</TD>
-		<TD WIDTH="98%">
-		        {$netdevinfo.serialnumber}
+		<TD style="width: 98%;">
+			{if $netdevinfo.netdevid}
+			<A href="?m=netdevinfo&id={$netdevinfo.netdevid}">{$netdevinfo.netdevname}</A>
+			{else}
+			{trans("- none -")}
+			{/if}
 		</TD>
 	</TR>
-	{/if}
-	{if $netdevinfo.location}
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/home.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>{trans("Location:")}</B>
-		</TD>
-		<TD WIDTH="98%">
-			{$netdevinfo.location}
-		</TD>
-	</TR>
-	{/if}
 	{if $onuports}
 	<TR class="light">
 		<TD WIDTH="1%">
@@ -216,54 +207,6 @@
 				</TD>
 				<TD WIDTH="50%" style="vertical-align:top;">
 				        <TABLE WIDTH="100%" CELLPADDING="3">
-	{if $netdevinfo.purchasetime}
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/calendar.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-		        <B>{trans("Purchase date:")}</B>
-		</TD>
-		<TD WIDTH="98%">
-		        {$netdevinfo.purchasetime|date_format:"%Y/%m/%d"}
-		</TD>
-	</TR>
-	{/if}
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/guarantee.png" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-		        <B>{trans("Guarantee:")}</B>
-		</TD>
-		<TD WIDTH="98%">
-			{if !$netdevinfo.guaranteeperiod}
-				{trans("no guarantee")}
-			{elseif $netdevinfo.guaranteeperiod == -1}
-				{trans("lifetime")}
-			{else}
-				{assign var=periodid value=$netdevinfo.guaranteeperiod}
-				{$_GUARANTEEPERIODS.$periodid}
-		        	({if $netdevinfo.guaranteetime-$smarty.now < 0}{trans("expired<!guarantee>")}{else}{$netdevinfo.guaranteetime|date_format:"%Y/%m/%d"}{/if})
-			{/if}
-		</TD>
-	</TR>
-        {if $netdevinfo.description}
-        <TR class="light">
-                <TD WIDTH="1%">
-                        <IMG SRC="img/desc.gif" ALT="">
-                </TD>
-                <TD WIDTH="99%" COLSPAN="2">
-                        <TABLE WIDTH="100%" CELLPADDING="5">
-                                <TR>
-                                        <TD class="fall superlight">
-						{$netdevinfo.description|escape|replace:"\n":"<BR>"}
-                                        </TD>
-                                </TR>
-                        </TABLE>
-                </TD>
-        </TR>
-        {/if}
         <TR class="light">
                 <TD WIDTH="1%">
                         <IMG SRC="img/users.gif" ALT="">

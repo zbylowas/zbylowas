@@ -3,7 +3,7 @@
 /*
  * LMS version 1.11-git
  *
- *  (C) Copyright 2001-2015 LMS Developers
+ *  (C) Copyright 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -24,33 +24,20 @@
  *  $Id$
  */
 
-if(! $GPON->GponOnuExists($_GET['id']))
-{
+if (!$GPON->GponOnuExists($_GET['id']))
 	$SESSION->redirect('?m=gpononulist');
-}		
+
 $onu_customerlimit = ConfigHelper::getConfig('gpon-dasan.onu_customerlimit', 1);
 $action = !empty($_GET['action']) ? $_GET['action'] : '';
 $edit = '';
 $subtitle = '';
 
-switch($action)
-{
+switch ($action) {
 
 
 case 'disconnectnode':
-
 	$LMS->NetDevLinkNode($_GET['nodeid'],0);
 	$SESSION->redirect('m=gpononuinfo&id='.$_GET['id']);
-
-case 'chkmac':
-
-        $DB->Execute('UPDATE nodes SET chkmac=? WHERE id=?', array($_GET['chkmac'], $_GET['ip']));
-	$SESSION->redirect('m=gpononuinfo&id='.$_GET['id'].'&ip='.$_GET['ip']);
-
-case 'duplex':
-
-        $DB->Execute('UPDATE nodes SET halfduplex=? WHERE id=?', array($_GET['duplex'], $_GET['ip']));
-	$SESSION->redirect('m=gpononuinfo&id='.$_GET['id'].'&ip='.$_GET['ip']);
 
 case 'nas':
 	$DB->Execute('UPDATE nodes SET nas=? WHERE id=?', array($_GET['nas'], $_GET['ip']));
@@ -139,271 +126,16 @@ case 'connect':
 	}
 	$SMARTY->assign('connect', $dev);
 	break;
-    
-case 'connectnode':
-
-	$linktype = !empty($_GET['linktype']) ? intval($_GET['linktype']) : '0';
-	$node['port'] = !empty($_GET['port']) ? intval($_GET['port']) : '0';
-	$node['id'] = !empty($_GET['nodeid']) ? intval($_GET['nodeid']) : '0';
-
-	$ports = $DB->GetOne('SELECT ports FROM netdevices WHERE id = ?', array($_GET['id']));
-	$takenports = $LMS->CountNetDevLinks($_GET['id']);
-
-	if($ports <= $takenports)
-		$error['linknode'] = trans('No free ports on device!');
-	elseif($node['port'])
-	{
-		if(!preg_match('/^[0-9]+$/', $node['port']) || $node['port'] > $ports)
-		{
-			$error['port'] = trans('Incorrect port number!');	
-		}
-		elseif($DB->GetOne('SELECT id FROM nodes WHERE netdev=? AND port=? AND ownerid>0', 
-				array($_GET['id'], $node['port']))
-			|| $DB->GetOne('SELECT 1 FROM netlinks WHERE (src = ? OR dst = ?)
-				AND (CASE src WHEN ? THEN srcport ELSE dstport END) = ?',
-				array($_GET['id'], $_GET['id'], $_GET['id'], $node['port'])))
-		{
-			$error['port'] = trans('Selected port number is taken by other device or node!');
-		}
-	}
-
-	$SESSION->save('nodelinktype', $linktype);
-	
-	if(!$error) 
-	{
-		$LMS->NetDevLinkNode($node['id'], $_GET['id'], $linktype, $node['port']);
-		$SESSION->redirect('m=gpononuinfo&id='.$_GET['id']);
-	}
-
-	$SMARTY->assign('connectnode', $node);
-
-	break;
-
-case 'addip':
-
-	$subtitle = trans('New IP address');
-	$nodeipdata['access'] = 1;
-	$SMARTY->assign('nodeipdata', $nodeipdata);
-	$edit = 'addip';
-	break;
-
-case 'editip':
-
-	$nodeipdata = $LMS->GetNode($_GET['ip']);
-	$subtitle = trans('IP address edit');
-	$nodeipdata['ipaddr'] = $nodeipdata['ip'];
-	$SMARTY->assign('nodeipdata',$nodeipdata);
-	$edit = 'ip';
-	break;
-
-case 'switchlinktype':
-
-	$LMS->SetNetDevLinkType($_GET['devid'], $_GET['id'], $_GET['linktype']);
-	$SESSION->redirect('m=gpononuinfo&id='.$_GET['id']);
-
-case 'switchnodelinktype':
-
-	$LMS->SetNodeLinkType($_GET['nodeid'], $_GET['linktype']);
-	$SESSION->redirect('m=gpononuinfo&id='.$_GET['id']);
-
-case 'ipdel':
-
-	if($_GET['is_sure']=='1' && !empty($_GET['ip']))
-	{
-		$DB->Execute('DELETE FROM nodes WHERE id = ? AND ownerid = 0', array($_GET['ip']));
-	}
-	
-	$SESSION->redirect('m=gpononuinfo&id='.$_GET['id']);
-
-case 'ipset':
-
-	if (!empty($_GET['ip']))
-		$DB->Execute('UPDATE nodes SET access = (CASE access WHEN 1 THEN 0 ELSE 1 END)
-			WHERE id = ? AND ownerid = 0', array($_GET['ip']));
-	else
-    		$LMS->IPSetU($_GET['id'], $_GET['access']);
-
-	header('Location: ?'.$SESSION->get('backto'));
-	break;							
-
-case 'formaddip':
-
-	$subtitle = trans('New IP address');
-	$nodeipdata = $_POST['ipadd'];
-	$nodeipdata['ownerid'] = 0;
-	$nodeipdata['mac'] = str_replace('-',':',$nodeipdata['mac']);
-
-	foreach($nodeipdata as $key => $value)
-		$nodeipdata[$key] = trim($value);
-	
-	if($nodeipdata['ipaddr']=='' && $nodeipdata['mac']=='' && $nodeipdata['name']=='' && $nodeipdata['passwd']=='')
-	{
-		$SESSION->redirect('m=gpononuedit&action=addip&id='.$_GET['id']);
-        }
-	
-	if($nodeipdata['name']=='')
-		$error['ipname'] = trans('Address field is required!');
-	elseif(strlen($nodeipdata['name']) > 32)
-		$error['ipname'] = trans('Specified name is too long (max.$a characters)!','32');
-	elseif($LMS->GetNodeIDByName($nodeipdata['name']))
-		$error['ipname'] = trans('Specified name is in use!');
-	elseif(!preg_match('/^[_a-z0-9-]+$/i', $nodeipdata['name']))
-		$error['ipname'] = trans('Name contains forbidden characters!');
-
-	if($nodeipdata['ipaddr']=='')
-		$error['ipaddr'] = trans('IP address is required!');
-	elseif(!check_ip($nodeipdata['ipaddr']))
-		$error['ipaddr'] = trans('Incorrect IP address!');
-	elseif(!$LMS->IsIPValid($nodeipdata['ipaddr']))
-		$error['ipaddr'] = trans('Specified address does not belongs to any network!');
-	elseif(!$LMS->IsIPFree($nodeipdata['ipaddr']))
-		$error['ipaddr'] = trans('Specified IP address is in use!');
-	
-	if($nodeipdata['ipaddr_pub']!='0.0.0.0' && $nodeipdata['ipaddr_pub']!='')
-	{
-		if(!check_ip($nodeipdata['ipaddr_pub']))
-	            	$error['ipaddr_pub'] = trans('Incorrect IP address!');
-	    	elseif(!$LMS->IsIPValid($nodeipdata['ipaddr_pub']))
-	            	$error['ipaddr_pub'] = trans('Specified address does not belongs to any network!');
-		elseif(!$LMS->IsIPFree($nodeipdata['ipaddr_pub']))
-			$error['ipaddr_pub'] = trans('Specified IP address is in use!');
-	}
-	else
-		$nodeipdata['ipaddr_pub'] = '0.0.0.0';
-
-	if($nodeipdata['mac']=='')
-		$error['mac'] = trans('MAC address is required!');
-	elseif(!check_mac($nodeipdata['mac']))
-		$error['mac'] = trans('Incorrect MAC address!');
-	elseif(($nodeipdata['mac']!='00:00:00:00:00:00' || $nodedata['mac']!='00:00:00:00:00:0E') && !ConfigHelper::checkConfig('phpui.allow_mac_sharing'))
-			$error['mac'] = trans('MAC address is in use!');
-
-	if(strlen($nodeipdata['passwd']) > 32)
-                $error['passwd'] = trans('Password is too long (max.32 characters)!');
-
-	if(!isset($nodeipdata['chkmac'])) $nodeipdata['chkmac'] = 0;
-	if(!isset($nodeipdata['halfduplex'])) $nodeipdata['halfduplex'] = 0;
-	if(!isset($nodeipdata['nas'])) $nodeipdata['nas'] = 0;
-
-	if(!$error)
-	{
-		$nodeipdata['warning'] = 0;
-		$nodeipdata['location'] = '';
-		$nodeipdata['netdev'] = $_GET['id'];
-		
-		$LMS->NodeAdd($nodeipdata);
-		$SESSION->redirect('m=gpononuinfo&id='.$_GET['id']);
-	}
-	
-	$SMARTY->assign('nodeipdata',$nodeipdata); 
-	$edit='addip';
-	break;
-		
-case 'formeditip':
-
-	$subtitle = trans('IP address edit');
-	$nodeipdata = $_POST['ipadd'];
-	$nodeipdata['ownerid']=0;
-	$nodeipdata['mac'] = str_replace('-',':',$nodeipdata['mac']);
-
-	foreach($nodeipdata as $key => $value)
-		$nodeipdata[$key] = trim($value);
-	
-	if($nodeipdata['ipaddr']=='' && $nodeipdata['mac']=='' && $nodeipdata['name']=='' && $nodeipdata['passwd']=='')
-	{
-		$SESSION->redirect('m=gpononuedit&action=editip&id='.$_GET['id'].'&ip='.$_GET['ip']);
-        }
-	
-	if($nodeipdata['name']=='')
-		$error['ipname'] = trans('Address field is required!');
-	elseif(strlen($nodeipdata['name']) > 32)
-		$error['ipname'] = trans('Specified name is too long (max.$a characters)!','32');
-	elseif(
-		$LMS->GetNodeIDByName($nodeipdata['name']) &&
-		$LMS->GetNodeName($_GET['ip'])!=$nodeipdata['name']
-		)
-		$error['ipname'] = trans('Specified name is in use!');
-	elseif(!preg_match('/^[_a-z0-9-]+$/i', $nodeipdata['name']))
-		$error['ipname'] = trans('Name contains forbidden characters!');	
-
-	if($nodeipdata['ipaddr']=='')
-		$error['ipaddr'] = trans('IP address is required!');
-	elseif(!check_ip($nodeipdata['ipaddr']))
-		$error['ipaddr'] = trans('Incorrect IP address!');
-	elseif(!$LMS->IsIPValid($nodeipdata['ipaddr']))
-		$error['ipaddr'] =  trans('Specified address does not belongs to any network!');
-	elseif(
-		!$LMS->IsIPFree($nodeipdata['ipaddr']) &&
-		$LMS->GetNodeIPByID($_GET['ip'])!=$nodeipdata['ipaddr']
-		)
-		$error['ipaddr'] = trans('IP address is in use!');
-
-	if($nodeipdata['ipaddr_pub']!='0.0.0.0' && $nodeipdata['ipaddr_pub']!='')
-	{
-		if(check_ip($nodeipdata['ipaddr_pub']))
-		{
-		        if($LMS->IsIPValid($nodeipdata['ipaddr_pub']))
-		        {
-		                $ip = $LMS->GetNodePubIPByID($nodeipdata['id']);
-		                if($ip!=$nodeipdata['ipaddr_pub'] && !$LMS->IsIPFree($nodeipdata['ipaddr_pub']))
-		                        $error['ipaddr_pub'] = trans('Specified IP address is in use!');
-		        }
-		        else
-		                $error['ipaddr_pub'] = trans('Specified IP address doesn\'t overlap with any network!');
-		}
-		else
-	    		$error['ipaddr_pub'] = trans('Incorrect IP address!');
-	}
-	else
-		$nodeipdata['ipaddr_pub'] = '0.0.0.0';
-
-	$macs = array();
-	foreach ($nodeipdata['macs'] as $key => $value)
-	        if (check_mac($value)) {
-	                if ($value != '00:00:00:00:00:00' && !ConfigHelper::checkConfig('phpui.allow_mac_sharing'))
-	                        if ($LMS->GetNodeIDByMAC($value))
-	                                $error['mac' . $key] = trans('MAC address is in use!');
-	                $macs[] = $value;
-	        }
-	        elseif ($value != '')
-	                $error['mac' . $key] = trans('Incorrect MAC address!');
-	if (empty($macs))
-	        $error['mac0'] = trans('MAC address is required!');
-	else   
-	        $nodeipdata['macs'] = $macs;
-
-	if(strlen($nodeipdata['passwd']) > 32)
-                $error['passwd'] = trans('Password is too long (max.32 characters)!');
-		
-	if(!isset($nodeipdata['chkmac'])) $nodeipdata['chkmac'] = 0;
-	if(!isset($nodeipdata['halfduplex'])) $nodeipdata['halfduplex'] = 0;
-	if(!isset($nodeipdata['nas'])) $nodeipdata['nas'] = 0;
-	
-	if(!$error)
-	{
-		$nodeipdata['warning'] = 0;
-		$nodeipdata['location'] = '';
-		$nodeipdata['netdev'] = $_GET['id'];
-
-		$LMS->NodeUpdate($nodeipdata);	
-		$SESSION->redirect('m=gpononuinfo&id='.$_GET['id']);
-	}
-
-	$nodeipdata['ip_pub'] = $nodeipdata['ipaddr_pub'];
-	$SMARTY->assign('nodeipdata',$nodeipdata); 
-	$edit='ip';
-	break;
 
 default:
 	$edit = 'data';
 	break;
 }
 
-if(isset($_POST['netdev']) && !isset($_POST['snmpsend']))
-{
+if (isset($_POST['netdev']) && (!isset($_POST['snmpsend']) || empty($_POST['snmpsend']))) {
 	$netdevdata_old = $GPON->GetGponOnu($_GET['id']);
-	
 	$netdevdata = $_POST['netdev'];
+
 	if(!isset($netdevdata['autoprovisioning']))
 	{
 		$netdevdata['autoprovisioning']=0;
@@ -453,34 +185,6 @@ if(isset($_POST['netdev']) && !isset($_POST['snmpsend']))
 		    }
 		}
 	}
-	$netdevdata['purchasetime'] = 0;
-	if($netdevdata['purchasedate'] != '')
-	{
-		// date format 'yyyy/mm/dd'
-		if(!preg_match('/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/', $netdevdata['purchasedate'])) 
-		{
-			$error['purchasedate'] = trans('Invalid date format!');
-		}
-		else
-		{
-			$date = explode('/', $netdevdata['purchasedate']);
-			if(checkdate($date[1], $date[2], (int)$date[0]))
-			{
-				$tmpdate = mktime(0, 0, 0, $date[1], $date[2], $date[0]);
-				if(mktime(0,0,0) < $tmpdate)
-					$error['purchasedate'] = trans('Date from the future not allowed!');
-				else
-					$netdevdata['purchasetime'] = $tmpdate;
-			}
-			else
-				$error['purchasedate'] = trans('Invalid date format!');
-		}
-	}
-
-	if($netdevdata['guaranteeperiod'] != 0 && $netdevdata['purchasedate'] == '')
-	{
-		$error['purchasedate'] = trans('Purchase date cannot be empty when guarantee period is set!');
-	}
 	
 	if(isset($netdevdata['autoprovisioning']) && intval($netdevdata['autoprovisioning'])==1)
 	{
@@ -517,8 +221,6 @@ if(isset($_POST['netdev']) && !isset($_POST['snmpsend']))
 	
 	if(!$error)
 	{
-		if($netdevdata['guaranteeperiod'] == -1)
-			$netdevdata['guaranteeperiod'] = NULL;
 		$GPON->GponOnuClearCustomers($_GET['id']);
 		if(is_array($netdevdata) && count($netdevdata)>0)
 		{
@@ -551,23 +253,14 @@ if(isset($_POST['netdev']) && !isset($_POST['snmpsend']))
 		$SESSION->redirect('?m=gpononuinfo&id='.$_GET['id']);
 		
 	}
-}
-elseif (!isset($_POST['xjxfun']))
-{
+} elseif (!isset($_POST['xjxfun'])) {
 	$netdevdata = $GPON->GetGponOnu($_GET['id']);
-	
-if($netdevdata['purchasetime'])
-		$netdevdata['purchasedate'] = date('Y/m/d', $netdevdata['purchasetime']);
-	
 
-		$options_snmp=$GPON->GetGponOlt($netdevdata['gponoltid']);
+	$options_snmp=$GPON->GetGponOlt($netdevdata['gponoltid']);
 	$GPON->snmp->set_options($options_snmp);
-	
 	$GPON->snmp->GPON_get_profiles();
-	
-	if(isset($_POST['snmpsend']) && intval($_POST['snmpsend'])==1)
-	{
-	
+
+	if (isset($_POST['snmpsend']) && intval($_POST['snmpsend'])) {
 		if(isset($_POST['onureset']) && intval($_POST['onureset'])==1)
 		{
 			$GPON->snmp->ONU_Reset($netdevdata['gponoltnumport'],$netdevdata['onuid']);
@@ -598,7 +291,7 @@ if($netdevdata['purchasetime'])
 
 			foreach($_POST as $k2=>$v2)
 			{
-				$typ=1; #default type - ethernet (most of ports)
+				$typ=1; //default type - ethernet (most of ports)
 				if(preg_match('/pots/',$k2))
 				{
 					$typ=2;
@@ -910,6 +603,7 @@ $SMARTY->assign('error',$error);
 $SMARTY->assign('onu_customerlimit',$onu_customerlimit);
 $SMARTY->assign('netdevhosts', $GPON->GetHostForNetdevices());
 $SMARTY->assign('modelports', $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']));
+$SMARTY->assign('notgpononudevices', $GPON->GetNotGponOnuDevices($_GET['id']));
 $SMARTY->assign('onuports', $portsarray);
 $SMARTY->assign('netdevinfo',$netdevdata);
 $SMARTY->assign('numports',$numports);

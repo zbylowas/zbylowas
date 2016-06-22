@@ -361,6 +361,7 @@ $netdev_temp['name'] = $netdev_temp['name'];
 $SMARTY->assign('netdev', $netdev_temp);
 $SMARTY->assign('netdevhosts', $GPON->GetHostForNetdevices());
 $SMARTY->assign('onucheck', $onucheck);
+$SMARTY->assign('notgpononudevices', $GPON->GetNotGponOnuDevices());
 $SMARTY->display('gpononuadd.html');
 
 ?>

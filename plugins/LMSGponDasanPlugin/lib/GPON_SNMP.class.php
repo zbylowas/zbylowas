@@ -1076,7 +1076,7 @@ class GPON_SNMP {
 			{
 				$result.='
 				<FORM ID="myform" name="myform" METHOD="POST" ACTION="?m=gpononuedit&id='.$id.'">
-				<input type="hidden" name="snmpsend" id="snmpsend" value="1" />
+				<input type="hidden" name="snmpsend" id="snmpsend" value="0" />
 				<input type="hidden" name="onureset" id="onureset" value="0" />
 				<input type="hidden" name="clear_mac" id="clear_mac" value="0" />
 				<input type="hidden" name="save" id="save" value="1" />
@@ -1389,7 +1389,7 @@ class GPON_SNMP {
 				$result .= '</table>
 				</td>
 				</tr>
-				<tr><td align="right" colspan="2"><input type="button" value="Zapisz zmiany na ONU" id="save_changes" OnClick="document.getElementById(\'save\').value=1;this.form.submit();" /></td></tr>
+				<tr><td align="right" colspan="2"><input type="button" value="Zapisz zmiany na ONU" id="save_changes" OnClick="document.getElementById(\'save\').value=1;document.getElementById(\'snmpsend\').value=1;this.form.submit();" /></td></tr>
 				</table>
 				</form>
 				';

@@ -629,9 +629,9 @@ class GPON {
 			where g.id not in (select distinct gpononuid from gpononu2olt)
 			ORDER BY name');
 	}
-	function GetGponOnu($id)
-	{
-		$result = $this->DB->GetRow("SELECT g.*, gom.name AS model,
+
+	public function GetGponOnu($id) {
+		$result = $this->DB->GetRow("SELECT g.*, d.name AS netdevname, gom.name AS model,
 		    (SELECT SUM(portscount) FROM gpononuportstype2models WHERE gpononumodelsid=g.gpononumodelsid) AS ports, gom.producer, 
 		    (SELECT portscount FROM gpononuportstype2models gm2p JOIN gpononuportstype gpt ON gpt.id = gm2p.gpononuportstypeid WHERE gpononumodelsid=g.gpononumodelsid AND gpt.name='pots') AS potsports, 
 		    (SELECT nd.name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponolt,
@@ -643,17 +643,19 @@ class GPON {
 		    (SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid2) AS voipaccountsid2_phone,
 		    (SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id1) AS host_id1_host,
 		    (SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id2) AS host_id2_host
-		FROM gpononu g
-		INNER JOIN gpononumodels gom on gom.id=g.gpononumodelsid
-		WHERE g.id = ?", array($id));
+			FROM gpononu g
+			INNER JOIN gpononumodels gom on gom.id=g.gpononumodelsid
+			LEFT JOIN netdevices d ON d.id = g.netdevid
+			WHERE g.id = ?", array($id));
 
 		$result['createdby'] = $this->DB->GetOne('SELECT name FROM users WHERE id=?', array($result['creatorid']));
 		$result['modifiedby'] = $this->DB->GetOne('SELECT name FROM users WHERE id=?', array($result['modid']));
 		$result['creationdateh'] = date('Y/m/d, H:i',$result['creationdate']);
 		$result['moddateh'] = date('Y/m/d, H:i',$result['moddate']);
-		
+
 		return $result;
 	}
+
 	function GetGponOnuFromName($name)
 	{
 		$result = $this->DB->GetRow("SELECT g.*,
@@ -682,55 +684,39 @@ class GPON {
 	{
 		return ($this->DB->GetOne('SELECT * FROM gpononu WHERE id=?', array($id)) ? TRUE : FALSE);
 	}
-	function GponOnuAdd($gpononudata)
-	{
-		$ogonek     = array("ą", "ś", "ż", "ź", "ć", "ń", "ł", "ó", "ę", "Ą", "Ś", "Ż", "Ź", "Ć", "Ń", "Ł", "Ó", "Ę");
-		$bez_ogonek = array("a", "s", "z", "z", "c", "n", "l", "o", "e", "A", "S", "Z", "Z", "C", "N", "L", "O", "E");
-		$gpononudata['onu_description'] = str_replace($ogonek, $bez_ogonek, $gpononudata['onu_description']);
-		$gpononudata['gpononumodelsid']=intval($gpononudata['gpononumodelsid']);
+
+	public function GponOnuAdd($gpononudata) {
+		$gpononudata['onu_description'] = iconv('UTF-8', 'ASCII//TRANSLIT', $gpononudata['onu_description']);
+		$gpononudata['gpononumodelsid'] = intval($gpononudata['gpononumodelsid']);
 		$gpononumodelid=1;
-		if($gpononudata['gpononumodelsid']==0)
-		{
-			$gpononudata['onu_model']=trim($gpononudata['onu_model']);
-			if(strlen($gpononudata['onu_model'])>0)
-			{
+		if (empty($gpononudata['gpononumodelsid'])) {
+			$gpononudata['onu_model'] = trim($gpononudata['onu_model']);
+			if (strlen($gpononudata['onu_model'])) {
 				$result = $this->DB->GetRow("SELECT id FROM gpononumodels
 				WHERE name = ?", array($gpononudata['onu_model']));
 				$gpononudata['gpononumodelsid']=intval($result['id']);
-				if($gpononudata['gpononumodelsid']==0)
-				{
-					if ($this->DB->Execute('INSERT INTO gpononumodels (name) 
-						VALUES (?)', 
-						array(
-							$gpononudata['onu_model'],
-						)))
-					{
+				if (empty($gpononudata['gpononumodelsid'])) {
+					if ($this->DB->Execute('INSERT INTO gpononumodels (name)
+						VALUES (?)', array($gpononudata['onu_model']))) {
 						$gpononudata['gpononumodelsid'] = $this->DB->GetLastInsertID('gpononumodels');
-						$this->Log(4, 'gpononumodel', $gpononudata['gpononumodelsid'], 'model added via onuadd: '.$gpononudata['onu_model']);
+						$this->Log(4, 'gpononumodel', $gpononudata['gpononumodelsid'], 'model added via onuadd: ' . $gpononudata['onu_model']);
 					}
 				}
 			}
 		}
-		$gpononudata['gpononumodelsid']=intval($gpononudata['gpononumodelsid']);
-		if($gpononudata['gpononumodelsid']==0)
-		{
-			$gpononudata['gpononumodelsid']=1;
-		}
-		$gpononudata['gponoltprofilesid']=intval($gpononudata['gponoltprofilesid'])>0 ? $gpononudata['gponoltprofilesid']: NULL;
-		$gpononudata['voipaccountsid1']=intval($gpononudata['voipaccountsid1'])>0 ? $gpononudata['voipaccountsid1']: NULL;
-		$gpononudata['voipaccountsid2']=intval($gpononudata['voipaccountsid2'])>0 ? $gpononudata['voipaccountsid2']: NULL;
-		$gpononudata['host_id1']=intval($gpononudata['host_id1'])>0 ? $gpononudata['host_id1']: NULL;
-		$gpononudata['host_id2']=intval($gpononudata['host_id2'])>0 ? $gpononudata['host_id2']: NULL;
-		if ($this->DB->Execute('INSERT INTO gpononu (name, location, gpononumodelsid, description, serialnumber, purchasetime, guaranteeperiod, password, autoprovisioning, onudescription, gponoltprofilesid, voipaccountsid1, voipaccountsid2, host_id1, host_id2, creatorid, creationdate) 
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?NOW?)', 
+		$gpononudata['gpononumodelsid'] = intval($gpononudata['gpononumodelsid']);
+		if (empty($gpononudata['gpononumodelsid']))
+			$gpononudata['gpononumodelsid'] = 1;
+		$gpononudata['gponoltprofilesid'] = intval($gpononudata['gponoltprofilesid']) ? $gpononudata['gponoltprofilesid']: NULL;
+		$gpononudata['voipaccountsid1'] = intval($gpononudata['voipaccountsid1']) ? $gpononudata['voipaccountsid1']: NULL;
+		$gpononudata['voipaccountsid2'] = intval($gpononudata['voipaccountsid2']) ? $gpononudata['voipaccountsid2']: NULL;
+		$gpononudata['host_id1'] = intval($gpononudata['host_id1']) ? $gpononudata['host_id1']: NULL;
+		$gpononudata['host_id2'] = intval($gpononudata['host_id2']) ? $gpononudata['host_id2']: NULL;
+		if ($this->DB->Execute('INSERT INTO gpononu (name, gpononumodelsid, password, autoprovisioning, onudescription, gponoltprofilesid, voipaccountsid1, voipaccountsid2, host_id1, host_id2, creatorid, creationdate, netdevid)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?NOW?, ?)',
 				array(
 					$gpononudata['name'],
-					$gpononudata['location'],
 					$gpononudata['gpononumodelsid'],
-					$gpononudata['description'],
-					$gpononudata['serialnumber'],
-					$gpononudata['purchasetime'],
-					$gpononudata['guaranteeperiod'],
 					$gpononudata['password'],
 					$gpononudata['autoprovisioning'],
 					$gpononudata['onu_description'],
@@ -739,17 +725,17 @@ class GPON {
 					$gpononudata['voipaccountsid2'],
 					$gpononudata['host_id1'],
 					$gpononudata['host_id2'],
-					$this->AUTH->id
+					$this->AUTH->id,
+					empty($gpononudata['netdevid']) ? null : $gpononudata['netdevid'],
 		))) {
-		
 			$id = $this->DB->GetLastInsertID('gpononu');
 			$dump = var_export($gpononudata, true);
 			$this->Log(4, 'gpononu', $id, 'added '.$gpononudata['name'], $dump);
 			return $id;
-		}
-		else
-			return FALSE;
+		} else
+			return false;
 	}
+
 	function GponOnuDescriptionUpdate($id,$onudescription)
 	{
 		$ogonek     = array("ą", "ś", "ż", "ź", "ć", "ń", "ł", "ó", "ę", "Ą", "Ś", "Ż", "Ź", "Ć", "Ń", "Ł", "Ó", "Ę");
@@ -794,27 +780,20 @@ class GPON {
 		}
 
 	}
-	function GponOnuUpdate($gpononudata)
-	{
-		$ogonek     = array("ą", "ś", "ż", "ź", "ć", "ń", "ł", "ó", "ę", "Ą", "Ś", "Ż", "Ź", "Ć", "Ń", "Ł", "Ó", "Ę");
-		$bez_ogonek = array("a", "s", "z", "z", "c", "n", "l", "o", "e", "A", "S", "Z", "Z", "C", "N", "L", "O", "E");
-		$gpononudata['onudescription'] = str_replace($ogonek, $bez_ogonek, $gpononudata['onudescription']);
-		$gpononudata['gponoltprofilesid']=intval($gpononudata['gponoltprofilesid'])>0 ? $gpononudata['gponoltprofilesid']: NULL;
-		$gpononudata['voipaccountsid1']=intval($gpononudata['voipaccountsid1'])>0 ? $gpononudata['voipaccountsid1']: NULL;
-		$gpononudata['voipaccountsid2']=intval($gpononudata['voipaccountsid2'])>0 ? $gpononudata['voipaccountsid2']: NULL;
-		$gpononudata['host_id1']=intval($gpononudata['host_id1'])>0 ? $gpononudata['host_id1']: NULL;
-		$gpononudata['host_id2']=intval($gpononudata['host_id2'])>0 ? $gpononudata['host_id2']: NULL;
-		$this->DB->Execute('UPDATE gpononu SET location=?, gpononumodelsid=?, description=?, serialnumber=?, purchasetime=?,
-			    guaranteeperiod=?, password=?, autoprovisioning=?, onudescription=?, gponoltprofilesid=?,
-			    voipaccountsid1=?, voipaccountsid2=?, host_id1=?, host_id2=?, modid=?, moddate=?NOW?
-				WHERE id=?', 
-				array( 
-					$gpononudata['location'],
+
+	public function GponOnuUpdate($gpononudata) {
+		$gpononudata['onudescription'] = iconv('UTF-8', 'ASCII//TRANSLIT', $gpononudata['onudescription']);
+		$gpononudata['gponoltprofilesid'] = intval($gpononudata['gponoltprofilesid']) ? $gpononudata['gponoltprofilesid']: NULL;
+		$gpononudata['voipaccountsid1'] = intval($gpononudata['voipaccountsid1']) ? $gpononudata['voipaccountsid1']: NULL;
+		$gpononudata['voipaccountsid2'] = intval($gpononudata['voipaccountsid2']) ? $gpononudata['voipaccountsid2']: NULL;
+		$gpononudata['host_id1'] = intval($gpononudata['host_id1']) ? $gpononudata['host_id1']: NULL;
+		$gpononudata['host_id2'] = intval($gpononudata['host_id2']) ? $gpononudata['host_id2']: NULL;
+		$this->DB->Execute('UPDATE gpononu SET gpononumodelsid=?, password=?, autoprovisioning=?,
+				onudescription=?, gponoltprofilesid=?, voipaccountsid1=?, voipaccountsid2=?,
+				host_id1=?, host_id2=?, netdevid=?, modid=?, moddate=?NOW?
+				WHERE id=?',
+				array(
 					intval($gpononudata['gpononumodelsid']),
-					$gpononudata['description'],
-					$gpononudata['serialnumber'],
-					$gpononudata['purchasetime'],
-					$gpononudata['guaranteeperiod'],
 					$gpononudata['password'],
 					$gpononudata['autoprovisioning'],
 					$gpononudata['onudescription'],
@@ -823,8 +802,8 @@ class GPON {
 					$gpononudata['voipaccountsid2'],
 					$gpononudata['host_id1'],
 					$gpononudata['host_id2'],
+					empty($gpononudata['netdevid']) ? null : $gpononudata['netdevid'],
 					$this->AUTH->id,
-					
 					$gpononudata['id']
 				));
 		$dump = var_export($gpononudata, true);
@@ -1333,6 +1312,14 @@ class GPON {
 		//var_dump($this->DB);
 		return $result;
 	}
+
+	public function GetNotGponOnuDevices($gpononuid = null) {
+		return $this->DB->GetAll('SELECT d.id, d.name FROM netdevices d
+			LEFT JOIN gpononu o ON o.netdevid = d.id
+			WHERE o.netdevid IS NULL OR o.id = ?
+			ORDER BY name', array($gpononuid));
+	}
+
 	//--------------ONU_MODELS----------------
 	function GetGponOnuModelsList($order='name,asc')
 	{
