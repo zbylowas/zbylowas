@@ -82,6 +82,10 @@ class LMSGponDasanPlugin extends LMSPlugin {
 				'class' => 'GponDasanNodeHandler',
 				'method' => 'nodeScanOnLoad'
 			),
+			'netdevinfo_before_display' => array(
+				'class' => 'GponDasanNetDevHandler',
+				'method' => 'netdevinfoBeforeDisplay'
+			),
 		);
 	 }
 }
