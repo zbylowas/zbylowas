@@ -14,6 +14,7 @@ class GPON_SNMP {
 		@snmp_read_mib('DISMAN-EVENT-MIB.mib');
 		@snmp_read_mib('sle-device-mib.mib');
 		@snmp_read_mib('sle-systemmaintenance-mib.mib');
+		snmp_set_oid_output_format(SNMP_OID_OUTPUT_MODULE);
 	}
 
 	function set_options($options)
