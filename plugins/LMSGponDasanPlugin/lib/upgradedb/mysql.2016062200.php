@@ -17,7 +17,7 @@ if (!empty($onus))
 			VALUES (?, ?, ?, ?, ?, ?)",
 			array($onu['name'], empty($onu['location']) ? '' : $onu['location'],
 				empty($onu['description']) ? '' : $onu['description'],
-				empty($onu['serianlnumber']) ? '' : $onu['serialnumber'],
+				empty($onu['serialnumber']) ? '' : $onu['serialnumber'],
 				$onu['purchasetime'], $onu['guaranteeperiod']));
 		$netdevid = $this->GetLastInsertID('netdevices');
 		$this->Execute("UPDATE gpononu SET netdevid = ? WHERE id = ?",
