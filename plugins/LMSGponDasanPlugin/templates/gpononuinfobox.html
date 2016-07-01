@@ -28,17 +28,28 @@
 		</TD>
 	</TR>
 	<TR class="light">
-		<TD WIDTH="1%">
+		<TD style="width: 1%;">
 			<IMG SRC="img/settings.gif" ALT="">
 		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>Wydany do klienta:</B>
+		<TD style="width: 1%;" class="bold nobr">
+			Wydany do klienta:
 		</TD>
-		<TD WIDTH="98%">
-		{if $netdevinfo.autoprovisioning eq 1} Tak {else}  Nie {/if}
+		<TD style="width: 98%;">
+			{if $netdevinfo.autoprovisioning == 1}{trans("yes")}{else}{trans("no")}{/if}
 		</TD>
 	</TR>
-	 <TR class="light">
+	<TR class="light">
+		<TD style="width: 1%;">
+			<IMG SRC="img/settings.gif" ALT="">
+		</TD>
+		<TD style="width: 1%;" class="bold nobr">
+			{trans("XML provisioning:")}
+		</TD>
+		<TD style="width: 98%;">
+			{if $netdevinfo.xmlprovisioning}{trans("yes")}{else}{trans("no")}{/if}
+		</TD>
+	</TR>
+	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/settings.gif" ALT="">
 		</TD>

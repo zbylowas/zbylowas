@@ -37,23 +37,35 @@
 		       <b>{$netdevinfo.onuid}</b>
 		</TD>
 	</TR>
-	
+
 	<TR class="light">
-		<TD WIDTH="1%">
+		<TD style="width: 1%;">
 			<IMG SRC="img/settings.gif" ALT="">
 		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B {tip text="Pole możliwe do zmiany przy nowym, jeszcze nie podłączonym onu"}>Wydany do klienta:</B>
+		<TD style="width: 1%;" class="bold nobr">
+			<label for="netdev[autoprovisioning]">Wydany do klienta:</label>
 		</TD>
-		<TD WIDTH="98%">
-		<input type="checkbox" name="netdev[autoprovisioning]" {if $netdevinfo.autoprovisioning eq 0} {else} checked="checked"{/if} value="1" {if $netdevinfo.autoscript eq 1} disabled="disabled" {/if}/>
-		{if $netdevinfo.autoscript eq 1}
-		<INPUT TYPE="hidden" NAME="netdev[autoprovisioning]" ID="netdev[autoprovisioning]" VALUE="{$netdevinfo.autoprovisioning}"> 
-		{/if}
+		<TD style="width: 98%;">
+			<input type="checkbox" name="netdev[autoprovisioning]" id="netdev[autoprovisioning]" value="1"{if $netdevinfo.autoprovisioning} checked{/if}{if $netdevinfo.autoscript == 1} disabled{/if}>
+			{if $netdevinfo.autoscript == 1}
+			<INPUT TYPE="hidden" NAME="netdev[autoprovisioning]" ID="netdev[autoprovisioning]" VALUE="{$netdevinfo.autoprovisioning}">
+			{/if}
 		</TD>
 	</TR>
-	
-	 <TR class="light">
+
+	<TR class="light">
+		<TD style="width: 1%;">
+			<IMG SRC="img/settings.gif" ALT="">
+		</TD>
+		<TD style="width: 1%;" class="bold nobr">
+			<label for="xmlprovisioning">{trans("XML provisioning:")}</label>
+		</TD>
+		<TD style="width: 98%;">
+			<input type="checkbox" name="netdev[xmlprovisioning]" id="xmlprovisioning" value="1"{if $netdevinfo.xmlprovisioning} checked{/if}>
+		</TD>
+	</TR>
+
+	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/settings.gif" ALT="">
 		</TD>
@@ -72,7 +84,7 @@
 		{/if}
 		</TD>
 	</TR>
-	
+
 	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_model.gif" ALT="">

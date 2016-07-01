@@ -145,7 +145,8 @@ if(isset($_POST['netdev']))
         }
 	
 	$SMARTY->assign('error', $error);
-}
+} else
+	$netdevdata['xmlprovisioning'] = ConfigHelper::checkConfig('gpon-dasan.xml_provisioning_default_enabled') ? 1 : 0;
 
 
 /* Using AJAX plugins */
@@ -324,11 +325,11 @@ $gponoltprofiles = $GPON->GetGponOltProfiles(is_array($netdev) && array_key_exis
 $SMARTY->assign('gponoltprofiles', $gponoltprofiles);
 
 $netdev_temp=is_array($netdev)?$netdev:array();
-if(isset($_POST['netdev']))
-{
+if (isset($_POST['netdev'])) {
 	$netdev_temp=array_merge($netdevdata,$netdev_temp);
 	$netdev_temp['name']=isset($netdev['name'])?$netdev['name']:$netdev_temp['name'];
-}
+} else
+	$netdev_temp['xmlprovisioning'] = ConfigHelper::checkConfig('gpon-dasan.xml_provisioning_default_enabled') ? 1 : 0;
 
 $netdev_temp['name'] = $netdev_temp['name'];
 $SMARTY->assign('netdev', $netdev_temp);

@@ -1,10 +1,10 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 
 /*
  * LMS version 1.11-git
  *
- *  (C) Copyright 2001-2015 LMS Developers
+ *  (C) Copyright 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -19,7 +19,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
  *  USA.
  *
  *  $Id$
@@ -38,7 +38,7 @@ $parameters = array(
 	'q' => 'quiet',
 	'h' => 'help',
 	'v' => 'version',
-	's:' => 'section:',
+	'i:' => 'onu-id:',
 );
 
 foreach ($parameters as $key => $val) {
@@ -55,8 +55,8 @@ foreach ($short_to_longs as $short => $long)
 
 if (array_key_exists('version', $options)) {
 	print <<<EOF
-lms-radiususers-dasan.php
-(C) 2001-2015 LMS Developers
+lms-xml-autoprovisioning.php
+(C) 2001-2016 LMS Developers
 
 EOF;
 	exit(0);
@@ -64,15 +64,14 @@ EOF;
 
 if (array_key_exists('help', $options)) {
 	print <<<EOF
-lms-radiususers-dasan.php
-(C) 2001-2015 LMS Developers
+lms-xml-autoprovisioning.php
+(C) 2001-2016 LMS Developers
 
 -C, --config-file=/etc/lms/lms.ini      alternate config file (default: /etc/lms/lms.ini);
 -h, --help                      print this help and exit;
 -v, --version                   print version info and exit;
 -q, --quiet                     suppress any output, except errors;
--s, --section=<section-name>    section name from lms configuration where settings
-                                are stored
+-i, --onu-id=<onu-id>           generate xml file only for selected onu
 
 EOF;
 	exit(0);
@@ -81,13 +80,13 @@ EOF;
 $quiet = array_key_exists('quiet', $options);
 if (!$quiet) {
 	print <<<EOF
-lms-radiususers-dasan.php
-(C) 2001-2015 LMS Developers
+lms-xml-autoprovisioning.php
+(C) 2001-2016 LMS Developers
 
 EOF;
 }
 
-$config_section = (array_key_exists('section', $options) && preg_match('/^[a-z0-9-_]+$/i', $options['section']) ? $options['section'] : 'radiususers');
+$onuid = isset($options['onu-id']) ? intval($options['onu-id']) : 0;
 
 if (array_key_exists('config-file', $options))
 	$CONFIG_FILE = $options['config-file'];
@@ -107,9 +106,11 @@ $CONFIG = (array) parse_ini_file($CONFIG_FILE, true);
 // Check for configuration vars and set default values
 $CONFIG['directories']['sys_dir'] = (!isset($CONFIG['directories']['sys_dir']) ? getcwd() : $CONFIG['directories']['sys_dir']);
 $CONFIG['directories']['lib_dir'] = (!isset($CONFIG['directories']['lib_dir']) ? $CONFIG['directories']['sys_dir'] . DIRECTORY_SEPARATOR . 'lib' : $CONFIG['directories']['lib_dir']);
+$CONFIG['directories']['smarty_compile_dir'] = (!isset($CONFIG['directories']['smarty_compile_dir']) ? $CONFIG['directories']['sys_dir'] . DIRECTORY_SEPARATOR . 'templates_c' : $CONFIG['directories']['smarty_compile_dir']);
 
 define('SYS_DIR', $CONFIG['directories']['sys_dir']);
 define('LIB_DIR', $CONFIG['directories']['lib_dir']);
+define('SMARTY_COMPILE_DIR', $CONFIG['directories']['smarty_compile_dir']);
 
 // Load autoloader
 $composer_autoload_path = SYS_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
@@ -136,37 +137,25 @@ try {
 //require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'definitions.php');
 //require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'common.php');
 
-$config_owneruid = ConfigHelper::getConfig($config_section . '.config_owneruid', 0);
-$config_ownergid = ConfigHelper::getConfig($config_section . '.config_ownergid', 0);
-$config_permission = ConfigHelper::getConfig($config_section . '.config_permission', '0644');
-$config_file = ConfigHelper::getConfig($config_section . '.config_file', '/etc/raddb/radius_users');
+$AUTH = null;
+$GPON = new GPON($DB, $AUTH);
 
-$xml_provisioning_url = ConfigHelper::getConfig($config_section . '.xml_provisioning_url');
-if (!empty($xml_provisioning_url)) {
-	$data = parse_url($xml_provisioning_url);
-	if ($data === false)
-		die("Fatal error: malformed xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
-	if (!array_key_exists('scheme', $data) || !in_array($data['scheme'], array('ftp', 'tftp')))
-		die("Fatal error: missed or invalid url scheme in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
-	if (!array_key_exists('host', $data))
-		die("Fatal error: missed host in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
-	if (!array_key_exists('user', $data))
-		die("Fatal error: missed user name in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
-	if (!array_key_exists('pass', $data))
-		die("Fatal error: missed password in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
-	if (!array_key_exists('path', $data))
-		die("Fatal error: missed path in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
-	list ($xml_scheme, $xml_host, $xml_user, $xml_pass, $xml_path) = array(
-		$data['scheme'], $data['host'], $data['user'], $data['pass'], preg_replace('/^\//', '', $data['path'])
-	);
-}
+$xml_provisioning_admin_login = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_admin_login', 'admin');
+$xml_provisioning_admin_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_admin_password', 'password');
+$xml_provisioning_web_port = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_web_port', '80');
+$path = explode(DIRECTORY_SEPARATOR, dirname(realpath($argv[0])));
+array_pop($path);
+$plugin_dir_name = implode(DIRECTORY_SEPARATOR, $path);
+$xml_provisioning_template = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_template',
+	$plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates' . DIRECTORY_SEPARATOR . 'template.xml');
+$xml_provisioning_filename = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_filename',
+	$plugin_dir_name . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . '%sn%.xml');
 
 $query = "SELECT o.name, m.name AS model, p.name AS profile, o.onudescription AS description,
 		host1.ip AS ip1, host2.ip AS ip2,
 		phone1.phone AS sipnumber1, phone1.auth AS sipauth1,
 		phone2.phone AS sipnumber2, phone2.auth AS sipauth2,
-		disabledports.portnames, disabledports.portids,
-		xmlprovisioning
+		disabledports.portnames, disabledports.portids
 	FROM gpononu o
 	JOIN gpononumodels m ON m.id = o.gpononumodelsid
 	JOIN gponoltprofiles p ON p.id = o.gponoltprofilesid
@@ -192,52 +181,78 @@ $query = "SELECT o.name, m.name AS model, p.name AS profile, o.onudescription AS
 		JOIN gpononuportstype t ON t.id = p.typeid
 		WHERE portdisable = 1
 		GROUP BY onuid
-	) disabledports ON disabledports.onuid = o.id";
+	) disabledports ON disabledports.onuid = o.id
+	WHERE xmlprovisioning = 1"
+	. (!empty($onuid) ? " AND o.id = " . $onuid : '');
 $onus = $DB->GetAll($query);
 
-$fh = fopen($config_file, "w");
-if ($fh == NULL)
-	die("Fatal error: Unable to write " . $config_file . ", exiting." . PHP_EOL);
+if (empty($onus))
+	die("No gpon onus found!" . PHP_EOL);
 
-if (!empty($onus))
-	foreach ($onus as $onu) {
-		$contents = sprintf("%s\tCleartext-Password := \"%s\", Dasan-Gpon-Onu-Serial-Num == \"%s\"" . PHP_EOL,
-			$onu['name'], $onu['model'], $onu['name']);
-		$contents .= sprintf("\tDasan-Gpon-Onu-Profile = \"%s\"," . PHP_EOL . "\tDasan-Gpon-Onu-Description += \"%s\"",
-			$onu['profile'], preg_replace("/(\r)?" . PHP_EOL . "/", ', ', $onu['description']));
-		for ($i = 1; $i <= 2; $i++)
-			if (!empty($onu["ip$i"]))
-				$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Static-Ip += \"%d %s\"",
-					$i, $onu["ip$i"]);
-		for ($i = 1; $i <= 2; $i++)
-			if (!empty($onu["sipnumber$i"])) {
-				$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Voip-Sip-Number += \"%d %s\"",
-					$i, $onu["sipnumber$i"]);
-				$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Voip-Sip-Auth += \"%d %s\"",
-					$i, $onu["sipauth$i"]);
-			}
-		if ($onu['xmlprovisioning'] && !empty($xml_provisioning_url)) {
-			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Mgmt-Mode-Ip-Path-Ftp += \"id %s password %s\"",
-				$xml_user, $xml_pass);
-			$file = str_replace('%sn%', $onu['name'], $xml_path);
-			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Mgmt-Mode-Ip-Path-Uri += \"uri %s file %s\"",
-				$xml_host, $file);
-		}
-		if (!empty($onu['portids'])) {
-			$portids = explode(',', $onu['portids']);
-			$portnames = explode(',', $onu['portnames']);
-			foreach ($portids as $idx => $portid)
-				$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Uni-Port-Admin += \"%s %d disable\"",
-					$portnames[$idx], $portid);
-		}
-		$contents .= PHP_EOL . PHP_EOL;
-		fwrite($fh, $contents);
+if (!is_readable($xml_provisioning_template)) {
+	if (!$quiet)
+		echo "Xml template file ${xml_provisioning_template} not found!" . PHP_EOL;
+	die;
+}
+
+$SMARTY = new Smarty;
+$SMARTY->setTemplateDir(null);
+$SMARTY->setCompileDir(SMARTY_COMPILE_DIR);
+$tpl = $SMARTY->createTemplate($xml_provisioning_template);
+$tpl->assign('admin_login', $xml_provisioning_admin_login);
+$tpl->assign('admin_password', $xml_provisioning_admin_password);
+$tpl->assign('web_port', $xml_provisioning_web_port);
+$tpl->assign('modified_time', strftime('%Y-%m-%d %H:%M:%S'));
+
+foreach ($onus as $onu) {
+	$filename = str_replace('%sn%', $onu['name'], $xml_provisioning_filename);
+	if (!$quiet)
+		echo "Generating ${filename} file ..." . PHP_EOL;
+
+	$contents = $tpl->fetch();
+
+	$fh = fopen($filename, "w+");
+	if (empty($fh)) {
+		if (!$quiet)
+			echo "Unable to create xml file ${filename}!" . PHP_EOL;
+		continue;
 	}
-
-fclose($fh);
-chmod($config_file, intval($config_permission, 8));
-chown($config_file, $config_owneruid);
-chgrp($config_file, $config_ownergid);
+	fwrite($fh, $contents);
+	fclose($fh);
+	continue;
+/*
+	$contents = sprintf("%s\tCleartext-Password := \"%s\", Dasan-Gpon-Onu-Serial-Num == \"%s\"" . PHP_EOL,
+		$onu['name'], $onu['model'], $onu['name']);
+	$contents .= sprintf("\tDasan-Gpon-Onu-Profile = \"%s\"," . PHP_EOL . "\tDasan-Gpon-Onu-Description += \"%s\"",
+		$onu['profile'], preg_replace("/(\r)?" . PHP_EOL . "/", ', ', $onu['description']));
+	for ($i = 1; $i <= 2; $i++)
+		if (!empty($onu["ip$i"]))
+			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Static-Ip += \"%d %s\"",
+				$i, $onu["ip$i"]);
+	for ($i = 1; $i <= 2; $i++)
+		if (!empty($onu["sipnumber$i"])) {
+			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Voip-Sip-Number += \"%d %s\"",
+				$i, $onu["sipnumber$i"]);
+			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Voip-Sip-Auth += \"%d %s\"",
+				$i, $onu["sipauth$i"]);
+		}
+	if (!empty($xml_provisioning_url)) {
+		$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Mgmt-Mode-Ip-Path-Ftp += \"id %s password %s\"",
+			$xml_user, $xml_pass);
+		$file = str_replace('%sn%', $onu['name'], $xml_path);
+		$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Mgmt-Mode-Ip-Path-Uri += \"uri %s file %s\"",
+			$xml_host, $file);
+	}
+	if (!empty($onu['portids'])) {
+		$portids = explode(',', $onu['portids']);
+		$portnames = explode(',', $onu['portnames']);
+		foreach ($portids as $idx => $portid)
+			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Uni-Port-Admin += \"%s %d disable\"",
+				$portnames[$idx], $portid);
+	}
+	$contents .= PHP_EOL . PHP_EOL;
+*/
+}
 
 $DB->Destroy();
 

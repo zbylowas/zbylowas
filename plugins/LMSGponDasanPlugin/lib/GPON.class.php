@@ -712,8 +712,9 @@ class GPON {
 		$gpononudata['voipaccountsid2'] = intval($gpononudata['voipaccountsid2']) ? $gpononudata['voipaccountsid2']: NULL;
 		$gpononudata['host_id1'] = intval($gpononudata['host_id1']) ? $gpononudata['host_id1']: NULL;
 		$gpononudata['host_id2'] = intval($gpononudata['host_id2']) ? $gpononudata['host_id2']: NULL;
-		if ($this->DB->Execute('INSERT INTO gpononu (name, gpononumodelsid, password, autoprovisioning, onudescription, gponoltprofilesid, voipaccountsid1, voipaccountsid2, host_id1, host_id2, creatorid, creationdate, netdevid)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?NOW?, ?)',
+		if ($this->DB->Execute('INSERT INTO gpononu (name, gpononumodelsid, password, autoprovisioning, onudescription, gponoltprofilesid,
+			voipaccountsid1, voipaccountsid2, host_id1, host_id2, creatorid, creationdate, netdevid, xmlprovisioning)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?NOW?, ?, ?)',
 				array(
 					$gpononudata['name'],
 					$gpononudata['gpononumodelsid'],
@@ -727,6 +728,7 @@ class GPON {
 					$gpononudata['host_id2'],
 					$this->AUTH->id,
 					empty($gpononudata['netdevid']) ? null : $gpononudata['netdevid'],
+					$gpononudata['xmlprovisioning'],
 		))) {
 			$id = $this->DB->GetLastInsertID('gpononu');
 			$dump = var_export($gpononudata, true);
@@ -738,9 +740,7 @@ class GPON {
 
 	function GponOnuDescriptionUpdate($id,$onudescription)
 	{
-		$ogonek     = array("ą", "ś", "ż", "ź", "ć", "ń", "ł", "ó", "ę", "Ą", "Ś", "Ż", "Ź", "Ć", "Ń", "Ł", "Ó", "Ę");
-		$bez_ogonek = array("a", "s", "z", "z", "c", "n", "l", "o", "e", "A", "S", "Z", "Z", "C", "N", "L", "O", "E");
-		$onudescription = str_replace($ogonek, $bez_ogonek, $onudescription);
+		$onudescription = iconv('UTF-8', 'ASCII//TRANSLIT', $onudescription);
 		$id=intval($id);
 		if($id>0)
 		{
@@ -790,7 +790,7 @@ class GPON {
 		$gpononudata['host_id2'] = intval($gpononudata['host_id2']) ? $gpononudata['host_id2']: NULL;
 		$this->DB->Execute('UPDATE gpononu SET gpononumodelsid=?, password=?, autoprovisioning=?,
 				onudescription=?, gponoltprofilesid=?, voipaccountsid1=?, voipaccountsid2=?,
-				host_id1=?, host_id2=?, netdevid=?, modid=?, moddate=?NOW?
+				host_id1=?, host_id2=?, netdevid=?, xmlprovisioning=?, modid=?, moddate=?NOW?
 				WHERE id=?',
 				array(
 					intval($gpononudata['gpononumodelsid']),
@@ -803,6 +803,7 @@ class GPON {
 					$gpononudata['host_id1'],
 					$gpononudata['host_id2'],
 					empty($gpononudata['netdevid']) ? null : $gpononudata['netdevid'],
+					$gpononudata['xmlprovisioning'],
 					$this->AUTH->id,
 					$gpononudata['id']
 				));
