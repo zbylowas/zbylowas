@@ -146,12 +146,10 @@ $xml_provisioning_web_port = ConfigHelper::getConfig('gpon-dasan.xml_provisionin
 $path = explode(DIRECTORY_SEPARATOR, dirname(realpath($argv[0])));
 array_pop($path);
 $plugin_dir_name = implode(DIRECTORY_SEPARATOR, $path);
-$xml_provisioning_template = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_template',
-	$plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates' . DIRECTORY_SEPARATOR . 'template.xml');
 $xml_provisioning_filename = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_filename',
 	$plugin_dir_name . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . '%sn%.xml');
 
-$query = "SELECT o.name, m.name AS model, p.name AS profile, o.onudescription AS description,
+$query = "SELECT o.name, m.id AS modelid, m.name AS model, p.name AS profile, o.onudescription AS description,
 		host1.ip AS ip1, host2.ip AS ip2,
 		phone1.phone AS sipnumber1, phone1.auth AS sipauth1,
 		phone2.phone AS sipnumber2, phone2.auth AS sipauth2,
@@ -189,26 +187,49 @@ $onus = $DB->GetAll($query);
 if (empty($onus))
 	die("No gpon onus found!" . PHP_EOL);
 
-if (!is_readable($xml_provisioning_template)) {
+$models = $DB->GetAllByKey("SELECT id, name, xmltemplate FROM gpononumodels
+	WHERE xmltemplate <> ''", 'id');
+if (empty($models)) {
 	if (!$quiet)
-		echo "Xml template file ${xml_provisioning_template} not found!" . PHP_EOL;
+		echo "No gpon onu models found!" . PHP_EOL;
 	die;
 }
 
 $SMARTY = new Smarty;
 $SMARTY->setTemplateDir(null);
 $SMARTY->setCompileDir(SMARTY_COMPILE_DIR);
-$tpl = $SMARTY->createTemplate($xml_provisioning_template);
+
+$tpl = $SMARTY->createTemplate($plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates'
+	. DIRECTORY_SEPARATOR . 'template.xml');
 $tpl->assign('admin_login', $xml_provisioning_admin_login);
 $tpl->assign('admin_password', $xml_provisioning_admin_password);
 $tpl->assign('web_port', $xml_provisioning_web_port);
 $tpl->assign('modified_time', strftime('%Y-%m-%d %H:%M:%S'));
 
+foreach ($models as $modelid => &$model) {
+	$template_filename = $plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates' . DIRECTORY_SEPARATOR
+		. $model['name'] . '-' . $modelid . '.xml';
+	$fh = fopen($template_filename, "w+");
+	if (empty($fh))
+		continue;
+	fwrite($fh, $model['xmltemplate']);
+	fclose($fh);
+	$model['tpl'] = $SMARTY->createTemplate($template_filename);
+	$model['tpl']->assign($tpl->getTemplateVars());
+}
+
 foreach ($onus as $onu) {
+	if (!isset($models[$onu['modelid']])) {
+		if (!$quiet)
+			echo "Onu " . $onu['name'] . " (model " . $onu['model'] . ") doesn't support xml provisioning!" . PHP_EOL;
+		continue;
+	}
+
 	$filename = str_replace('%sn%', $onu['name'], $xml_provisioning_filename);
 	if (!$quiet)
 		echo "Generating ${filename} file ..." . PHP_EOL;
 
+	$tpl = $models[$onu['modelid']]['tpl'];
 	$contents = $tpl->fetch();
 
 	$fh = fopen($filename, "w+");
@@ -219,7 +240,6 @@ foreach ($onus as $onu) {
 	}
 	fwrite($fh, $contents);
 	fclose($fh);
-	continue;
 /*
 	$contents = sprintf("%s\tCleartext-Password := \"%s\", Dasan-Gpon-Onu-Serial-Num == \"%s\"" . PHP_EOL,
 		$onu['name'], $onu['model'], $onu['name']);
@@ -236,13 +256,6 @@ foreach ($onus as $onu) {
 			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Voip-Sip-Auth += \"%d %s\"",
 				$i, $onu["sipauth$i"]);
 		}
-	if (!empty($xml_provisioning_url)) {
-		$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Mgmt-Mode-Ip-Path-Ftp += \"id %s password %s\"",
-			$xml_user, $xml_pass);
-		$file = str_replace('%sn%', $onu['name'], $xml_path);
-		$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Mgmt-Mode-Ip-Path-Uri += \"uri %s file %s\"",
-			$xml_host, $file);
-	}
 	if (!empty($onu['portids'])) {
 		$portids = explode(',', $onu['portids']);
 		$portnames = explode(',', $onu['portnames']);
@@ -253,6 +266,10 @@ foreach ($onus as $onu) {
 	$contents .= PHP_EOL . PHP_EOL;
 */
 }
+
+foreach ($models as $modelid => &$model)
+	@unlink($plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates'
+		. DIRECTORY_SEPARATOR . $model['name'] . '-' . $modelid . '.xml');
 
 $DB->Destroy();
 

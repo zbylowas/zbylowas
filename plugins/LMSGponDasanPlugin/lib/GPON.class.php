@@ -1367,37 +1367,27 @@ class GPON {
 			WHERE g.id = ?', array($id));
 		return $result;
 	}
-	function GponOnuModelsUpdate($gpononumodelsdata)
-	{
-		$this->DB->Execute('UPDATE gpononumodels SET name=?,description=?,producer=?
-				WHERE id=?', 
-				array( 
-					$gpononumodelsdata['name'],
-					$gpononumodelsdata['description'],
-					$gpononumodelsdata['producer'],
-					$gpononumodelsdata['id']
-				));
+
+	public function GponOnuModelsUpdate($gpononumodelsdata) {
+		$this->DB->Execute('UPDATE gpononumodels SET name=?, description=?, producer=?, xmltemplate=?
+			WHERE id=?', array($gpononumodelsdata['name'], $gpononumodelsdata['description'],
+				$gpononumodelsdata['producer'], $gpononumodelsdata['xmltemplate'], $gpononumodelsdata['id']));
 		$dump = var_export($gpononumodelsdata, true);
-		$this->Log(4, 'gpononumodel', $gpononumodelsdata['id'], 'updated '.$gpononudata['name'], $dump);
+		$this->Log(4, 'gpononumodel', $gpononumodelsdata['id'], 'updated ' . $gpononudata['name'], $dump);
 	}
-	function GponOnuModelsAdd($gpononumodelsdata)
-	{
-		if ($this->DB->Execute('INSERT INTO gpononumodels (name,description,producer) 
-				VALUES (?, ?, ?)', 
-				array(
-					$gpononumodelsdata['name'],
-					$gpononumodelsdata['description'],
-					$gpononumodelsdata['producer']
-		))) {
-		
+
+	public function GponOnuModelsAdd($gpononumodelsdata) {
+		if ($this->DB->Execute('INSERT INTO gpononumodels (name, description, producer, xmltemplate) VALUES (?, ?, ?, ?)',
+			array($gpononumodelsdata['name'], $gpononumodelsdata['description'],
+				$gpononumodelsdata['producer'], $gpononumodelsdata['xmltemplate']))) {
 			$id = $this->DB->GetLastInsertID('gpononumodels');
 			$dump = var_export($gpononumodelsdata, true);
-			$this->Log(4, 'gpononumodel', $id, 'added '.$gpononudata['name'], $dump);
+			$this->Log(4, 'gpononumodel', $id, 'added ' . $gpononudata['name'], $dump);
 			return $id;
-		}
-		else
-			return FALSE;
+		} else
+			return false;
 	}
+
 	function DeleteGponOnuModels($id)
 	{
 		$this->DB->BeginTrans();

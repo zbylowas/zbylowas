@@ -44,6 +44,22 @@
                 </TD>
         </TR>
         {/if}
+		{if $netdevinfo.xmltemplate}
+		<TR class="light">
+			<TD style="width: 1%;">
+				<IMG SRC="img/folder.gif" ALT="">
+			</TD>
+			<TD style="width: 99%;" colspan="2">
+					<TABLE width="100%" cellpadding="5">
+						<TR>
+							<TD class="fall superlight">
+								{$netdevinfo.xmltemplate|escape|replace:" ":"&nbsp;"|nl2br}
+							</TD>
+						</TR>
+					</TABLE>
+			</TD>
+		</TR>
+		{/if}
         <TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/port.gif" ALT="">
