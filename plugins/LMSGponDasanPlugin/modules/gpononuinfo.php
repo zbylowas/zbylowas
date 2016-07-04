@@ -62,56 +62,88 @@ function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
 	return $objResponse;
 }
 
-function radius_disconnect($id, $xml_provisioning = false) {
+function gpononu_reset($id) {
+	global $GPON;
+
+	$netdevdata = $GPON->GetGponOnu($id);
+
+	$options_snmp = $GPON->GetGponOlt($netdevdata['gponoltid']);
+	$GPON->snmp->set_options($options_snmp);
+	$res = $GPON->snmp->ONU_Reset($netdevdata['gponoltnumport'], $netdevdata['onuid']);
+	return $res;
+}
+
+function ONU_reset($id) {
 	// xajax response
 	$objResponse = new xajaxResponse();
 
-	$res = 0;
-	if ($xml_provisioning) {
-		$cmd = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_helper', SYS_DIR . DIRECTORY_SEPARATOR . 'plugins'
-			. DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name . DIRECTORY_SEPARATOR
-			. 'bin' . DIRECTORY_SEPARATOR . 'lms-xml-autoprovisioning.php -i %id%');
-		$cmd = str_replace('%id%', $id, $cmd);
-		system($cmd . " >/dev/null", $res);
-	}
+	$res = gpononu_reset($id);
+	if (!is_array($res) || $res[0] != 1)
+		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "')");
 
-	if (!$res) {
-		$DB = LMSDB::getInstance();
-		$rdata = $DB->GetRow("SELECT INET_NTOA(ipaddr) AS nas, numport AS oltport, g.name, d.secret FROM gpononu g
-				JOIN gpononu2olt go ON go.gpononuid = g.id
-				JOIN netdevices d ON go.netdevicesid = d.id
-				JOIN nodes n ON n.netdev = d.id
-				WHERE g.id = ? AND ownerid = 0", array($id));
-
-		$cmd = ConfigHelper::getConfig('gpon-dasan.radius_disconnect_helper',
-			"echo \"Dasan-Gpon-Olt-Id=%port%,Dasan-Gpon-Onu-Serial-Num=%sn%\"| radclient -r 1 %nas% disconnect %secret%");
-		$cmd = str_replace(array('%port%', '%sn%', '%nas%', '%secret%'),
-			array($rdata['oltport'], $rdata['name'], $rdata['nas'], $rdata['secret']), $cmd);
-		$res = 0;
-		system($cmd . " >/dev/null", $res);
-	}
-
-	$elemid = $xml_provisioning ? 'xml_provisioning_status' : 'radius_disconnect_status';
-	if ($res) {
-		$objResponse->assign($elemid, 'className', 'bold red');
-		$objResponse->assign($elemid, 'innerHTML', trans("<!gpon-dasan>Failed!"));
-	} else {
-		$objResponse->assign($elemid, 'className', 'bold green');
-		$objResponse->assign($elemid, 'innerHTML', trans("<!gpon-dasan>Success!"));
-	}
 	return $objResponse;
 }
 
+function gpononu_radius_disconnect($id) {
+	$DB = LMSDB::getInstance();
+	$rdata = $DB->GetRow("SELECT INET_NTOA(ipaddr) AS nas, numport AS oltport, g.name, d.secret FROM gpononu g
+		JOIN gpononu2olt go ON go.gpononuid = g.id
+		JOIN netdevices d ON go.netdevicesid = d.id
+		JOIN nodes n ON n.netdev = d.id
+		WHERE g.id = ? AND ownerid = 0", array($id));
+
+	$cmd = ConfigHelper::getConfig('gpon-dasan.radius_disconnect_helper',
+		"echo \"Dasan-Gpon-Olt-Id=%port%,Dasan-Gpon-Onu-Serial-Num=%sn%\"| radclient -r 1 %nas% disconnect %secret%");
+	$cmd = str_replace(array('%port%', '%sn%', '%nas%', '%secret%'),
+		array($rdata['oltport'], $rdata['name'], $rdata['nas'], $rdata['secret']), $cmd);
+	$res = 0;
+	system($cmd . " >/dev/null", $res);
+
+	return $res;
+}
+
 function ONU_radius_disconnect($id) {
-	return radius_disconnect($id);
+	// xajax response
+	$objResponse = new xajaxResponse();
+
+	$res = gpononu_radius_disconnect($id);
+	if ($res)
+		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "')");
+
+	return $objResponse;
 }
 
 function ONU_xml_provisioning($id) {
-	return radius_disconnect($id, true);
+	// xajax response
+	$objResponse = new xajaxResponse();
+
+	$cmd = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_helper', SYS_DIR . DIRECTORY_SEPARATOR . 'plugins'
+		. DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name . DIRECTORY_SEPARATOR
+		. 'bin' . DIRECTORY_SEPARATOR . 'lms-xml-autoprovisioning.php -i %id%');
+	$cmd = str_replace('%id%', $id, $cmd);
+	$res = 0;
+	system($cmd . " >/dev/null", $res);
+
+	if (!$res) {
+		if (ConfigHelper::checkConfig('gpon-dasan.use_radius'))
+			$res = gpononu_radius_disconnect($id);
+		else {
+			$res = gpononu_reset($id);
+			if (is_array($res) && $res[0] == 1)
+				$res = 0;
+			else
+				$res = 1;
+		}
+	}
+
+	if ($res)
+		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "')");
+
+	return $objResponse;
 }
 
 $LMS->InitXajax();
-$LMS->RegisterXajaxFunction(array('GetFreeOltPort_Xj', 'ONU_get_param_Xj', 'ONU_radius_disconnect', 'ONU_xml_provisioning'));
+$LMS->RegisterXajaxFunction(array('GetFreeOltPort_Xj', 'ONU_get_param_Xj', 'ONU_reset', 'ONU_radius_disconnect', 'ONU_xml_provisioning'));
 $SMARTY->assign('xajax', $LMS->RunXajax());
 /* end AJAX plugin stuff */
 

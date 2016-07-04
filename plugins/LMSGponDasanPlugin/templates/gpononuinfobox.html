@@ -243,18 +243,6 @@
 			{/if}
 		</TD>
 	</TR>
-	{if ConfigHelper::checkConfig('gpon-dasan.use_radius')}
-	<TR class="light">
-		<td style="width: 100%;" COLSPAN="3">
-			<a onclick="if (confirm('{trans("Are you sure you want to disconnect ONU?")}')) xajax_ONU_radius_disconnect({$netdevinfo.id}); else return false;"><IMG SRC="img/radius.gif" ALT=""> {trans("Disconnect ONU")}</a>
-			<span id="radius_disconnect_status" class="bold"></span>
-			{if $netdevinfo.xmlprovisioning}
-			<a onclick="if (confirm('{trans("Are you sure you want to make XML provisioning for ONU?")}')) xajax_ONU_xml_provisioning({$netdevinfo.id}); else return false;"><IMG SRC="img/radius.gif" ALT=""> {trans("XML provisioning")}</a>
-			<span id="xml_provisioning_status" class="bold"></span>
-			{/if}
-		</td>
-	</tr>
-	{/if}
         <TR class="light">
                 <TD WIDTH="100%" COLSPAN="3">
                         <input type="button" value="Pokaż parametry" id="pokaz_parametry_{$netdevinfo.id}" OnClick="xajax_ONU_get_param_Xj({$netdevinfo.gponoltid},{$netdevinfo.gponoltnumport},{$netdevinfo.onuid},{$netdevinfo.id},'{$netdevinfo.name}');" /> <input style="display:none;" type="button" value="Odśwież parametry" id="odswiez_parametry_{$netdevinfo.id}" OnClick="xajax_ONU_get_param_Xj({$netdevinfo.gponoltid},{$netdevinfo.gponoltnumport},{$netdevinfo.onuid},{$netdevinfo.id},'{$netdevinfo.name}');" />
@@ -272,6 +260,13 @@
 	<TR class="light">
 	        <TD WIDTH="100%" COLSPAN="2" class="fbottomu" ALIGN="RIGHT">
 {/if}
+			{if ConfigHelper::checkConfig('gpon-dasan.use_radius')}
+			<a onclick="if (confirm('{trans("Are you sure you want to disconnect ONU?")}')) xajax_ONU_radius_disconnect({$netdevinfo.id}); else return false;">{trans("Disconnect ONU")} <IMG SRC="img/radius.gif" ALT=""></a>
+			{/if}
+			{if $netdevinfo.xmlprovisioning}
+			<a onclick="if (confirm('{trans("Are you sure you want to make XML provisioning for ONU?")}')) xajax_ONU_xml_provisioning({$netdevinfo.id}); else return false;">{trans("XML provisioning")} <IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""></a>
+			{/if}
+			<a onclick="if (confirm('{trans("Are you sure you want to reset ONU?")}')) xajax_ONU_reset({$netdevinfo.id}); else return false;">{trans("<!gpon-dasan>Reset")} <IMG SRC="img/reload.gif" ALT=""></a>
 			<A href="?m=gpononuedit&id={$netdevinfo.id}" ACCESSKEY="E">{trans("Edit")} <IMG src="img/edit.gif" ALT="[ {trans("Edit")} ]"></A>
 			<A href="?m=gpononudel&id={$netdevinfo.id}" OnClick="return confirmLink(this, '{t a=$netdevinfo.name}Are you sure, you want to remove device \'$a\' from database?{/t}');">{trans("Delete")} <img src="img/delete.gif" ALT=""></A>
 		</TD>
