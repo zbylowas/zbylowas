@@ -20,7 +20,7 @@ $_LANG['Enter XML configuration template contents (optional)'] = 'Wprowadź zawa
 $_LANG['Are you sure you want to disconnect ONU?'] = 'Jesteś pewien, że chcesz rozłączyć ONU?';
 $_LANG['Are you sure you want to make XML provisioning for ONU?'] = 'Jesteś pewien, że chcesz wykonać provisioning XML dla ONU?';
 $_LANG['Are you sure you want to reset ONU?'] = 'Jesteś pewien, że chcesz wykonać restart ONU?';
-$_LANG['Disconnect ONU'] = 'Rozłącz ONU';
+$_LANG['<!gpon-dasan>Disconnect'] = 'Rozłącz';
 $_LANG['XML provisioning'] = 'Provisioning XML';
 $_LANG['<!gpon-dasan>Reset'] = 'Restart';
 

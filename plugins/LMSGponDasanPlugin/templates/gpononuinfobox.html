@@ -261,7 +261,7 @@
 	        <TD WIDTH="100%" COLSPAN="2" class="fbottomu" ALIGN="RIGHT">
 {/if}
 			{if ConfigHelper::checkConfig('gpon-dasan.use_radius')}
-			<a onclick="if (confirm('{trans("Are you sure you want to disconnect ONU?")}')) xajax_ONU_radius_disconnect({$netdevinfo.id}); else return false;">{trans("Disconnect ONU")} <IMG SRC="img/radius.gif" ALT=""></a>
+			<a onclick="if (confirm('{trans("Are you sure you want to disconnect ONU?")}')) xajax_ONU_radius_disconnect({$netdevinfo.id}); else return false;">{trans("<!gpon-dasan>Disconnect")} <IMG SRC="img/radius.gif" ALT=""></a>
 			{/if}
 			{if $netdevinfo.xmlprovisioning}
 			<a onclick="if (confirm('{trans("Are you sure you want to make XML provisioning for ONU?")}')) xajax_ONU_xml_provisioning({$netdevinfo.id}); else return false;">{trans("XML provisioning")} <IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""></a>
