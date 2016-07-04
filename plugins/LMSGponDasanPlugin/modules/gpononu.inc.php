@@ -2,7 +2,7 @@
 /*
  * LMS version 1.11-git
  *
- *  (C) Copyright 2001-2015 LMS Developers
+ *  (C) Copyright 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -41,8 +41,8 @@ function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
 }
 
 $LMS->RegisterXajaxFunction('ONU_get_param_Xj');
-
 /* end AJAX plugin stuff */
-$SMARTY->assign('netdevlist',$netdevconnected);
+
+$SMARTY->assign('netdevlist', $netdevconnected);
 
 ?>

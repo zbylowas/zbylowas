@@ -3,7 +3,7 @@
 /*
  * LMS version 1.11-git
  *
- *  (C) Copyright 2001-2015 LMS Developers
+ *  (C) Copyright 2001-2016 LMS Developers
  *
  *  Please, see the doc/AUTHORS for more information about authors!
  *
@@ -24,23 +24,11 @@
  *  $Id$
  */
 
-if(! $GPON->GponOnuExists($_GET['id']))
-{
+if (!$GPON->GponOnuExists($_GET['id']))
 	$SESSION->redirect('?m=gpononulist');
-}
-$netdevinfo = $GPON->GetGponOnu($_GET['id']);
-
-
-$netdevconnected = $GPON->GetGponOltConnectedNames($_GET['id']);
-$netdevlist = $GPON->GetNotConnectedOlt();
-if(is_array($netdevlist) && count($netdevlist)>0)
-{
-	$numports=$GPON->GetFreeOltPort($netdevlist[0]['id']);
-}
 
 /* Using AJAX plugins */
-function GetFreeOltPort_Xj($netdevicesid)
-{
+function GetFreeOltPort_Xj($netdevicesid) {
 	// xajax response
 	global $GPON;
 	$objResponse = new xajaxResponse();
@@ -58,8 +46,8 @@ function GetFreeOltPort_Xj($netdevicesid)
 	$objResponse->call("GetFreeOltPort_Xj");
 	return $objResponse;
 }
-function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='')
-{
+
+function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
 	// xajax response
 	global $GPON;
 	$objResponse = new xajaxResponse();
@@ -73,11 +61,66 @@ function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='')
 	$objResponse->assign("ONU_param_".$id,"innerHTML",$error_snmp.$table_param);
 	return $objResponse;
 }
-$LMS->InitXajax();                                                           
-$LMS->RegisterXajaxFunction(array('GetFreeOltPort_Xj','ONU_get_param_Xj'));  
-$SMARTY->assign('xajax', $LMS->RunXajax());                                  
 
+function radius_disconnect($id, $xml_provisioning = false) {
+	// xajax response
+	$objResponse = new xajaxResponse();
+
+	$res = 0;
+	if ($xml_provisioning) {
+		$cmd = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_helper', SYS_DIR . DIRECTORY_SEPARATOR . 'plugins'
+			. DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name . DIRECTORY_SEPARATOR
+			. 'bin' . DIRECTORY_SEPARATOR . 'lms-xml-autoprovisioning.php -i %id%');
+		$cmd = str_replace('%id%', $id, $cmd);
+		system($cmd . " >/dev/null", $res);
+	}
+
+	if (!$res) {
+		$DB = LMSDB::getInstance();
+		$rdata = $DB->GetRow("SELECT INET_NTOA(ipaddr) AS nas, numport AS oltport, g.name, d.secret FROM gpononu g
+				JOIN gpononu2olt go ON go.gpononuid = g.id
+				JOIN netdevices d ON go.netdevicesid = d.id
+				JOIN nodes n ON n.netdev = d.id
+				WHERE g.id = ? AND ownerid = 0", array($id));
+
+		$cmd = ConfigHelper::getConfig('gpon-dasan.radius_disconnect_helper',
+			"echo \"Dasan-Gpon-Olt-Id=%port%,Dasan-Gpon-Onu-Serial-Num=%sn%\"| radclient -r 1 %nas% disconnect %secret%");
+		$cmd = str_replace(array('%port%', '%sn%', '%nas%', '%secret%'),
+			array($rdata['oltport'], $rdata['name'], $rdata['nas'], $rdata['secret']), $cmd);
+		$res = 0;
+		system($cmd . " >/dev/null", $res);
+	}
+
+	$elemid = $xml_provisioning ? 'xml_provisioning_status' : 'radius_disconnect_status';
+	if ($res) {
+		$objResponse->assign($elemid, 'className', 'bold red');
+		$objResponse->assign($elemid, 'innerHTML', trans("<!gpon-dasan>Failed!"));
+	} else {
+		$objResponse->assign($elemid, 'className', 'bold green');
+		$objResponse->assign($elemid, 'innerHTML', trans("<!gpon-dasan>Success!"));
+	}
+	return $objResponse;
+}
+
+function ONU_radius_disconnect($id) {
+	return radius_disconnect($id);
+}
+
+function ONU_xml_provisioning($id) {
+	return radius_disconnect($id, true);
+}
+
+$LMS->InitXajax();
+$LMS->RegisterXajaxFunction(array('GetFreeOltPort_Xj', 'ONU_get_param_Xj', 'ONU_radius_disconnect', 'ONU_xml_provisioning'));
+$SMARTY->assign('xajax', $LMS->RunXajax());
 /* end AJAX plugin stuff */
+
+$netdevinfo = $GPON->GetGponOnu($_GET['id']);
+
+$netdevconnected = $GPON->GetGponOltConnectedNames($_GET['id']);
+$netdevlist = $GPON->GetNotConnectedOlt();
+if (is_array($netdevlist) && !empty($netdevlist))
+	$numports = $GPON->GetFreeOltPort($netdevlist[0]['id']);
 
 $netcomplist = $LMS->GetNetdevLinkedNodes($_GET['id']);
 
@@ -132,14 +175,6 @@ $SMARTY->assign('nodelinktype',$SESSION->get('nodelinktype'));
 $SMARTY->assign('portstype',$portstype);
 $SMARTY->assign('customername', $LMS->GetCustomerName($netdevinfo['ownerid']));
 
-if(isset($_GET['ip']))
-{
-	$SMARTY->assign('nodeipdata',$LMS->GetNode($_GET['ip']));
-	$SMARTY->display('gpononuipinfo.html');
-}
-else
-{
-	$SMARTY->display('gpononuinfo.html');
-}
+$SMARTY->display('gpononuinfo.html');
 
 ?>
