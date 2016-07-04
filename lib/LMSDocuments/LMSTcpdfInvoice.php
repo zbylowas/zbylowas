@@ -732,7 +732,7 @@ class LMSTcpdfInvoice extends LMSInvoice {
 			$this->backend->SetFont('arial', '', 8);
 			$h = $this->backend->getStringHeight(0, $tmp);
 			$tmp = mb_ereg_replace('\r?\n', '<br>', $tmp);
-			$this->backend->writeHTMLCell(0, 0, '', 188 - $h, $tmp, 0, 1, 0, true, 'C');
+			$this->backend->writeHTMLCell(0, 0, '', '', $tmp, 0, 1, 0, true, 'C');
 		}
 	}
 
@@ -751,7 +751,8 @@ class LMSTcpdfInvoice extends LMSInvoice {
 		$this->invoice_buyer();
 		$this->invoice_data();
 		$this->invoice_to_pay();
-		$this->invoice_balance();
+		if (ConfigHelper::checkValue(ConfigHelper::getConfig('invoices.show_balance',true)))
+		    $this->invoice_balance();
 		$this->invoice_dates();
 		$this->invoice_expositor();
 		$this->invoice_footnote();
@@ -789,7 +790,8 @@ class LMSTcpdfInvoice extends LMSInvoice {
 		$this->invoice_buyer();
 		$this->invoice_data();
 		$this->invoice_to_pay();
-		$this->invoice_balance();
+		if (ConfigHelper::checkValue(ConfigHelper::getConfig('invoices.show_balance',true)))
+		    $this->invoice_balance();
 		$this->invoice_dates();
 		$this->invoice_expositor();
 		$this->invoice_footnote();
