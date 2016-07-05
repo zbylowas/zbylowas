@@ -157,7 +157,7 @@ if (!empty($xml_provisioning_url)) {
 	if (!array_key_exists('path', $data))
 		die("Fatal error: missed path in xml provisioning url " . $xml_provisioning_url . "!" . PHP_EOL);
 	list ($xml_scheme, $xml_host, $xml_user, $xml_pass, $xml_path) = array(
-		$data['scheme'], $data['host'], $data['user'], $data['pass'], preg_replace('/^\//', '', $data['path'])
+		$data['scheme'], $data['host'], $data['user'], $data['pass'], $data['path']
 	);
 }
 
