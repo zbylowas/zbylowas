@@ -79,7 +79,7 @@ function ONU_reset($id) {
 
 	$res = gpononu_reset($id);
 	if (!is_array($res) || $res[0] != 1)
-		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "')");
+		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "');");
 
 	return $objResponse;
 }
@@ -108,7 +108,7 @@ function ONU_radius_disconnect($id) {
 
 	$res = gpononu_radius_disconnect($id);
 	if ($res)
-		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "')");
+		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "');");
 
 	return $objResponse;
 }
@@ -137,7 +137,7 @@ function ONU_xml_provisioning($id) {
 	}
 
 	if ($res)
-		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "')");
+		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "');");
 
 	return $objResponse;
 }
