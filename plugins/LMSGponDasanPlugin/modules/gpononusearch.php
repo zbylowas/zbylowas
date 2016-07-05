@@ -101,7 +101,7 @@ function NetDevSearch($order='name,asc', $search=NULL, $sqlskey='AND')
 	
 	if(isset($searchargs))
                 $searchargs = ' AND ('.implode(' '.$sqlskey.' ',$searchargs).')';
-	$sql_query='SELECT DISTINCT d.id, d.name, d.location, d.description, d.onuid, gm.producer, go.netdevicesid,
+	$sql_query='SELECT DISTINCT d.id, d.name, nd.location, d.onudescription, d.onuid, gm.producer, go.netdevicesid,
 			    nd.name AS oltname, go.numport, nd.model AS oltmodel, gp.name AS profil,
 				gm.name as model, d.serialnumber, (select count(gpononuportstypeid) from gpononuportstype2models where gpononumodelsid=d.gpononumodelsid) as ports
 	        		FROM gpononu d
