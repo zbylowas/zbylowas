@@ -229,6 +229,7 @@ foreach ($onus as $onu) {
 		echo "Generating ${filename} file ..." . PHP_EOL;
 
 	$tpl = $models[$onu['modelid']]['tpl'];
+	$tpl->clearAllAssign();
 	$tpl->assign($default_properties);
 	if (!empty($onu['properties'])) {
 		$properties = unserialize($onu['properties']);
