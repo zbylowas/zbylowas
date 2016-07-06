@@ -218,6 +218,33 @@
 				</TD>
 				<TD WIDTH="50%" style="vertical-align:top;">
 				        <TABLE WIDTH="100%" CELLPADDING="3">
+		{if $netdevinfo.properties.wifi_ssid || $netdevinfo.properties.wifi_password}
+		<TR class="light">
+			<TD colspan="3">
+				<fieldset style="width: 1%;" class="nobr">
+					<legend class="bold"><IMG SRC="img/wireless.gif" ALT=""> {trans("WiFi settings")}</legend>
+					<table cellpadding="2">
+						<tr>
+							<TD class="bold nobr">
+								{trans("SSID:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.wifi_ssid}
+							</TD>
+						</tr>
+						<tr>
+							<TD class="bold nobr">
+								{trans("Password:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.wifi_password}
+							</TD>
+						</tr>
+					</table>
+				</fieldset>
+			</TD>
+		</TR>
+		{/if}
         <TR class="light">
                 <TD WIDTH="1%">
                         <IMG SRC="img/users.gif" ALT="">

@@ -633,7 +633,16 @@ class GPON {
 	public function GetGponOnu($id) {
 		$result = $this->DB->GetRow("SELECT g.*, d.name AS netdevname, gom.name AS model,
 		    (SELECT SUM(portscount) FROM gpononuportstype2models WHERE gpononumodelsid=g.gpononumodelsid) AS ports, gom.producer, 
-		    (SELECT portscount FROM gpononuportstype2models gm2p JOIN gpononuportstype gpt ON gpt.id = gm2p.gpononuportstypeid WHERE gpononumodelsid=g.gpononumodelsid AND gpt.name='pots') AS potsports, 
+			(
+				SELECT portscount FROM gpononuportstype2models gm2p
+				JOIN gpononuportstype gpt ON gpt.id = gm2p.gpononuportstypeid
+				WHERE gpononumodelsid=g.gpononumodelsid AND gpt.name='pots'
+			) AS potsports,
+			(
+				SELECT portscount FROM gpononuportstype2models gm2p
+				JOIN gpononuportstype gpt ON gpt.id = gm2p.gpononuportstypeid
+				WHERE gpononumodelsid=g.gpononumodelsid AND gpt.name='wifi'
+			) AS wifiports,
 		    (SELECT nd.name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponolt,
 		    (SELECT nd.id AS name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponoltnetdevicesid,
 		    (SELECT go2o.numport FROM gpononu2olt go2o WHERE go2o.gpononuid=g.id) AS gponoltnumport,
@@ -648,6 +657,7 @@ class GPON {
 			LEFT JOIN netdevices d ON d.id = g.netdevid
 			WHERE g.id = ?", array($id));
 
+		$result['properties'] = unserialize($result['properties']);
 		$result['createdby'] = $this->DB->GetOne('SELECT name FROM users WHERE id=?', array($result['creatorid']));
 		$result['modifiedby'] = $this->DB->GetOne('SELECT name FROM users WHERE id=?', array($result['modid']));
 		$result['creationdateh'] = date('Y/m/d, H:i',$result['creationdate']);
@@ -713,8 +723,8 @@ class GPON {
 		$gpononudata['host_id1'] = intval($gpononudata['host_id1']) ? $gpononudata['host_id1']: NULL;
 		$gpononudata['host_id2'] = intval($gpononudata['host_id2']) ? $gpononudata['host_id2']: NULL;
 		if ($this->DB->Execute('INSERT INTO gpononu (name, gpononumodelsid, password, autoprovisioning, onudescription, gponoltprofilesid,
-			voipaccountsid1, voipaccountsid2, host_id1, host_id2, creatorid, creationdate, netdevid, xmlprovisioning)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?NOW?, ?, ?)',
+			voipaccountsid1, voipaccountsid2, host_id1, host_id2, creatorid, creationdate, netdevid, xmlprovisioning, properties)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?NOW?, ?, ?, ?)',
 				array(
 					$gpononudata['name'],
 					$gpononudata['gpononumodelsid'],
@@ -729,6 +739,7 @@ class GPON {
 					$this->AUTH->id,
 					empty($gpononudata['netdevid']) ? null : $gpononudata['netdevid'],
 					$gpononudata['xmlprovisioning'],
+					$gpononudata['properties'],
 		))) {
 			$id = $this->DB->GetLastInsertID('gpononu');
 			$dump = var_export($gpononudata, true);
@@ -790,7 +801,7 @@ class GPON {
 		$gpononudata['host_id2'] = intval($gpononudata['host_id2']) ? $gpononudata['host_id2']: NULL;
 		$this->DB->Execute('UPDATE gpononu SET gpononumodelsid=?, password=?, autoprovisioning=?,
 				onudescription=?, gponoltprofilesid=?, voipaccountsid1=?, voipaccountsid2=?,
-				host_id1=?, host_id2=?, netdevid=?, xmlprovisioning=?, modid=?, moddate=?NOW?
+				host_id1=?, host_id2=?, netdevid=?, xmlprovisioning=?, properties=?, modid=?, moddate=?NOW?
 				WHERE id=?',
 				array(
 					intval($gpononudata['gpononumodelsid']),
@@ -804,6 +815,7 @@ class GPON {
 					$gpononudata['host_id2'],
 					empty($gpononudata['netdevid']) ? null : $gpononudata['netdevid'],
 					$gpononudata['xmlprovisioning'],
+					$gpononudata['properties'],
 					$this->AUTH->id,
 					$gpononudata['id']
 				));

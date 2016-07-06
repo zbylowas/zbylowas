@@ -246,6 +246,32 @@
 				<TD WIDTH="50%" style="vertical-align:top;">
 			                <TABLE WIDTH="100%" CELLPADDING="3">
 
+	<tr class="light">
+		<TD colspan="3">
+			<fieldset style="width: 1%;" class="nobr">
+				<legend class="bold"><IMG SRC="img/wireless.gif" ALT=""> {trans("WiFi settings")}</legend>
+				<table cellpadding="2">
+					<tr>
+						<TD class="bold nobr">
+							{trans("SSID:")}
+						</TD>
+						<TD>
+							<input type="text" name="netdev[properties][wifi_ssid]" value="{$netdevinfo.properties.wifi_ssid}" size="25" {tip trigger="wifi_ssid"}>
+						</TD>
+					</tr>
+					<tr>
+						<TD class="bold nobr">
+							{trans("Password:")}
+						</TD>
+						<TD>
+							<input type="text" name="netdev[properties][wifi_password]" value="{$netdevinfo.properties.wifi_password}" size="25" {tip trigger="wifi_password"}>
+						</TD>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+
 	{if ConfigHelper::checkConfig('gpon-dasan.use_radius')}
 	<tr class="light">
 		<TD WIDTH="1%">

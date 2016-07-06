@@ -101,11 +101,15 @@ if(isset($_POST['netdev']))
 			$error['gponoltprofiles'] = trans('Wybierz profil');
 		}
 	} */
-        if(!$error)
-        {
-			if($netdevdata['guaranteeperiod'] == -1)
-				$netdevdata['guaranteeperiod'] = NULL;
-				
+
+	if (!empty($netdevdata['properties']['wifi_ssid']) && strlen($netdevdata['properties']['wifi_ssid']) < 8)
+		$error['wifi_ssid'] = trans('WiFi SSID should contain at least 8 characters!');
+
+	if (!empty($netdevdata['properties']['wifi_password']) && strlen($netdevdata['properties']['wifi_password']) < 8)
+		$error['wifi_password'] = trans('WiFi password should contain at least 8 characters!');
+
+	if (!$error) {
+		$netdevdata['properties'] = serialize($netdevdata['properties']);
 
 			$netdevid = $GPON->GponOnuAdd($netdevdata);
 			if(is_array($netdevdata) && count($netdevdata)>0)

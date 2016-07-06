@@ -218,9 +218,17 @@ if (isset($_POST['netdev']) && (!isset($_POST['snmpsend']) || empty($_POST['snmp
 			$error['gponoltprofiles'] = trans('Wybierz profil, jeżeli zaznaczono Wydany do klienta');
 		}
 	}
-	
+
+	if (!empty($netdevdata['properties']['wifi_ssid']) && strlen($netdevdata['properties']['wifi_ssid']) < 8)
+		$error['wifi_ssid'] = trans('WiFi SSID should contain at least 8 characters!');
+
+	if (!empty($netdevdata['properties']['wifi_password']) && strlen($netdevdata['properties']['wifi_password']) < 8)
+		$error['wifi_password'] = trans('WiFi password should contain at least 8 characters!');
+
 	if(!$error)
 	{
+		$netdevdata['properties'] = serialize($netdevdata['properties']);
+
 		$GPON->GponOnuClearCustomers($_GET['id']);
 		if(is_array($netdevdata) && count($netdevdata)>0)
 		{
