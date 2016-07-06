@@ -83,7 +83,7 @@
 			<label for="xmlprovisioning">{trans("XML provisioning:")}</label>
 		</TD>
 		<TD style="width: 98%;">
-			<input type="checkbox" name="netdev[xmlprovisioning]" id="xmlprovisioning" value="1"{if $netdev.xmlprovisioning} checked{/if}>
+			<input type="checkbox" name="netdev[xmlprovisioning]" id="xmlprovisioning" value="1"{if $netdev.xmlprovisioning} checked{/if} onchange="javascript:xajax_ONU_UpdateProperties(this.checked, xjx.$('gpononumodelsid').value);">
 		</TD>
 	</TR>
 
@@ -115,7 +115,7 @@
 		{if $onu_check_add}
 		{$netdev.onu_model}
 		{else}
-			<SELECT SIZE="1" NAME="netdev[gpononumodelsid]" {tip text="Wybierz model ONU"}>
+			<SELECT SIZE="1" NAME="netdev[gpononumodelsid]" id="gpononumodelsid" {tip text="Select ONU model"} onchange="javascript:xajax_ONU_UpdateProperties(xjx.$('xmlprovisioning').checked, this.options[this.selectedIndex].value);">
 				{foreach $gpononumodels as $model}
 				<OPTION VALUE="{$model.id}"{if $netdev.gpononumodelsid == $model.id} selected{/if}>{$model.name}</OPTION>
 				{/foreach}
@@ -271,7 +271,7 @@
 				</TD>
 					<TD WIDTH="50%" style="vertical-align:top;">
 						<TABLE WIDTH="100%" CELLPADDING="3">
-							<tr class="light">
+							<tr class="light" id="wifisettings"{if !$netdev.xmlprovisioning || !isset($netdev.portdetails.wifi.portscount)} style="display: none;"{/if}>
 								<TD colspan="3">
 									<fieldset style="width: 1%;" class="nobr">
 										<legend class="bold"><IMG SRC="img/wireless.gif" ALT=""> {trans("WiFi settings")}</legend>

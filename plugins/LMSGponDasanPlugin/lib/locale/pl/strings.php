@@ -27,6 +27,8 @@ $_LANG['<!gpon-dasan>Reset'] = 'Restart';
 $_LANG['<!gpon-dasan>Success!'] = 'Zakończone powodzeniem!';
 $_LANG['<!gpon-dasan>Failed!'] = 'Nie powiodło się!';
 
+$_LANG['Select ONU model'] = 'Wybierz model ONU';
+
 $_LANG['WiFi settings'] = 'Ustawienia WiFi';
 $_LANG['SSID:'] = 'SSID:';
 $_LANG['minimum 8 characters'] = 'minimum 8 znaków';

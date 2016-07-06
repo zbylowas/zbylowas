@@ -153,25 +153,25 @@
 				</ol>
 		</TD>
 	</TR>                      	</TABLE>
-	<table  id="show_voip">
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/voip.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>VoIP:</B>
-		</TD>
-		<TD WIDTH="98%" id="ONU_Voip_Phone" align="left">
-		    {if $netdevinfo.potsports == 2}
-			<table>
-			<tr><td align="right">1.</td><td>{$netdevinfo.voipaccountsid1_phone}</td></tr>
-			<tr><td align="right">2.</td><td>{$netdevinfo.voipaccountsid2_phone}</td></tr>
-			</table>
-		    {else}
-			Brak portów voip w tym modelu
-		    {/if}
-		</TD>
-	</TR>
+	{if isset($netdevinfo.portdetails.pots.portscount)}
+	<table id="show_voip">
+		<TR class="light">
+			<TD WIDTH="1%">
+				<IMG SRC="img/voip.gif" ALT="">
+			</TD>
+			<TD WIDTH="1%" NOWRAP>
+				<B>VoIP:</B>
+			</TD>
+			<TD WIDTH="98%" id="ONU_Voip_Phone" align="left">
+				<table>
+				<tr><td align="right">1.</td><td>{$netdevinfo.voipaccountsid1_phone}</td></tr>
+				<tr><td align="right">2.</td><td>{$netdevinfo.voipaccountsid2_phone}</td></tr>
+				</table>
+			</TD>
+		</TR>
+	</table>
+	{/if}
+	<table>
 	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/node.gif" ALT="">
@@ -218,6 +218,7 @@
 				</TD>
 				<TD WIDTH="50%" style="vertical-align:top;">
 				        <TABLE WIDTH="100%" CELLPADDING="3">
+		{if $netdevinfo.xmlprovisioning && isset($netdevinfo.portdetails.wifi.portscount)}
 		{if $netdevinfo.properties.wifi_ssid || $netdevinfo.properties.wifi_password}
 		<TR class="light">
 			<TD colspan="3">
@@ -244,6 +245,7 @@
 				</fieldset>
 			</TD>
 		</TR>
+		{/if}
 		{/if}
         <TR class="light">
                 <TD WIDTH="1%">

@@ -61,7 +61,7 @@
 			<label for="xmlprovisioning">{trans("XML provisioning:")}</label>
 		</TD>
 		<TD style="width: 98%;">
-			<input type="checkbox" name="netdev[xmlprovisioning]" id="xmlprovisioning" value="1"{if $netdevinfo.xmlprovisioning} checked{/if}>
+			<input type="checkbox" name="netdev[xmlprovisioning]" id="xmlprovisioning" value="1"{if $netdevinfo.xmlprovisioning} checked{/if} onchange="javascript:xajax_ONU_UpdateProperties(this.checked, xjx.$('gpononumodelsid').value);">
 		</TD>
 	</TR>
 
@@ -93,7 +93,7 @@
 			<B>{trans("Model:")}</B>
 		</TD>
 		<TD WIDTH="98%">
-			<SELECT SIZE="1" NAME="netdev[gpononumodelsid]" {tip text="Wybierz model ONU"}>
+			<SELECT SIZE="1" NAME="netdev[gpononumodelsid]" id="gpononumodelsid" {tip text="Select ONU model"} onchange="javascript:xajax_ONU_UpdateProperties(xjx.$('xmlprovisioning').checked, this.options[this.selectedIndex].value);">
 				{foreach $gpononumodels as $model}
 				<OPTION VALUE="{$model.id}"{if $netdevinfo.gpononumodelsid == $model.id} selected{/if}>{$model.name}</OPTION>
 				{/foreach}
@@ -190,24 +190,21 @@
 		</TD>
 	</TR>
 	</TABLE>
-	<table  id="show_voip" style="display:none;">
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/voip.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>VoIP:</B>
-		</TD>
-		{if $netdevinfo.potsports == 2}
-		    <TD WIDTH="98%" id="ONU_Voip_Phone" align="left">
-		{else}
-		    <TD WIDTH="98%" align="left">
-		    Brak portów voip
-		{/if}
-
-		</TD>
-	</TR></table>
-	<table  id="show_host" style="display:block;">
+	{if isset($netdevinfo.portdetails.pots.portscount)}
+	<table id="show_voip" style="display:none;">
+		<TR class="light">
+			<TD WIDTH="1%">
+				<IMG SRC="img/voip.gif" ALT="">
+			</TD>
+			<TD WIDTH="1%" NOWRAP>
+				<B>VoIP:</B>
+			</TD>
+			<TD WIDTH="98%" id="ONU_Voip_Phone" align="left">
+			</TD>
+		</TR>
+	</table>
+	{/if}
+	<table id="show_host" style="display:block;">
 	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/node.gif" ALT="">
@@ -246,7 +243,7 @@
 				<TD WIDTH="50%" style="vertical-align:top;">
 			                <TABLE WIDTH="100%" CELLPADDING="3">
 
-	<tr class="light">
+	<tr class="light" id="wifisettings"{if !$netdevinfo.xmlprovisioning || !isset($netdevinfo.portdetails.wifi.portscount)} style="display: none;"{/if}>
 		<TD colspan="3">
 			<fieldset style="width: 1%;" class="nobr">
 				<legend class="bold"><IMG SRC="img/wireless.gif" ALT=""> {trans("WiFi settings")}</legend>

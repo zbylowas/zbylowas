@@ -632,17 +632,7 @@ class GPON {
 
 	public function GetGponOnu($id) {
 		$result = $this->DB->GetRow("SELECT g.*, d.name AS netdevname, gom.name AS model,
-		    (SELECT SUM(portscount) FROM gpononuportstype2models WHERE gpononumodelsid=g.gpononumodelsid) AS ports, gom.producer, 
-			(
-				SELECT portscount FROM gpononuportstype2models gm2p
-				JOIN gpononuportstype gpt ON gpt.id = gm2p.gpononuportstypeid
-				WHERE gpononumodelsid=g.gpononumodelsid AND gpt.name='pots'
-			) AS potsports,
-			(
-				SELECT portscount FROM gpononuportstype2models gm2p
-				JOIN gpononuportstype gpt ON gpt.id = gm2p.gpononuportstypeid
-				WHERE gpononumodelsid=g.gpononumodelsid AND gpt.name='wifi'
-			) AS wifiports,
+		    (SELECT SUM(portscount) FROM gpononuportstype2models WHERE gpononumodelsid=g.gpononumodelsid) AS ports, gom.producer,
 		    (SELECT nd.name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponolt,
 		    (SELECT nd.id AS name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponoltnetdevicesid,
 		    (SELECT go2o.numport FROM gpononu2olt go2o WHERE go2o.gpononuid=g.id) AS gponoltnumport,
@@ -656,6 +646,10 @@ class GPON {
 			INNER JOIN gpononumodels gom on gom.id=g.gpononumodelsid
 			LEFT JOIN netdevices d ON d.id = g.netdevid
 			WHERE g.id = ?", array($id));
+		$result['portdetails'] = $this->DB->GetAllByKey("SELECT pt.name, portscount FROM gpononu o
+			JOIN gpononuportstype2models t2m ON o.gpononumodelsid = t2m.gpononumodelsid
+			JOIN gpononuportstype pt ON pt.id = gpononuportstypeid
+			WHERE o.id = ?", 'name', array($id));
 
 		$result['properties'] = unserialize($result['properties']);
 		$result['createdby'] = $this->DB->GetOne('SELECT name FROM users WHERE id=?', array($result['creatorid']));
@@ -666,25 +660,29 @@ class GPON {
 		return $result;
 	}
 
-	function GetGponOnuFromName($name)
-	{
+	public function GetGponOnuFromName($name) {
 		$result = $this->DB->GetRow("SELECT g.*,
-		    (SELECT SUM(portscount) FROM gpononuportstype2models WHERE gpononumodelsid=g.gpononumodelsid) AS ports,
-		    (SELECT portscount FROM gpononuportstype2models gm2p JOIN gpononuportstype gpt ON gpt.id = gm2p.gpononuportstypeid WHERE gpononumodelsid=g.gpononumodelsid AND gpt.name='pots') AS potsports,
-		    (SELECT nd.name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponolt,
-		    (SELECT nd.id AS name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponoltnetdevicesid,
-		    (SELECT go2o.numport FROM gpononu2olt go2o WHERE go2o.gpononuid=g.id) AS gponoltnumport,
-		    (SELECT nd.gponoltid AS name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponoltid,
-		    (SELECT gop.name FROM gponoltprofiles gop WHERE gop.id=g.gponoltprofilesid) AS profil_olt,
-		    (SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid1) AS voipaccountsid1_phone,
-		    (SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid2) AS voipaccountsid2_phone,
-		    (SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id1) AS host_id1_host,
-		    (SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id2) AS host_id2_host
+			(SELECT SUM(portscount) FROM gpononuportstype2models WHERE gpononumodelsid=g.gpononumodelsid) AS ports,
+			(SELECT nd.name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponolt,
+			(SELECT nd.id AS name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponoltnetdevicesid,
+			(SELECT go2o.numport FROM gpononu2olt go2o WHERE go2o.gpononuid=g.id) AS gponoltnumport,
+			(SELECT nd.gponoltid AS name FROM gpononu2olt go2o INNER JOIN netdevices nd ON nd.id=go2o.netdevicesid WHERE go2o.gpononuid=g.id) AS gponoltid,
+			(SELECT gop.name FROM gponoltprofiles gop WHERE gop.id=g.gponoltprofilesid) AS profil_olt,
+			(SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid1) AS voipaccountsid1_phone,
+			(SELECT va.phone FROM voipaccounts va WHERE va.id=g.voipaccountsid2) AS voipaccountsid2_phone,
+			(SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id1) AS host_id1_host,
+			(SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no WHERE no.id=g.host_id2) AS host_id2_host
 			FROM gpononu g
 			WHERE g.name = ?", array($name));
-		
+		if (!empty($result))
+			$result['portdetails'] = $this->DB->GetAllByKey("SELECT pt.name, portscount FROM gpononu o
+				JOIN gpononuportstype2models t2m ON o.gpononumodelsid = t2m.gpononumodelsid
+				JOIN gpononuportstype pt ON pt.id = gpononuportstypeid
+				WHERE o.id = ?", 'name', array($result['id']));
+
 		return $result;
 	}
+
 	function GponOnuNameExists($name)
 	{
 		return ($this->DB->GetOne("SELECT * FROM gpononu WHERE name=?", array($name)) ? TRUE : FALSE);
@@ -1408,15 +1406,16 @@ class GPON {
 		$this->Log(4, 'gpononumodel', $id, 'model removed');
 		$this->DB->CommitTrans();
 	}
-	function GetGponOnuModelPorts($model)
-	{
-		$result = $this->DB->GetAll('SELECT p.id, p.name, portscount FROM gpononuportstype2models p2m
+
+	public function GetGponOnuModelPorts($model) {
+		$result = $this->DB->GetAllByKey("SELECT p.id, p.name, portscount FROM gpononuportstype2models p2m
 			JOIN gpononuportstype p ON p.id = p2m.gpononuportstypeid
 			JOIN gpononumodels m ON m.id = p2m.gpononumodelsid
-			WHERE m.id = ? ORDER BY name', array($model));
+			WHERE m.id = ? ORDER BY name", 'name', array($model));
 
 		return $result;
 	}
+
 	function GetGponOnuPorts($id, $disabled=0)
 	{
 		if($disabled = 1)

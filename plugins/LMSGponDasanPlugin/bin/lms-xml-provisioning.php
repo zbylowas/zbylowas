@@ -149,7 +149,7 @@ $plugin_dir_name = implode(DIRECTORY_SEPARATOR, $path);
 $xml_provisioning_filename = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_filename',
 	$plugin_dir_name . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . '%sn%.xml');
 
-$query = "SELECT o.name, m.id AS modelid, m.name AS model, p.name AS profile, o.onudescription AS description,
+$query = "SELECT o.name, o.properties, m.id AS modelid, m.name AS model, p.name AS profile, o.onudescription AS description,
 		host1.ip AS ip1, host2.ip AS ip2,
 		phone1.phone AS sipnumber1, phone1.auth AS sipauth1,
 		phone2.phone AS sipnumber2, phone2.auth AS sipauth2,
@@ -199,12 +199,12 @@ $SMARTY = new Smarty;
 $SMARTY->setTemplateDir(null);
 $SMARTY->setCompileDir(SMARTY_COMPILE_DIR);
 
-$tpl = $SMARTY->createTemplate($plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates'
-	. DIRECTORY_SEPARATOR . 'template.xml');
-$tpl->assign('admin_login', $xml_provisioning_admin_login);
-$tpl->assign('admin_password', $xml_provisioning_admin_password);
-$tpl->assign('web_port', $xml_provisioning_web_port);
-$tpl->assign('modified_time', strftime('%Y-%m-%d %H:%M:%S'));
+$default_properties = array(
+	'admin_login' => $xml_provisioning_admin_login,
+	'admin_password' => $xml_provisioning_admin_password,
+	'web_port' => $xml_provisioning_web_port,
+	'modified_time' => strftime('%Y-%m-%d %H:%M:%S'),
+);
 
 foreach ($models as $modelid => &$model) {
 	$template_filename = $plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates' . DIRECTORY_SEPARATOR
@@ -215,7 +215,6 @@ foreach ($models as $modelid => &$model) {
 	fwrite($fh, $model['xmltemplate']);
 	fclose($fh);
 	$model['tpl'] = $SMARTY->createTemplate($template_filename);
-	$model['tpl']->assign($tpl->getTemplateVars());
 }
 
 foreach ($onus as $onu) {
@@ -230,6 +229,12 @@ foreach ($onus as $onu) {
 		echo "Generating ${filename} file ..." . PHP_EOL;
 
 	$tpl = $models[$onu['modelid']]['tpl'];
+	$tpl->assign($default_properties);
+	if (!empty($onu['properties'])) {
+		$properties = unserialize($onu['properties']);
+		if ($properties !== false)
+			$tpl->assign($properties);
+	}
 	$contents = $tpl->fetch();
 
 	$fh = fopen($filename, "w+");

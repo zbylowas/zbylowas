@@ -102,11 +102,17 @@ if(isset($_POST['netdev']))
 		}
 	} */
 
-	if (!empty($netdevdata['properties']['wifi_ssid']) && strlen($netdevdata['properties']['wifi_ssid']) < 8)
-		$error['wifi_ssid'] = trans('WiFi SSID should contain at least 8 characters!');
+	if ($netdevdata['xmlprovisioning']) {
+		$ports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
 
-	if (!empty($netdevdata['properties']['wifi_password']) && strlen($netdevdata['properties']['wifi_password']) < 8)
-		$error['wifi_password'] = trans('WiFi password should contain at least 8 characters!');
+		if (isset($ports['wifi'])) {
+			if (!empty($netdevdata['properties']['wifi_ssid']) && strlen($netdevdata['properties']['wifi_ssid']) < 8)
+				$error['wifi_ssid'] = trans('WiFi SSID should contain at least 8 characters!');
+			if (!empty($netdevdata['properties']['wifi_password']) && strlen($netdevdata['properties']['wifi_password']) < 8)
+				$error['wifi_password'] = trans('WiFi password should contain at least 8 characters!');
+		} else
+			unset($netdevdata['properties']['wifi_ssid'], $netdevdata['properties']['wifi_password']);
+	}
 
 	if (!$error) {
 		$netdevdata['properties'] = serialize($netdevdata['properties']);
@@ -286,8 +292,25 @@ function ONU_Host_hosts_Xj($id_clients,$host1_id,$host2_id)
 	return $objResponse;
 }
 
+function ONU_UpdateProperties($xmlprovisioning, $modelid) {
+	global $GPON;
+
+	// xajax response
+	$objResponse = new xajaxResponse();
+
+	$wifisettings = 'none';
+	if ($xmlprovisioning) {
+		$ports = $GPON->GetGponOnuModelPorts($modelid);
+		if (isset($ports['wifi']))
+			$wifisettings = '';
+	}
+	$objResponse->assign("wifisettings", "style.display", $wifisettings);
+
+	return $objResponse;
+}
+
 $LMS->InitXajax();
-$LMS->RegisterXajaxFunction(array('ONU_Voip_Phone_Xj', 'ONU_Host_hosts_Xj'));
+$LMS->RegisterXajaxFunction(array('ONU_Voip_Phone_Xj', 'ONU_Host_hosts_Xj', 'ONU_UpdateProperties'));
 $SMARTY->assign('xajax', $LMS->RunXajax());
 
 /* end AJAX plugin stuff */
