@@ -245,21 +245,8 @@
 				</TD>
 				<TD WIDTH="50%" style="vertical-align:top;">
 			                <TABLE WIDTH="100%" CELLPADDING="3">
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/users.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>{trans("Created:")}<BR>
-			{trans("Modified:")}</B>
-		</TD>
-		<TD WIDTH="98%">
-			{if $netdevinfo.creationdateh}{$netdevinfo.createdby}, {$netdevinfo.creationdateh}{else} ? {/if}<BR>
-			{if $netdevinfo.moddate}{$netdevinfo.modifiedby}, {$netdevinfo.moddateh}{else}-{/if}
-		</TD>
-	</TR>
 
-	{if ConfigHelper::getConfig('phpui.default_editor')}
+	{if ConfigHelper::checkConfig('gpon-dasan.use_radius')}
 	<tr class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
@@ -285,6 +272,21 @@
 		</TD>
 	</TR>
 	{/if}
+
+	<TR class="light">
+		<TD WIDTH="1%">
+			<IMG SRC="img/users.gif" ALT="">
+		</TD>
+		<TD WIDTH="1%" NOWRAP>
+			<B>{trans("Created:")}<BR>
+			{trans("Modified:")}</B>
+		</TD>
+		<TD WIDTH="98%">
+			{if $netdevinfo.creationdateh}{$netdevinfo.createdby}, {$netdevinfo.creationdateh}{else} ? {/if}<BR>
+			{if $netdevinfo.moddate}{$netdevinfo.modifiedby}, {$netdevinfo.moddateh}{else}-{/if}
+		</TD>
+	</TR>
+
                                     		</TABLE>
                             		</TD>
                     		</TR>
