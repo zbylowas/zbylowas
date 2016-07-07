@@ -168,24 +168,16 @@ if (isset($_POST['netdev']) && (!isset($_POST['snmpsend']) || empty($_POST['snmp
 		$netdevdata['host_id2']=$_POST['devhost_id2'];
 	}
 
-	if(isset($_POST['portdisable']))
-	{
-		foreach($_POST['portdisable'] as $porttype => $portarray)
-		{
-		    foreach($portarray as $port => $disable)
-		    {
-			if($disable ==1)
-			{
-			    $GPON->DisableGponOnuPortDB($netdevdata['id'], $porttype, $port);
-			}
-			else
-			{
-			    $GPON->EnableGponOnuPortDB($netdevdata['id'], $porttype, $port);
-			}
-		    }
-		}
-	}
-	
+	if (isset($netdevdata['portsettings']))
+		foreach ($netdevdata['portsettings'] as $porttype => $ports)
+			foreach ($ports as $port => $portsettings)
+				foreach ($portsettings as $portsetting => $setting)
+					if ($portsetting == 'portdisable')
+						if ($setting == 1)
+							$GPON->DisableGponOnuPortDB($netdevdata['id'], $porttype, $port);
+						else
+							$GPON->EnableGponOnuPortDB($netdevdata['id'], $porttype, $port);
+
 	if(isset($netdevdata['autoprovisioning']) && intval($netdevdata['autoprovisioning'])==1)
 	{
 		//customer
@@ -608,12 +600,11 @@ if($GPON->IsNodeIdNetDevice($netdevdata['host_id2']))
 if(ConfigHelper::checkConfig('gpon-dasan.use_radius'))
     $netdevdata['autoscript'] =0;
 
-if($onuports = $GPON->GetGponOnuPorts($_GET['id']))
-{
-    foreach ($onuports as $row)
-    {
-	$portsarray[$row['typeid']][$row['portid']] = $row['portdisable'];
-    }
+if (!isset($netdevdata['portsettings'])) {
+	$netdevdata['portsettings'] = array();
+	if ($onuports = $GPON->GetGponOnuPorts($_GET['id']))
+		foreach ($onuports as $row)
+			$netdevdata['portsettings'][$row['typeid']][$row['portid']] = $row;
 }
 
 $SMARTY->assign('error',$error);
@@ -621,7 +612,6 @@ $SMARTY->assign('onu_customerlimit',$onu_customerlimit);
 $SMARTY->assign('netdevhosts', $GPON->GetHostForNetdevices());
 $SMARTY->assign('modelports', $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']));
 $SMARTY->assign('notgpononudevices', $GPON->GetNotGponOnuDevices($_GET['id']));
-$SMARTY->assign('onuports', $portsarray);
 $SMARTY->assign('netdevinfo',$netdevdata);
 $SMARTY->assign('numports',$numports);
 $SMARTY->assign('gpononumodels',$gpononumodels);
@@ -637,20 +627,14 @@ $SMARTY->assign('replacelisttotal',$replacelisttotal);
 $SMARTY->assign('devlinktype',$SESSION->get('devlinktype'));
 $SMARTY->assign('nodelinktype',$SESSION->get('nodelinktype'));
 $SMARTY->assign('nastype', $LMS->GetNAStypes());
-switch($edit)
-{
-    case 'data':
-	$SMARTY->display('gpononuedit.html');
-    break;
-    case 'ip':
-	$SMARTY->display('gpononuipedit.html');
-    break;
-    case 'addip':
-	$SMARTY->display('gpononuipadd.html');
-    break;
-    default:
-	$SMARTY->display('gpononuinfo.html');
-    break;
+
+switch ($edit) {
+	case 'data':
+		$SMARTY->display('gpononuedit.html');
+		break;
+	default:
+		$SMARTY->display('gpononuinfo.html');
+		break;
 }
 
 ?>

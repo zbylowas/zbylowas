@@ -125,21 +125,6 @@
 			{/if}
 		</TD>
 	</TR>
-	{if $onuports}
-	<TR class="light">
-		<TD WIDTH="1%">
-			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
-		</TD>
-		<TD WIDTH="1%" NOWRAP>
-			<B>Porty wyłaczone:</B>
-		</TD>
-		<TD WIDTH="98%" id="ONU_Host_id" align="left">
-			    {foreach from=$onuports item=onuport}
-				{$onuport.name}.{$onuport.portid} <br>
-			    {/foreach}
-		</TD>
-	</TR>
-	{/if}
 
 	<TR class="light">
 		<TD WIDTH="1%">
@@ -246,6 +231,34 @@
 			</TD>
 		</TR>
 		{/if}
+		{/if}
+		{if $netdevinfo.xmlprovisioning && $netdevinfo.portsettings}
+		<TR class="light">
+			<TD style="width: 1%;">
+				<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
+			</TD>
+			<TD style="width: 1%;" class="bold nobr">
+				{trans("<!gpon-dasan>Ports:")}
+			</TD>
+			<TD style="width: 98%;" id="ONU_Host_id" class="text-left">
+				<table CELLPADDING="2" border="1" rules="cols">
+					<tr class="dark">
+						<td class="bold">{trans("Port")}</td>
+						<td class="bold">{trans("<!gpon-dasan>Administrative status")}</td>
+					</tr>
+					{foreach $netdevinfo.portsettings as $port}
+					<tr>
+						<td class="text-right">
+							{$port.name} {$port.portid}
+						</td>
+						<td class="text-center">
+							{if $port.portdisable}{trans("- down -")}{else}{trans("- up -")}{/if}
+						</td>
+					</tr>
+					{/foreach}
+				</table>
+			</TD>
+		</TR>
 		{/if}
         <TR class="light">
                 <TD WIDTH="1%">

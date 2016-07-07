@@ -180,11 +180,8 @@ if(count($gpononu2customers)>0)
 $SMARTY->assign('gpononu2customerscount', count($gpononu2customers));
 */
 
-$onuports = $GPON->GetGponOnuPorts($_GET['id'], 1);
-if(sizeof($onuports) > 0)
-{
-	$SMARTY->assign('onuports', $onuports);
-}
+$netdevinfo['portsettings'] = $GPON->GetGponOnuPorts($_GET['id']);
+
 $onulastauth = $GPON->GetGponOnuLastAuth($_GET['id']);
 if(sizeof($onulastauth) > 0)
 {

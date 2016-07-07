@@ -276,32 +276,37 @@
 		</td>
 	</tr>
 
-	{if ConfigHelper::checkConfig('gpon-dasan.use_radius')}
-	<tr class="light">
-		<TD WIDTH="1%">
+	<tr class="light" id="portsettings"{if !ConfigHelper::checkConfig('gpon-dasan.use_radius') && !$netdevinfo.xmlprovisioning} style="display: none;"{/if}>
+		<TD style="width: 1%;">
 			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
 		</td>
-		<TD WIDTH="1%" NOWRAP>
-			<B>{trans("Ports:")}<br>(radius)</B>
+		<TD style="width: 1%;" class="bold nobr">
+			{trans("<!gpon-dasan>Ports:")}
 		</TD>
-		<TD WIDTH="98%">
-		    <table CELLPADDING="2" border="1" rules="cols">
-			<tr class="dark"><td>Port</td><td>Admin status</td></tr>
-			{foreach from=$modelports key=mpid item=modelport}
-			    {section name=port loop=$modelport.portscount}
-			    <tr><td align="right">{$modelport.name} {$smarty.section.port.iteration}</td>
-				<td>
-				<SELECT SIZE="1" NAME="portdisable[{$modelport.id}][{$smarty.section.port.iteration}]">
-				    <option value="0"> up </option>
-				    <option value="1" {if $onuports[$modelport.id][$smarty.section.port.iteration] == 1} SELECTED {/if}> down </option>
-				</SELECT>
-			    </td></tr>
-			    {/section}
-			{/foreach}
-		    </table>
+		<TD style="width: 98%;">
+			<table CELLPADDING="2" border="1" rules="cols">
+				<tr class="dark">
+					<td class="bold">{trans("Port")}</td>
+					<td class="bold">{trans("<!gpon-dasan>Administrative status")}</td>
+				</tr>
+				{foreach $modelports as $modelport}
+				{for $port=1 to $modelport.portscount}
+				<tr>
+					<td class="text-right">
+						{$modelport.name} {$port}
+					</td>
+					<td>
+						<SELECT NAME="netdev[portsettings][{$modelport.id}][{$port}][portdisable]">
+							<option value="0">{trans("- up -")}</option>
+							<option value="1"{if $netdevinfo['portsettings'][$modelport.id][$port]['portdisable']} selected{/if}>{trans("- down -")}</option>
+						</SELECT>
+					</td>
+				</tr>
+				{/for}
+				{/foreach}
+			</table>
 		</TD>
-	</TR>
-	{/if}
+	</tr>
 
 	<TR class="light">
 		<TD WIDTH="1%">

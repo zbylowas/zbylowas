@@ -38,6 +38,11 @@ function ONU_UpdateProperties($xmlprovisioning, $modelid) {
 	}
 	$objResponse->assign("wifisettings", "style.display", $wifisettings);
 
+	$portsettings = 'none';
+	if ($xmlprovisioning || ConfigHelper::checkConfig('gpon-dasan.use_radius'))
+		$portsettings = '';
+	$objResponse->assign("portsettings", "style.display", $portsettings);
+
 	return $objResponse;
 }
 

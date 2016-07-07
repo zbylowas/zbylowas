@@ -303,6 +303,37 @@
 									</fieldset>
 								</td>
 							</tr>
+							<tr class="light" id="portsettings"{if !ConfigHelper::checkConfig('gpon-dasan.use_radius') && !$netdevinfo.xmlprovisioning} style="display: none;"{/if}>
+								<TD style="width: 1%;">
+									<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
+								</td>
+								<TD style="width: 1%;" class="bold nobr">
+									{trans("<!gpon-dasan>Ports:")}
+								</TD>
+								<TD style="width: 98%;">
+									<table CELLPADDING="2" border="1" rules="cols">
+										<tr class="dark">
+											<td class="bold">{trans("Port")}</td>
+											<td class="bold">{trans("<!gpon-dasan>Administrative status")}</td>
+										</tr>
+										{foreach $modelports as $modelport}
+										{for $port=1 to $modelport.portscount}
+										<tr>
+											<td class="text-right">
+												{$modelport.name} {$port}
+											</td>
+											<td>
+												<SELECT NAME="netdev[portsettings][{$modelport.id}][{$port}][portdisable]">
+													<option value="0">{trans("- up -")}</option>
+													<option value="1"{if $netdev['portsettings'][$modelport.id][$port]['portdisable']} selected{/if}>{trans("- down -")}</option>
+												</SELECT>
+											</td>
+										</tr>
+										{/for}
+										{/foreach}
+									</table>
+								</TD>
+							</tr>
 						</TABLE>
 					</TD>
 				</TR>

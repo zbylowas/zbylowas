@@ -1416,39 +1416,30 @@ class GPON {
 		return $result;
 	}
 
-	function GetGponOnuPorts($id, $disabled=0)
-	{
-		if($disabled = 1)
-			$where_dis = ' AND portdisable =1';
-		else
-			$where_dis = '';
-
-		$result = $this->DB->GetAll('SELECT p.*, t.name FROM gpononuport p
+	public function GetGponOnuPorts($id) {
+		return $this->DB->GetAll("SELECT p.*, t.name FROM gpononuport p
 			JOIN gpononuportstype t ON t.id = p.typeid
-			WHERE p.onuid = ?'.
-			$where_dis
-			, array($id));
-
-		return $result;
+			WHERE p.onuid = ?
+			ORDER BY p.typeid, p.portid", array($id));
 	}
-	function EnableGponOnuPortDB($onu, $porttype, $port)
-	{
-		$this->DB->Execute('UPDATE gpononuport SET portdisable =0 WHERE onuid=? AND typeid=? AND portid=?',
-			array($onu, $porttype, $port));
+
+	public function EnableGponOnuPortDB($onu, $porttype, $port) {
+		if (!$this->DB->Execute("UPDATE gpononuport SET portdisable=0 WHERE onuid=? AND typeid=? AND portid=?",
+			array($onu, $porttype, $port)))
+			$rows = $this->DB->Execute("INSERT INTO gpononuport (onuid, typeid, portid, portdisable)
+				VALUES(?, ?, ?, 0)", array($onu, $porttype, $port));
+
 		$this->Log(4, 'gpononu', $onu, 'port enabled: '.$port.', typ: '.$porttype);
 	}
-	function DisableGponOnuPortDB($onu, $porttype, $port)
-	{
-		$rows = $this->DB->Execute('UPDATE gpononuport SET portdisable =1 WHERE onuid=? AND typeid=? AND portid=?',
-			array($onu, $porttype, $port));
-		if($rows == 0)
-		{
-			$rows = $this->DB->Execute('INSERT INTO gpononuport(onuid, typeid, portid, portdisable)
-				VALUES(?, ?, ?, 1)',
-				array($onu, $porttype, $port));
-		}
+
+	public function DisableGponOnuPortDB($onu, $porttype, $port) {
+		if (!$this->DB->Execute("UPDATE gpononuport SET portdisable=1 WHERE onuid=? AND typeid=? AND portid=?",
+			array($onu, $porttype, $port)))
+			$rows = $this->DB->Execute("INSERT INTO gpononuport (onuid, typeid, portid, portdisable)
+				VALUES(?, ?, ?, 1)", array($onu, $porttype, $port));
 		$this->Log(4, 'gpononu', $onu, 'port disabled: '.$port.', typ: '.$porttype);
 	}
+
 	function GetGponOnuPortsType()
 	{
 		$result = $this->DB->GetAll('SELECT gpt.*
