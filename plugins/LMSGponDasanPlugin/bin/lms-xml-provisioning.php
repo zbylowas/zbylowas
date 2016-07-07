@@ -150,27 +150,28 @@ $xml_provisioning_filename = ConfigHelper::getConfig('gpon-dasan.xml_provisionin
 	$plugin_dir_name . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . '%sn%.xml');
 
 $query = "SELECT o.name, o.properties, m.id AS modelid, m.name AS model, p.name AS profile, o.onudescription AS description,
-		host1.ip AS ip1, host2.ip AS ip2,
-		phone1.phone AS sipnumber1, phone1.auth AS sipauth1,
-		phone2.phone AS sipnumber2, phone2.auth AS sipauth2,
+		h1.details AS host1, h2.details AS host2,
+		p1.details AS sip1, p2.details AS sip2,
 		disabledports.portnames, disabledports.portids
 	FROM gpononu o
 	JOIN gpononumodels m ON m.id = o.gpononumodelsid
 	JOIN gponoltprofiles p ON p.id = o.gponoltprofilesid
 	LEFT JOIN (
-		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'MASK2PREFIX(INET_ATON(mask))', "' '", 'gateway') . ") AS ip FROM nodes n
+		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details,
+		FROM nodes n
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
-	) host1 ON host1.id = o.host_id1
+	) h1 ON h1.id = o.host_id1
 	LEFT JOIN (
-		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'MASK2PREFIX(INET_ATON(mask))', "' '", 'gateway') . ") AS ip FROM nodes n
+		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details,
+		FROM nodes n
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
-	) host2 ON host2.id = o.host_id2
+	) h2 ON h2.id = o.host_id2
 	LEFT JOIN (
-		SELECT id, phone, (" . $DB->Concat('login', "' '", 'passwd') . ") AS auth FROM voipaccounts
-	) phone1 ON phone1.id = o.voipaccountsid1
+		SELECT id, (" . $DB->Concat('login', "'/'", 'passwd', "'/'", 'phone') . ") AS details FROM voipaccounts
+	) p1 ON p1.id = o.voipaccountsid1
 	LEFT JOIN (
-		SELECT id, phone, (" . $DB->Concat('login', "' '", 'passwd') . ") AS auth FROM voipaccounts
-	) phone2 ON phone2.id = o.voipaccountsid2
+		SELECT id, (" . $DB->Concat('login', "'/'", 'passwd', "'/'", 'phone') . ") AS details FROM voipaccounts
+	) p2 ON p2.id = o.voipaccountsid2
 	LEFT JOIN (
 		SELECT onuid,
 			(" . $DB->GroupConcat('t.name') . ") AS portnames,
@@ -218,24 +219,57 @@ foreach ($models as $modelid => &$model) {
 }
 
 foreach ($onus as $onu) {
-	if (!isset($models[$onu['modelid']])) {
+	extract($onu);
+	if (!isset($models[$modelid])) {
 		if (!$quiet)
-			echo "Onu " . $onu['name'] . " (model " . $onu['model'] . ") doesn't support xml provisioning!" . PHP_EOL;
+			echo "Onu " . $name . " (model " . $model . ") doesn't support xml provisioning!" . PHP_EOL;
 		continue;
 	}
 
-	$filename = str_replace('%sn%', $onu['name'], $xml_provisioning_filename);
+	$filename = str_replace('%sn%', $name, $xml_provisioning_filename);
 	if (!$quiet)
 		echo "Generating ${filename} file ..." . PHP_EOL;
 
-	$tpl = $models[$onu['modelid']]['tpl'];
+	$tpl = $models[$modelid]['tpl'];
 	$tpl->clearAllAssign();
 	$tpl->assign($default_properties);
-	if (!empty($onu['properties'])) {
-		$properties = unserialize($onu['properties']);
+	if (!empty($properties)) {
+		$properties = unserialize($properties);
 		if ($properties !== false)
 			$tpl->assign($properties);
 	}
+
+	$i = 1;
+	foreach (array($host1, $host2) as $host) {
+		if (!empty($host)) {
+			list ($host_ip, $host_mask, $host_gateway, $host_login, $host_password, $host_authtype) =
+				explode('/', $host);
+			$tpl->assign(array(
+				'host' . $i . '_ip' => $host_ip,
+				'host' . $i . '_mask' => $host_mask,
+				'host' . $i . '_gateway' => $host_gateway,
+				'host' . $i . '_login' => $host_login,
+				'host' . $i . '_password' => $host_password,
+				'host' . $i . '_authtype' => $host_authtype,
+			));
+		}
+		$i++;
+	}
+
+	$i = 1;
+	foreach (array($sip1, $sip2) as $sip) {
+		if (!empty($sip)) {
+			list ($sip_login, $sip_password, $sip_phone) =
+				explode('/', $sip);
+			$tpl->assign(array(
+				'sip' . $i . '_login' => $sip_login,
+				'sip' . $i . '_password' => $sip_password,
+				'sip' . $i . '_phone' => $sip_phone,
+			));
+		}
+		$i++;
+	}
+
 	$contents = $tpl->fetch();
 
 	$fh = fopen($filename, "w+");
@@ -247,21 +281,8 @@ foreach ($onus as $onu) {
 	fwrite($fh, $contents);
 	fclose($fh);
 /*
-	$contents = sprintf("%s\tCleartext-Password := \"%s\", Dasan-Gpon-Onu-Serial-Num == \"%s\"" . PHP_EOL,
-		$onu['name'], $onu['model'], $onu['name']);
 	$contents .= sprintf("\tDasan-Gpon-Onu-Profile = \"%s\"," . PHP_EOL . "\tDasan-Gpon-Onu-Description += \"%s\"",
 		$onu['profile'], preg_replace("/(\r)?" . PHP_EOL . "/", ', ', $onu['description']));
-	for ($i = 1; $i <= 2; $i++)
-		if (!empty($onu["ip$i"]))
-			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Static-Ip += \"%d %s\"",
-				$i, $onu["ip$i"]);
-	for ($i = 1; $i <= 2; $i++)
-		if (!empty($onu["sipnumber$i"])) {
-			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Voip-Sip-Number += \"%d %s\"",
-				$i, $onu["sipnumber$i"]);
-			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Voip-Sip-Auth += \"%d %s\"",
-				$i, $onu["sipauth$i"]);
-		}
 	if (!empty($onu['portids'])) {
 		$portids = explode(',', $onu['portids']);
 		$portnames = explode(',', $onu['portnames']);
