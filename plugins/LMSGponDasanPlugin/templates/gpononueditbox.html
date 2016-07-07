@@ -253,7 +253,7 @@
 							{trans("SSID:")}
 						</TD>
 						<TD>
-							<input type="text" name="netdev[properties][wifi_ssid]" value="{$netdevinfo.properties.wifi_ssid}" size="25" {tip trigger="wifi_ssid"}>
+							<input type="text" name="netdev[properties][wifi_ssid]" id="wifi_ssid" value="{$netdevinfo.properties.wifi_ssid}" size="25" {tip trigger="wifi_ssid"}>
 						</TD>
 					</tr>
 					<tr>
@@ -261,9 +261,16 @@
 							{trans("Password:")}
 						</TD>
 						<TD>
-							<input type="text" name="netdev[properties][wifi_password]" value="{$netdevinfo.properties.wifi_password}" size="25" {tip trigger="wifi_password"}>
+							<input type="text" name="netdev[properties][wifi_password]" id="wifi_password" value="{$netdevinfo.properties.wifi_password}" size="25" {tip trigger="wifi_password"}>
 						</TD>
 					</tr>
+					{if ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_ssid', '') || ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_password', '')}
+					<tr>
+						<TD colspan="2" class="text-center">
+							<a onclick="javascript:xajax_ONU_GenerateWifiSettings({$netdevinfo.id});"><IMG src="img/reload.gif" alt=""> {trans("Generate automatically")}</a>
+						</TD>
+					</tr>
+					{/if}
 				</table>
 			</fieldset>
 		</td>

@@ -562,25 +562,11 @@ function ONU_Host_hosts_Xj($id_clients,$host1_id,$host2_id,$disable=0)
 	return $objResponse;
 }
 
-function ONU_UpdateProperties($xmlprovisioning, $modelid) {
-	global $GPON;
-
-	// xajax response
-	$objResponse = new xajaxResponse();
-
-	$wifisettings = 'none';
-	if ($xmlprovisioning) {
-		$ports = $GPON->GetGponOnuModelPorts($modelid);
-		if (isset($ports['wifi']))
-			$wifisettings = '';
-	}
-	$objResponse->assign("wifisettings", "style.display", $wifisettings);
-
-	return $objResponse;
-}
+include('gpononuxajax.inc.php');
 
 $LMS->InitXajax();
-$LMS->RegisterXajaxFunction(array('GetFreeOltPort_Xj', 'ONU_get_param_Xj', 'ONU_Voip_Phone_Xj', 'ONU_Host_hosts_Xj', 'ONU_UpdateProperties'));
+$LMS->RegisterXajaxFunction(array('GetFreeOltPort_Xj', 'ONU_get_param_Xj', 'ONU_Voip_Phone_Xj', 'ONU_Host_hosts_Xj',
+	'ONU_UpdateProperties', 'ONU_GenerateWifiSettings'));
 $SMARTY->assign('xajax', $LMS->RunXajax());
 
 /* end AJAX plugin stuff */

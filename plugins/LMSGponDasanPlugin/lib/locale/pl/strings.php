@@ -35,4 +35,6 @@ $_LANG['minimum 8 characters'] = 'minimum 8 znaków';
 $_LANG['WiFi SSID should contain at least 8 characters!'] = 'SSID WiFi powinien zawierać co najmniej 8 znaków!';
 $_LANG['WiFi password should contain at least 8 characters!'] = 'Hasło WiFi powinien zawierać co najmniej 8 znaków!';
 
+$_LANG['Generate automatically'] = 'Generuj automatycznie';
+
 ?>
