@@ -253,7 +253,7 @@
 							{trans("SSID:")}
 						</TD>
 						<TD>
-							<input type="text" name="netdev[properties][wifi_ssid]" id="wifi_ssid" value="{$netdevinfo.properties.wifi_ssid}" size="25" {tip trigger="wifi_ssid"}>
+							<input type="text" name="netdev[properties][wifi_ssid]" id="wifi_ssid" placeholder="{trans("minimum 8 characters")}" value="{$netdevinfo.properties.wifi_ssid}" size="25" {tip trigger="wifi_ssid"}>
 						</TD>
 					</tr>
 					<tr>
@@ -261,7 +261,7 @@
 							{trans("Password:")}
 						</TD>
 						<TD>
-							<input type="text" name="netdev[properties][wifi_password]" id="wifi_password" value="{$netdevinfo.properties.wifi_password}" size="25" {tip trigger="wifi_password"}>
+							<input type="text" name="netdev[properties][wifi_password]" id="wifi_password" placeholder="{trans("minimum 8 characters")}" value="{$netdevinfo.properties.wifi_password}" size="25" {tip trigger="wifi_password"}>
 						</TD>
 					</tr>
 					{if ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_ssid', '') || ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_password', '')}
