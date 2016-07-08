@@ -78,6 +78,7 @@ function ONU_reset($id) {
 	$objResponse = new xajaxResponse();
 
 	$res = gpononu_reset($id);
+	$objResponse->assign("resetbutton", "style.display", "");
 	if (!is_array($res) || $res[0] != 1)
 		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "');");
 
@@ -107,6 +108,7 @@ function ONU_radius_disconnect($id) {
 	$objResponse = new xajaxResponse();
 
 	$res = gpononu_radius_disconnect($id);
+	$objResponse->assign("disconnectbutton", "style.display", "");
 	if ($res)
 		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "');");
 
@@ -136,6 +138,7 @@ function ONU_xml_provisioning($id) {
 		}
 	}
 
+	$objResponse->assign("xmlprovisioningbutton", "style.display", "");
 	if ($res)
 		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "');");
 
