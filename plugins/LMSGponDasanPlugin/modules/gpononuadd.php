@@ -117,7 +117,10 @@ if(isset($_POST['netdev']))
 	if (!$error) {
 		$netdevdata['properties'] = serialize($netdevdata['properties']);
 
-			$netdevid = $GPON->GponOnuAdd($netdevdata);
+		$netdevid = $GPON->GponOnuAdd($netdevdata);
+		if (!empty($netdevid))
+			$GPON->UpdateGponOnuPorts($netdevid, $netdevdata['portsettings']);
+
 			if(is_array($netdevdata) && count($netdevdata)>0)
 			{
 				foreach($netdevdata as $k5=>$v5)
@@ -307,8 +310,16 @@ $SMARTY->assign('onu_customerlimit',$onu_customerlimit);
 $gpononumodels = $GPON->GetGponOnuModelsList();
 unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['direction']);
 $SMARTY->assign('gpononumodels', $gpononumodels);
-$SMARTY->assign('modelports', $GPON->GetGponOnuModelPorts(isset($_POST['netdev'])
-	? $netdevdata['gpononumodelsid'] : reset($gpononumodels)['id']));
+
+if (isset($_POST['netdev'])) {
+	$modelports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
+	$onuports = $netdevdata['portsettings'];
+	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
+} else {
+	$modelports = $GPON->GetGponOnuModelPorts(reset($gpononumodels)['id']);
+	$onuports = array();
+	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
+}
 
 $SMARTY->assign('onu_check_add',$onu_check_add);
 $SMARTY->assign('customers', $LMS->GetCustomerNames());
@@ -347,7 +358,7 @@ if (isset($_POST['netdev'])) {
 	$netdev_temp['xmlprovisioning'] = ConfigHelper::checkConfig('gpon-dasan.xml_provisioning_default_enabled') ? 1 : 0;
 
 $netdev_temp['name'] = $netdev_temp['name'];
-$SMARTY->assign('netdev', $netdev_temp);
+$SMARTY->assign('netdevinfo', $netdev_temp);
 $SMARTY->assign('netdevhosts', $GPON->GetHostForNetdevices());
 $SMARTY->assign('onucheck', $onucheck);
 $SMARTY->assign('notgpononudevices', $GPON->GetNotGponOnuDevices());

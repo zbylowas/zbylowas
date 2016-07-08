@@ -25,10 +25,11 @@
 	</TR>
 	{cycle values="light,lucid" print=false}
 	{section name=netdevlist loop=$netdevlist start=0 max=$listdata.total}
+	{if $netdevlist[netdevlist].onu_model}
 	<TR class="{cycle}" onmouseover="addClass(this, 'highlight')" onmouseout="removeClass(this, 'highlight')">
 		<TD width="57%" class="fleft" VALIGN="TOP">
 			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT=""> <B>{$netdevlist[netdevlist].onu_serial}</B><BR>
-			<IMG src="img/producer.gif" ALT=""> {if $netdevlist[netdevlist].onu_model}{$netdevlist[netdevlist].onu_model}{/if}
+			<IMG src="img/producer.gif" ALT=""> {$netdevlist[netdevlist].onu_model}
 			<BR>
 			{if $netdevlist[netdevlist].onu_description}{$netdevlist[netdevlist].onu_description}{/if}
 		</TD>
@@ -62,6 +63,7 @@
 		</TD>
 	</TR>
 	{if $netdevlist[netdevlist.index_next].ownerid eq $netdevlist[netdevlist].ownerid && $listdata.order eq "owner"}{cycle print=false}{/if}
+	{/if}
 	{sectionelse}
 	<TR>
 		<TD colspan="5" class="fall" align="center">

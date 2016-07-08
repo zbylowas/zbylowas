@@ -6,10 +6,10 @@
 <H1>{$layout.pagetitle}</H1>
 <FORM NAME="netdevadd" METHOD="POST" ACTION="?m=gpononuadd&onu_check_add={$onu_check_add}">
 <INPUT type="submit" class="hiddenbtn">
-<INPUT TYPE="hidden" NAME="pots_1_phone" ID="pots_1_phone" VALUE="{$netdev.voipaccountsid1}"> 
-<INPUT TYPE="hidden" NAME="pots_2_phone" ID="pots_2_phone" VALUE="{$netdev.voipaccountsid2}"> 
-<INPUT TYPE="hidden" NAME="hostid_1" ID="hostid_1" VALUE="{$netdev.host_id1}">
-<INPUT TYPE="hidden" NAME="hostid_2" ID="hostid_2" VALUE="{$netdev.host_id2}">
+<INPUT TYPE="hidden" NAME="pots_1_phone" ID="pots_1_phone" VALUE="{$netdevinfo.voipaccountsid1}"> 
+<INPUT TYPE="hidden" NAME="pots_2_phone" ID="pots_2_phone" VALUE="{$netdevinfo.voipaccountsid2}"> 
+<INPUT TYPE="hidden" NAME="hostid_1" ID="hostid_1" VALUE="{$netdevinfo.host_id1}">
+<INPUT TYPE="hidden" NAME="hostid_2" ID="hostid_2" VALUE="{$netdevinfo.host_id2}">
 
 <TABLE WIDTH="100%" CELLPADDING="3">
 {if $onu_check_add}
@@ -19,7 +19,7 @@
 		</TD>
 		<TD WIDTH="1%" class="fbt">
 		<b>OLT:</b>
-		<TD WIDTH="98%" class="frightu">{$netdev.olt_data}
+		<TD WIDTH="98%" class="frightu">{$netdevinfo.olt_data}
 		</TD>
 	</TR>
 {/if}
@@ -31,16 +31,16 @@
 			<B>{trans("Name:")}</B>
 		<TD WIDTH="98%" class="frightu">
 		{if $onu_check_add}
-		<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdev.name}" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1} readonly="readonly">
-		<INPUT TYPE="hidden" NAME="olt_port" VALUE="{$netdev.olt_port}"> 
-		<INPUT TYPE="hidden" NAME="netdevicesid" VALUE="{$netdev.olt_netdevicesid}"> 
-		<INPUT TYPE="hidden" NAME="onu_id" VALUE="{$netdev.onu_id}"> 
-		<INPUT TYPE="hidden" NAME="netdev[onu_model]" VALUE="{$netdev.onu_model}"> 
+		<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdevinfo.name}" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1} readonly="readonly">
+		<INPUT TYPE="hidden" NAME="olt_port" VALUE="{$netdevinfo.olt_port}"> 
+		<INPUT TYPE="hidden" NAME="netdevicesid" VALUE="{$netdevinfo.olt_netdevicesid}"> 
+		<INPUT TYPE="hidden" NAME="onu_id" VALUE="{$netdevinfo.onu_id}"> 
+		<INPUT TYPE="hidden" NAME="netdev[onu_model]" VALUE="{$netdevinfo.onu_model}"> 
 		
-		<INPUT TYPE="hidden" NAME="gponoltid" VALUE="{$netdev.gponoltid}"> 
+		<INPUT TYPE="hidden" NAME="gponoltid" VALUE="{$netdevinfo.gponoltid}"> 
 		
 		{else}
-		<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdev.name}" MAXLENGTH="20" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1}>
+		<INPUT TYPE="TEXT" NAME="netdev[name]" VALUE="{$netdevinfo.name}" MAXLENGTH="20" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1}>
 		{/if}
 		</TD>
 	</TR>
@@ -51,7 +51,7 @@
 		</TD>
 		<TD WIDTH="1%" class="fbt">
 		<b>ONU ID:</b>
-		<TD WIDTH="98%" class="frightu">{$netdev.onu_id}
+		<TD WIDTH="98%" class="frightu">{$netdevinfo.onu_id}
 		</TD>
 	</TR>
 {/if}
@@ -113,7 +113,7 @@
 		</TD>
 		<TD WIDTH="98%">
 		{if $onu_check_add}
-		{$netdev.onu_model}
+		{$netdevinfo.onu_model}
 		{else}
 			<SELECT SIZE="1" NAME="netdev[gpononumodelsid]" id="gpononumodelsid" {tip text="Select ONU model"} onchange="javascript:xajax_ONU_UpdateProperties(xjx.$('xmlprovisioning').checked, this.options[this.selectedIndex].value);">
 				{foreach $gpononumodels as $model}
@@ -138,10 +138,10 @@
 	{foreach from=$onucheck key=k1 item=v1}
    <INPUT TYPE="hidden" NAME="onucheck[{$k1}]" VALUE="{$v1}"> 
 {/foreach}
-{$netdev.onu_passwordResult}
-<INPUT TYPE="hidden" NAME="netdev[password]" VALUE="{$netdev.onu_password}">
+{$netdevinfo.onu_passwordResult}
+<INPUT TYPE="hidden" NAME="netdev[password]" VALUE="{$netdevinfo.onu_password}">
 	{else}
-		        <INPUT TYPE="TEXT" maxlength="10" NAME="netdev[password]" VALUE="{$netdev.onu_password}" {tip text="Enter password (optional)" trigger="passwd"}>
+		        <INPUT TYPE="TEXT" maxlength="10" NAME="netdev[password]" VALUE="{$netdevinfo.onu_password}" {tip text="Enter password (optional)" trigger="passwd"}>
 		        {/if}
  		</TD>
 	</TR>
@@ -153,8 +153,8 @@
 		<TD WIDTH="1%">
 			<B>ONU description:</B>
 		<TD WIDTH="98%">
-		<INPUT TYPE="hidden" NAME="onu_description_old" VALUE="{$netdev.onu_description_old}"> 
-		<INPUT TYPE="TEXT" NAME="netdev[onu_description]" VALUE="{$netdev.onu_description}" MAXLENGTH="32"> 
+		<INPUT TYPE="hidden" NAME="onu_description_old" VALUE="{$netdevinfo.onu_description_old}"> 
+		<INPUT TYPE="TEXT" NAME="netdev[onu_description]" VALUE="{$netdevinfo.onu_description}" MAXLENGTH="32"> 
 		</TD>
 	</TR>
 	<TR class="light">
@@ -281,7 +281,7 @@
 													{trans("SSID:")}
 												</TD>
 												<TD>
-													<input type="text" name="netdev[properties][wifi_ssid]" id="wifi_ssid" placeholder="{trans("minimum 8 characters")}" value="{$netdev.properties.wifi_ssid}" size="25" {tip trigger="wifi_ssid"}>
+													<input type="text" name="netdev[properties][wifi_ssid]" id="wifi_ssid" placeholder="{trans("minimum 8 characters")}" value="{$netdevinfo.properties.wifi_ssid}" size="25" {tip trigger="wifi_ssid"}>
 												</TD>
 											</tr>
 											<tr>
@@ -289,7 +289,7 @@
 													{trans("Password:")}
 												</TD>
 												<TD>
-													<input type="text" name="netdev[properties][wifi_password]" id="wifi_password" placeholder="{trans("minimum 8 characters")}" value="{$netdev.properties.wifi_password}" size="25" {tip trigger="wifi_password"}>
+													<input type="text" name="netdev[properties][wifi_password]" id="wifi_password" placeholder="{trans("minimum 8 characters")}" value="{$netdevinfo.properties.wifi_password}" size="25" {tip trigger="wifi_password"}>
 												</TD>
 											</tr>
 											{if ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_ssid', '') || ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_password', '')}
@@ -311,26 +311,8 @@
 									{trans("<!gpon-dasan>Ports:")}
 								</TD>
 								<TD style="width: 98%;">
-									<table CELLPADDING="2" border="1" rules="cols">
-										<tr class="dark">
-											<td class="bold">{trans("Port")}</td>
-											<td class="bold">{trans("<!gpon-dasan>Administrative status")}</td>
-										</tr>
-										{foreach $modelports as $modelport}
-										{for $port=1 to $modelport.portscount}
-										<tr>
-											<td class="text-right">
-												{$modelport.name} {$port}
-											</td>
-											<td>
-												<SELECT NAME="netdev[portsettings][{$modelport.id}][{$port}][portdisable]">
-													<option value="0">{trans("- up -")}</option>
-													<option value="1"{if $netdev['portsettings'][$modelport.id][$port]['portdisable']} selected{/if}>{trans("- down -")}</option>
-												</SELECT>
-											</td>
-										</tr>
-										{/for}
-										{/foreach}
+									<table id="portsettingstable" CELLPADDING="2" border="1" rules="cols">
+										{include file="gpononu/gpononuports.html"}
 									</table>
 								</TD>
 							</tr>

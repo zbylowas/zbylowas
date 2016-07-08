@@ -1417,10 +1417,56 @@ class GPON {
 	}
 
 	public function GetGponOnuPorts($id) {
-		return $this->DB->GetAll("SELECT p.*, t.name FROM gpononuport p
+		return $this->DB->GetAllByKey("SELECT p.*, t.name, " . $this->DB->Concat('t.name', "'.'", 'p.portid') . " AS portname
+			FROM gpononuport p
 			JOIN gpononuportstype t ON t.id = p.typeid
 			WHERE p.onuid = ?
-			ORDER BY p.typeid, p.portid", array($id));
+			ORDER BY p.typeid, p.portid", 'portname', array($id));
+	}
+
+	public function GetGponOnuAllPorts($modelports, $onuports) {
+		$portsettings = array();
+		foreach ($modelports as $porttype => $portdetails)
+			for ($i = 1; $i <= $portdetails['portscount']; $i++) {
+				$portname = $porttype . '.' . $i;
+				if (isset($onuports[$portname]))
+					$portsettings[$portname] = $onuports[$portname];
+				else {
+					$portsettings[$portname] = array(
+						'onuid' => $_GET['id'],
+						'typeid' => $portdetails['id'],
+						'portid' => $i,
+						'portdisable' => 0,
+						'name' => $porttype,
+						'portname' => $portname,
+					);
+				}
+			}
+		return $portsettings;
+	}
+
+	public function UpdateGponOnuPorts($onu, $portsettings) {
+		$this->DB->Execute("DELETE FROM gpononuport WHERE onuid = ?", array($onu));
+		$porttypes = $this->DB->GetAllByKey("SELECT * FROM gpononuportstype", 'name');
+		foreach ($portsettings as $portname => $port) {
+			list ($porttype, $portid) = explode('.', $portname);
+			$porttypeid = $porttypes[$porttype]['id'];
+			$dbfields = array();
+			foreach ($port as $property => $value) {
+				switch ($property) {
+					case 'portdisable':
+						if ($value == 1)
+							$dbfields['portdisable'] = 1;
+						break;
+				}
+			}
+			if (!empty($dbfields)) {
+				$args = array($onu, $porttypeid, $portid);
+				$args = array_merge($args, array_values($dbfields));
+				$this->DB->Execute("INSERT INTO gpononuport (onuid, typeid, portid, ". implode(', ', array_keys($dbfields)) .")
+					VALUES (?, ?, ?, " . implode(', ', array_fill(0, count($dbfields), '?')) . ")", $args);
+			}
+		}
 	}
 
 	public function EnableGponOnuPortDB($onu, $porttype, $port) {

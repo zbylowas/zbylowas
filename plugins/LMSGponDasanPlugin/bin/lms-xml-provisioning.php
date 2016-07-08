@@ -149,9 +149,9 @@ $plugin_dir_name = implode(DIRECTORY_SEPARATOR, $path);
 $xml_provisioning_filename = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_filename',
 	$plugin_dir_name . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . '%sn%.xml');
 
-$query = "SELECT o.name, o.properties, m.id AS modelid, m.name AS model, p.name AS profile, o.onudescription AS description,
-		h1.details AS host1, h2.details AS host2,
-		p1.details AS sip1, p2.details AS sip2,
+$query = "SELECT o.id AS gpononuid, o.name, o.properties, m.id AS modelid, m.name AS model,
+		p.name AS profile, o.onudescription AS description,
+		h1.details AS host1, h2.details AS host2, p1.details AS sip1, p2.details AS sip2,
 		disabledports.portnames, disabledports.portids
 	FROM gpononu o
 	JOIN gpononumodels m ON m.id = o.gpononumodelsid
@@ -239,6 +239,8 @@ foreach ($onus as $onu) {
 			$tpl->assign($properties);
 	}
 
+	$tpl->assign('portsettings', $GPON->GetGponOnuPorts($gpononuid));
+
 	$i = 1;
 	foreach (array($host1, $host2) as $host) {
 		if (!empty($host)) {
@@ -283,13 +285,6 @@ foreach ($onus as $onu) {
 /*
 	$contents .= sprintf("\tDasan-Gpon-Onu-Profile = \"%s\"," . PHP_EOL . "\tDasan-Gpon-Onu-Description += \"%s\"",
 		$onu['profile'], preg_replace("/(\r)?" . PHP_EOL . "/", ', ', $onu['description']));
-	if (!empty($onu['portids'])) {
-		$portids = explode(',', $onu['portids']);
-		$portnames = explode(',', $onu['portnames']);
-		foreach ($portids as $idx => $portid)
-			$contents .= sprintf("," . PHP_EOL . "\tDasan-Gpon-Onu-Uni-Port-Admin += \"%s %d disable\"",
-				$portnames[$idx], $portid);
-	}
 	$contents .= PHP_EOL . PHP_EOL;
 */
 }

@@ -249,7 +249,7 @@
 					{foreach $netdevinfo.portsettings as $port}
 					<tr>
 						<td class="text-right">
-							{$port.name} {$port.portid}
+							{$port.name}.{$port.portid}
 						</td>
 						<td class="text-center">
 							{if $port.portdisable}{trans("- down -")}{else}{trans("- up -")}{/if}

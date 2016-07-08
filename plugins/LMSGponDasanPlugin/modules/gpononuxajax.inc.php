@@ -25,7 +25,7 @@
  */
 
 function ONU_UpdateProperties($xmlprovisioning, $modelid) {
-	global $GPON;
+	global $GPON, $SMARTY;
 
 	// xajax response
 	$objResponse = new xajaxResponse();
@@ -38,9 +38,16 @@ function ONU_UpdateProperties($xmlprovisioning, $modelid) {
 	}
 	$objResponse->assign("wifisettings", "style.display", $wifisettings);
 
-	$portsettings = 'none';
-	if ($xmlprovisioning || ConfigHelper::checkConfig('gpon-dasan.use_radius'))
+	if ($xmlprovisioning || ConfigHelper::checkConfig('gpon-dasan.use_radius')) {
+		$modelports = $GPON->GetGponOnuModelPorts($modelid);
+		$onuports = $GPON->GetGponOnuPorts($_GET['id']);
+		$netdevinfo['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
+		$SMARTY->assign('netdevinfo', $netdevinfo);
+		$contents = $SMARTY->fetch('gpononu/gpononuports.html');
+		$objResponse->assign("portsettingstable", "innerHTML", $contents);
 		$portsettings = '';
+	} else
+		$portsettings = 'none';
 	$objResponse->assign("portsettings", "style.display", $portsettings);
 
 	return $objResponse;

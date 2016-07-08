@@ -168,16 +168,6 @@ if (isset($_POST['netdev']) && (!isset($_POST['snmpsend']) || empty($_POST['snmp
 		$netdevdata['host_id2']=$_POST['devhost_id2'];
 	}
 
-	if (isset($netdevdata['portsettings']))
-		foreach ($netdevdata['portsettings'] as $porttype => $ports)
-			foreach ($ports as $port => $portsettings)
-				foreach ($portsettings as $portsetting => $setting)
-					if ($portsetting == 'portdisable')
-						if ($setting == 1)
-							$GPON->DisableGponOnuPortDB($netdevdata['id'], $porttype, $port);
-						else
-							$GPON->EnableGponOnuPortDB($netdevdata['id'], $porttype, $port);
-
 	if(isset($netdevdata['autoprovisioning']) && intval($netdevdata['autoprovisioning'])==1)
 	{
 		//customer
@@ -223,8 +213,10 @@ if (isset($_POST['netdev']) && (!isset($_POST['snmpsend']) || empty($_POST['snmp
 			unset($netdevdata['properties']['wifi_ssid'], $netdevdata['properties']['wifi_password']);
 	}
 
-	if(!$error)
-	{
+	if (!$error) {
+		if (isset($netdevdata['portsettings']))
+			$GPON->UpdateGponOnuPorts($netdevdata['id'], $netdevdata['portsettings']);
+
 		$netdevdata['properties'] = serialize($netdevdata['properties']);
 
 		$GPON->GponOnuClearCustomers($_GET['id']);
@@ -601,10 +593,9 @@ if(ConfigHelper::checkConfig('gpon-dasan.use_radius'))
     $netdevdata['autoscript'] =0;
 
 if (!isset($netdevdata['portsettings'])) {
-	$netdevdata['portsettings'] = array();
-	if ($onuports = $GPON->GetGponOnuPorts($_GET['id']))
-		foreach ($onuports as $row)
-			$netdevdata['portsettings'][$row['typeid']][$row['portid']] = $row;
+	$modelports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
+	$onuports = $GPON->GetGponOnuPorts($_GET['id']);
+	$netdevdata['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
 }
 
 $SMARTY->assign('error',$error);
