@@ -243,7 +243,7 @@
 				<TD WIDTH="50%" style="vertical-align:top;">
 			                <TABLE WIDTH="100%" CELLPADDING="3">
 
-	<tr class="light" id="wifisettings"{if !$netdevinfo.xmlprovisioning || !isset($netdevinfo.portdetails.wifi.portscount)} style="display: none;"{/if}>
+	<tr class="light" id="wifisettings"{if !$netdevinfo.xmlprovisioning || !isset($netdevinfo['portsettings']['wifi.1'])} style="display: none;"{/if}>
 		<TD colspan="3">
 			<fieldset style="width: 1%;" class="nobr">
 				<legend class="bold"><IMG SRC="img/wireless.gif" ALT=""> {trans("WiFi settings")}</legend>
