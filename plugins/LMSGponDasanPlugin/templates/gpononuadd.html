@@ -71,7 +71,7 @@
 			<label for="autoprovisioning">Wydany do klienta:</label>
 		</TD>
 		<TD style="width: 98%;">
-			<input type="checkbox" name="netdev[autoprovisioning]" id="autoprovisioning" value="1"{if $netdev.autoprovisioning} checked{/if}>
+			<input type="checkbox" name="netdev[autoprovisioning]" id="autoprovisioning" value="1"{if $netdevinfo.autoprovisioning} checked{/if}>
 		</TD>
 	</TR>
 
@@ -83,7 +83,7 @@
 			<label for="xmlprovisioning">{trans("XML provisioning:")}</label>
 		</TD>
 		<TD style="width: 98%;">
-			<input type="checkbox" name="netdev[xmlprovisioning]" id="xmlprovisioning" value="1"{if $netdev.xmlprovisioning} checked{/if} onchange="javascript:xajax_ONU_UpdateProperties(this.checked, xjx.$('gpononumodelsid').value);">
+			<input type="checkbox" name="netdev[xmlprovisioning]" id="xmlprovisioning" value="1"{if $netdevinfo.xmlprovisioning} checked{/if} onchange="javascript:xajax_ONU_UpdateProperties(this.checked, xjx.$('gpononumodelsid').value);">
 		</TD>
 	</TR>
 
@@ -98,7 +98,7 @@
 			<SELECT {tip trigger="gponoltprofiles"} SIZE="1" NAME="netdev[gponoltprofilesid]" {tip text="Wybierz profil"}>
 			<option value="">Wybierz</option>
 				{foreach $gponoltprofiles as $profile}
-				<OPTION VALUE="{$profile.id}"{if $netdev.gponoltprofilesid == $profile.id} selected{/if}>{$profile.name}{if array_key_exists('oltname', $profile)} ({$profile.oltname}){/if}</OPTION>
+				<OPTION VALUE="{$profile.id}"{if $netdevinfo.gponoltprofilesid == $profile.id} selected{/if}>{$profile.name}{if array_key_exists('oltname', $profile)} ({$profile.oltname}){/if}</OPTION>
 				{/foreach}
 			</SELECT>
 		</TD>
@@ -117,7 +117,7 @@
 		{else}
 			<SELECT SIZE="1" NAME="netdev[gpononumodelsid]" id="gpononumodelsid" {tip text="Select ONU model"} onchange="javascript:xajax_ONU_UpdateProperties(xjx.$('xmlprovisioning').checked, this.options[this.selectedIndex].value);">
 				{foreach $gpononumodels as $model}
-				<OPTION VALUE="{$model.id}"{if $netdev.gpononumodelsid == $model.id} selected{/if}>{$model.name}</OPTION>
+				<OPTION VALUE="{$model.id}"{if $netdevinfo.gpononumodelsid == $model.id} selected{/if}>{$model.name}</OPTION>
 				{/foreach}
 			</SELECT>
 			{/if}
@@ -168,7 +168,7 @@
 			<SELECT name="netdev[netdevid]" {tip text="Select assigned network device"}>
 				<OPTION value="0">{trans("- none -")}</OPTION>
 				{foreach $notgpononudevices as $device}
-				<OPTION value="{$device.id}"{if $netdev.netdevid == $device.id} selected{/if}>{$device.name}</OPTION>
+				<OPTION value="{$device.id}"{if $netdevinfo.netdevid == $device.id} selected{/if}>{$device.name}</OPTION>
 				{/foreach}
 			</SELECT>
 		</TD>
@@ -204,7 +204,7 @@
 			</TD>
 			<TD>
 				{$cid="customersid_"|cat:$index}
-				{customerlist form="netdevadd" customers=$customers selected=$netdev.$cid selectname="netdev[customersid_$index]" inputname="netdev[cid_$index]" customOnChange="customerlist_change();"}
+				{customerlist form="netdevadd" customers=$customers selected=$netdevinfo.$cid selectname="netdev[customersid_$index]" inputname="netdev[cid_$index]" customOnChange="customerlist_change();"}
 				<SCRIPT type="text/javascript">
 				<!--
 					input_elems.push(document.forms['netdevadd'].elements['netdev[cid_{$index}]']);
@@ -271,7 +271,7 @@
 				</TD>
 					<TD WIDTH="50%" style="vertical-align:top;">
 						<TABLE WIDTH="100%" CELLPADDING="3">
-							<tr class="light" id="wifisettings"{if !$netdev.xmlprovisioning || !isset($netdev.portdetails.wifi.portscount)} style="display: none;"{/if}>
+							<tr class="light" id="wifisettings"{if !$netdevinfo.xmlprovisioning || !isset($netdevinfo.portdetails.wifi.portscount)} style="display: none;"{/if}>
 								<TD colspan="3">
 									<fieldset style="width: 1%;" class="nobr">
 										<legend class="bold"><IMG SRC="img/wireless.gif" ALT=""> {trans("WiFi settings")}</legend>
