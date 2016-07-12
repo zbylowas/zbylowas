@@ -316,7 +316,8 @@ if (isset($_POST['netdev'])) {
 	$onuports = $netdevdata['portsettings'];
 	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
 } else {
-	$modelports = $GPON->GetGponOnuModelPorts(reset($gpononumodels)['id']);
+	$onumodel = reset($gpononumodels);
+	$modelports = $GPON->GetGponOnuModelPorts($onumodel['id']);
 	$onuports = array();
 	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
 }
