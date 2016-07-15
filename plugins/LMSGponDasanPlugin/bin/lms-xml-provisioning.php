@@ -142,6 +142,7 @@ $GPON = new GPON($DB, $AUTH);
 
 $xml_provisioning_admin_login = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_admin_login', 'admin');
 $xml_provisioning_admin_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_admin_password', 'password');
+$xml_provisioning_telnet_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_telnet_password', $xml_provisioning_admin_password);
 $xml_provisioning_web_port = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_web_port', '80');
 $path = explode(DIRECTORY_SEPARATOR, dirname(realpath($argv[0])));
 array_pop($path);
@@ -203,6 +204,7 @@ $SMARTY->setCompileDir(SMARTY_COMPILE_DIR);
 $default_properties = array(
 	'admin_login' => $xml_provisioning_admin_login,
 	'admin_password' => $xml_provisioning_admin_password,
+	'telnet_password' => $xml_provisioning_telnet_password,
 	'web_port' => $xml_provisioning_web_port,
 	'modified_time' => strftime('%Y-%m-%d %H:%M:%S'),
 );
