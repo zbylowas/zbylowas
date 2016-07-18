@@ -214,17 +214,6 @@ $default_properties = array(
 	'modified_time' => strftime('%Y-%m-%d %H:%M:%S'),
 );
 
-foreach ($models as $modelid => &$model) {
-	$template_filename = $plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates' . DIRECTORY_SEPARATOR
-		. $model['name'] . '-' . $modelid . '.xml';
-	$fh = fopen($template_filename, "w+");
-	if (empty($fh))
-		continue;
-	fwrite($fh, $model['xmltemplate']);
-	fclose($fh);
-	$model['tpl'] = $SMARTY->createTemplate($template_filename);
-}
-
 foreach ($onus as $onu) {
 	extract($onu);
 	if (!isset($models[$modelid])) {
@@ -237,23 +226,22 @@ foreach ($onus as $onu) {
 	if (!$quiet)
 		echo "Generating ${filename} file ..." . PHP_EOL;
 
-	$tpl = $models[$modelid]['tpl'];
-	$tpl->clearAllAssign();
-	$tpl->assign($default_properties);
+	$SMARTY->clearAllAssign();
+	$SMARTY->assign($default_properties);
 	if (!empty($properties)) {
 		$properties = unserialize($properties);
 		if ($properties !== false)
-			$tpl->assign($properties);
+			$SMARTY->assign($properties);
 	}
 
-	$tpl->assign('portsettings', $GPON->GetGponOnuPorts($gpononuid));
+	$SMARTY->assign('portsettings', $GPON->GetGponOnuPorts($gpononuid));
 
 	$i = 1;
 	foreach (array($host1, $host2) as $host) {
 		if (!empty($host)) {
 			list ($host_ip, $host_mask, $host_gateway, $host_login, $host_password, $host_authtype) =
 				explode('/', $host);
-			$tpl->assign(array(
+			$SMARTY->assign(array(
 				'host' . $i . '_ip' => $host_ip,
 				'host' . $i . '_mask' => $host_mask,
 				'host' . $i . '_gateway' => $host_gateway,
@@ -270,7 +258,7 @@ foreach ($onus as $onu) {
 		if (!empty($sip)) {
 			list ($sip_login, $sip_password, $sip_phone) =
 				explode('/', $sip);
-			$tpl->assign(array(
+			$SMARTY->assign(array(
 				'sip' . $i . '_login' => $sip_login,
 				'sip' . $i . '_password' => $sip_password,
 				'sip' . $i . '_phone' => $sip_phone,
@@ -279,7 +267,7 @@ foreach ($onus as $onu) {
 		$i++;
 	}
 
-	$contents = $tpl->fetch();
+	$contents = $SMARTY->fetch('string:' . $models[$modelid]['xmltemplate']);
 
 	$fh = fopen($filename, "w+");
 	if (empty($fh)) {
@@ -295,10 +283,6 @@ foreach ($onus as $onu) {
 	$contents .= PHP_EOL . PHP_EOL;
 */
 }
-
-foreach ($models as $modelid => &$model)
-	@unlink($plugin_dir_name . DIRECTORY_SEPARATOR . 'xml-templates'
-		. DIRECTORY_SEPARATOR . $model['name'] . '-' . $modelid . '.xml');
 
 $DB->Destroy();
 
