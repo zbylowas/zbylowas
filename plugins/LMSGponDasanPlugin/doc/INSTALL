@@ -16,24 +16,27 @@ Instalacja:
 4. Zrestartować serwer www.
 
 Provisioning XML (skrypt bin/lms-xml-provisioning.php):
-1. Ustawić dla modeli końcówek szablony konfiguracji xml.
-2. Ustawienie gpon-dasan.xml_provisioning_default_enabled (true/false) decyduje czy dla nowo
+1. Ustawić adres URL wskazujący plik xml konfiguracji końcówki wstawiany jako jeden z atrybutów
+   serwera Radius - gpon-dasan.xml_provisioning_url, np. ftp://login:password@ftp-server.pl/DSNW%sn%.xml
+   (symbol %sn% będzie zastępowany numerem seryjnym końcówki)
+2. Ustawić dla modeli końcówek szablony konfiguracji xml.
+3. Ustawienie gpon-dasan.xml_provisioning_default_enabled (true/false) decyduje czy dla nowo
    dodawanych końcówek automatycznie zaznaczana jest flaga "Provisioning XML".
-3. Ustawieniem gpon-dasan.xml_provisioning_filename wskazać ścieżkę do plików, które
+4. Ustawieniem gpon-dasan.xml_provisioning_filename wskazać ścieżkę do plików, które
    będzie generował skrypt bin/lms-xml-provisioning.php (może wystąpić symbol %sn%
    za który zostanie wstaiony numer seryjny końcówki).
-4. Ustawienia gpon-dasan.xml_provisioning_admin_password i gpon-dasan.xml_provisioning_telnet_password
+5. Ustawienia gpon-dasan.xml_provisioning_admin_password i gpon-dasan.xml_provisioning_telnet_password
    ustalają odpowiednio domyślne hasła administratora końcówki i usługi telnet działającej
     na końcówce.
-5. Ustawienie gpon-dasan.xml_provisioning_web_port ustala port tcp na którym
+6. Ustawienie gpon-dasan.xml_provisioning_web_port ustala port tcp na którym
    działa interfejs www końcówki.
-6. Ustawienia gpon-dasan.xml_provisioning_default_wifi_ssid oraz gpon-dasan.xml_provisioning_default_wifi_password
+7. Ustawienia gpon-dasan.xml_provisioning_default_wifi_ssid oraz gpon-dasan.xml_provisioning_default_wifi_password
    ustalają wzorzec automatycznie generowanych z poziomu UI wtyczki ustawień sieci bezprzewodowej
    (gdy ustawienia są niepuste w UI jest dostępny przycisk "Generuj"). Pierwsze ustawienie obsługuje
    symbol specjalny %sn% za który wstawiany jest numer seryjny końcówki. Drugie ustawienie obsługuje
    symbol specjalny %14random% za który wstawiany jest losowy ciąg znaków o długości 14 (długość można
    zmieniać poprzez wpisane przed słowem random innej liczby).
-7. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
+8. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
    {$admin_password} - hasło administratora końcówki,
    {$telnet_password} - hasło usługi telnet na końcówce,
    {$web_port} - port tcp na którym działa interfejs www końcówki,
