@@ -158,12 +158,12 @@ $query = "SELECT o.id AS gpononuid, o.name, o.properties, m.id AS modelid, m.nam
 	JOIN gpononumodels m ON m.id = o.gpononumodelsid
 	JOIN gponoltprofiles p ON p.id = o.gponoltprofilesid
 	LEFT JOIN (
-		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details,
+		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details
 		FROM nodes n
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
 	) h1 ON h1.id = o.host_id1
 	LEFT JOIN (
-		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details,
+		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details
 		FROM nodes n
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
 	) h2 ON h2.id = o.host_id2
