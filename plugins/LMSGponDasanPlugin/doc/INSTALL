@@ -17,7 +17,7 @@ Instalacja:
 
 Provisioning XML (skrypt bin/lms-xml-provisioning.php):
 1. Ustawić adres URL wskazujący plik xml konfiguracji końcówki wstawiany jako jeden z atrybutów
-   serwera Radius - gpon-dasan.xml_provisioning_url, np. ftp://login:password@ftp-server.pl/DSNW%sn%.xml
+   serwera Radius - gpon-dasan.xml_provisioning_url, np. ftp://login:password@ftp-server.pl/%sn%.xml
    (symbol %sn% będzie zastępowany numerem seryjnym końcówki)
 2. Ustawić dla modeli końcówek szablony konfiguracji xml.
 3. Ustawienie gpon-dasan.xml_provisioning_default_enabled (true/false) decyduje czy dla nowo
