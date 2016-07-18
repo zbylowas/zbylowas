@@ -1,4 +1,4 @@
-Dodatek GPON Dasan do LMS w wersji git (ver 2.1) / 21.07.2015
+Dodatek GPON Dasan do LMS w wersji git 18.07.2016
 
 ==========================================================
 Wymagania:
@@ -14,3 +14,44 @@ Instalacja:
 3. W pliku /etc/snmp/snmp.conf wskazać katalog <lms-path>/plugins/LMSGponDasanPlugin/mibs:
    mibdirs +<lms-path>/plugins/LMSGponDasanPlugin/mibs:<lms-path>/plugins/LMSGponDasanPlugin/mibs/SLE:<lms-path>/plugins/LMSGponDasanPlugin/mibs/DSSHE
 4. Zrestartować serwer www.
+
+Provisioning XML (skrypt bin/lms-xml-provisioning.php):
+1. Ustawić dla modeli końcówek szablony konfiguracji xml.
+2. Ustawienie gpon-dasan.xml_provisioning_default_enabled (true/false) decyduje czy dla nowo
+   dodawanych końcówek automatycznie zaznaczana jest flaga "Provisioning XML".
+3. Ustawieniem gpon-dasan.xml_provisioning_filename wskazać ścieżkę do plików, które
+   będzie generował skrypt bin/lms-xml-provisioning.php (może wystąpić symbol %sn%
+   za który zostanie wstaiony numer seryjny końcówki).
+4. Ustawienia gpon-dasan.xml_provisioning_admin_password i gpon-dasan.xml_provisioning_telnet_password
+   ustalają odpowiednio domyślne hasła administratora końcówki i usługi telnet działającej
+    na końcówce.
+5. Ustawienie gpon-dasan.xml_provisioning_web_port ustala port tcp na którym
+   działa interfejs www końcówki.
+6. Ustawienia gpon-dasan.xml_provisioning_default_wifi_ssid oraz gpon-dasan.xml_provisioning_default_wifi_password
+   ustalają wzorzec automatycznie generowanych z poziomu UI wtyczki ustawień sieci bezprzewodowej
+   (gdy ustawienia są niepuste w UI jest dostępny przycisk "Generuj"). Pierwsze ustawienie obsługuje
+   symbol specjalny %sn% za który wstawiany jest numer seryjny końcówki. Drugie ustawienie obsługuje
+   symbol specjalny %14random% za który wstawiany jest losowy ciąg znaków o długości 14 (długość można
+   zmieniać poprzez wpisane przed słowem random innej liczby).
+7. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
+   {$admin_password} - hasło administratora końcówki,
+   {$telnet_password} - hasło usługi telnet na końcówce,
+   {$web_port} - port tcp na którym działa interfejs www końcówki,
+   {$modified_time} - data ostatniej modyfikacji automatycznie generowana przez skrypt,
+   {$wifi_ssid}, {$wifi_password} - ustawienie sieci bezprzewodowej na końcówce,
+   {$host1_ip}, {$host1_mask}, {$host1_gateway} - ustawienia pierwszego hosta IP na końcówce pobrane
+     z przypisanego pierwszego komputera lub urządzenia,
+   {$host1_login}, {$host1_password}, {$host1_authtype} - ustawienia loginu/nazwy, hasła oraz typu połączenia
+     pierwszego komputera/urządzenia przypisanego do końcówki,
+   {$host2_ip}, {$host2_mask}, {$host2_gateway} - ustawienia drugiego hosta IP na końcówce pobrane
+     z przypisanego drugiego komputera lub urządzenia,
+   {$host2_login}, {$host2_password}, {$host2_authtype} - ustawienia loginu/nazwy, hasła oraz typu połączenia
+     drugiego komputera/urządzenia przypisanego do końcówki,
+   {$sip1_login}, {$sip1_password}, {$sip1_phone} - login, hasło i numer telefonu pobrane z pierwszego konta
+     VoIP przypisanego do końcówki,
+   {$sip2_login}, {$sip2_password}, {$sip2_phone} - login, hasło i numer telefonu pobrane z drugiego konta
+     VoIP przypisanego do końcówki,
+   {$portsettings['...'].portdisable} - czy dany port końcówki ma być aktywny (jako indeksy wpisujemy np.
+   'eth.1', 'eth.2', 'wifi.1', 'pots.1', 'pots.2', itd.),
+   Uwaga! Jako, że szablony xml są przetwarzane przez bibliotekę Smarty można w nich posługiwać się językiem
+   szablonów identycznym jak w zwykłych szablonach Smarty.
