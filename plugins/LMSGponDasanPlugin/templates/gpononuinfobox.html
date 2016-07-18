@@ -76,14 +76,14 @@
 	{/if}
 	{if $netdevinfo.model}
 	<TR class="light">
-		<TD WIDTH="1%">
+		<TD style="width: 1%;">
 			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_model.gif" ALT="">
 		</TD>
-		<TD WIDTH="1%">
-		        <B>{trans("Model:")}</B>
+		<TD style="width: 1%;" class="bold">
+			<B>{trans("Model:")}
 		</TD>
-		<TD WIDTH="98%">
-		        {$netdevinfo.model}
+		<TD style="width: 98%;">
+			<a href="?m=gpononumodelsinfo&id={$netdevinfo.gpononumodelsid}">{$netdevinfo.model}</a>
 		</TD>
 	</TR>
 	{/if}
