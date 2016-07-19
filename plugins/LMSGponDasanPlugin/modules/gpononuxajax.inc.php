@@ -108,6 +108,20 @@ function ONU_LoadNetworkSettings($netname) {
 	return $objResponse;
 }
 
-$LMS->RegisterXajaxFunction(array('ONU_UpdateProperties', 'ONU_GenerateWifiSettings', 'ONU_LoadNetworkSettings'));
+function ONU_AutoFillNetworkSettings($netaddress, $netmask) {
+	// xajax response
+	$objResponse = new xajaxResponse();
+
+	$netaddress_long = ip_long($netaddress);
+	$braddress_long = ip_long(getbraddr($netaddress, $netmask));
+	$objResponse->assign('lan_gateway', "value", long2ip($netaddress_long + 1));
+	$objResponse->assign('lan_firstdhcpip', "value", long2ip($netaddress_long + 2));
+	$objResponse->assign('lan_lastdhcpip', "value", long2ip($braddress_long - 1));
+
+	return $objResponse;
+}
+
+$LMS->RegisterXajaxFunction(array('ONU_UpdateProperties', 'ONU_GenerateWifiSettings', 'ONU_LoadNetworkSettings',
+	'ONU_AutoFillNetworkSettings'));
 
 ?>
