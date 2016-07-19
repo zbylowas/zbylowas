@@ -1,7 +1,7 @@
 <!--// $Id$ //-->
 {$xajax}
 <TABLE WIDTH="100%" CELLPADDING="3">
-	<TR {if $devicepanel} class="dark hand" onClick="showOrHide('devicepanel');"{else} class="dark"{/if}>
+	<TR class="dark">
 		<TD WIDTH="1%" class="fleftu">
 			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
@@ -9,9 +9,8 @@
 			<B>{$netdevinfo.name} ({$netdevinfo.id|string_format:"%04d"})</B>
 		</TD>
 	</TR>
-	
-	<TR class="light"{if $devicepanel} id="devicepanel" style="display:none;"{/if}>
-	        <TD WIDTH="100%" COLSPAN="2"{if $devicepanel} class="fall" ALIGN="RIGHT"{else}class="flr"{/if}>
+	<TR class="light">
+	        <TD WIDTH="100%" COLSPAN="2" class="flr">
 			<TABLE WIDTH="100%" CELLPADDING="0">
 				<TR class="light">
 					<TD WIDTH="50%" style="vertical-align:top;">
@@ -325,7 +324,7 @@
                 </TD>
         </TR>
 
-        {if $netdevinfo.gponoltid gt 0}
+	{if $netdevinfo.gponoltid gt 0}
 	<TR class="light">
 		<TD WIDTH="100%" COLSPAN="3">
 		    Historia sygnału 1490nm/<font color="#00c080">1310nm</font> odbieranego na ONU/OLT (RxPower):
@@ -336,23 +335,15 @@
 			{/if}
 		</TD>
 	</TR>
-        <TR class="light">
-                <TD WIDTH="100%" COLSPAN="3">
-                        <input type="button" value="Pokaż parametry" id="pokaz_parametry_{$netdevinfo.id}" OnClick="xajax_ONU_get_param_Xj({$netdevinfo.gponoltid},{$netdevinfo.gponoltnumport},{$netdevinfo.onuid},{$netdevinfo.id},'{$netdevinfo.name}');" /> <input style="display:none;" type="button" value="Odśwież parametry" id="odswiez_parametry_{$netdevinfo.id}" OnClick="xajax_ONU_get_param_Xj({$netdevinfo.gponoltid},{$netdevinfo.gponoltnumport},{$netdevinfo.onuid},{$netdevinfo.id},'{$netdevinfo.name}');" />
-                        <div id="ONU_param_{$netdevinfo.id}"></div>
-                </TD>
-        </TR>
-        {/if}
-	                                        </TABLE>
+	{/if}
+						</TABLE>
 					</TD>
 				</TR>
 			</TABLE>
-{if !$devicepanel}
-    		</TD>
+		</TD>
 	</TR>
 	<TR class="light">
-	        <TD WIDTH="100%" COLSPAN="2" class="fbottomu" ALIGN="RIGHT">
-{/if}
+		<TD WIDTH="100%" COLSPAN="2" class="flr" ALIGN="RIGHT">
 			{if ConfigHelper::checkConfig('gpon-dasan.use_radius')}
 			<a href="#" id="disconnectbutton" onclick="if (confirm('{trans("Are you sure you want to disconnect ONU?")}')) { this.style.display = 'none'; xajax_ONU_radius_disconnect({$netdevinfo.id}); } else return false;">{trans("<!gpon-dasan>Disconnect")} <IMG SRC="img/radius.gif" ALT=""></a>
 			{/if}
@@ -363,6 +354,20 @@
 			<A href="?m=gpononuedit&id={$netdevinfo.id}" ACCESSKEY="E">{trans("Edit")} <IMG src="img/edit.gif" ALT="[ {trans("Edit")} ]"></A>
 			<A href="?m=gpononudel&id={$netdevinfo.id}" OnClick="return confirmLink(this, '{t a=$netdevinfo.name}Are you sure, you want to remove device \'$a\' from database?{/t}');">{trans("Delete")} <img src="img/delete.gif" ALT=""></A>
 		</TD>
+	</TR>
+	{if $netdevinfo.gponoltid gt 0}
+	<TR class="light">
+		<TD COLSPAN="2" class="flr text-center">
+			<HR>
+			<input type="button" value="{trans("Show SNMP settings")}" id="pokaz_parametry_{$netdevinfo.id}" OnClick="xajax_ONU_get_param_Xj({$netdevinfo.gponoltid},{$netdevinfo.gponoltnumport},{$netdevinfo.onuid},{$netdevinfo.id},'{$netdevinfo.name}');">
+			<br>
+			<input style="display:none;" type="button" value="{trans("Refresh SNMP settings")}" id="odswiez_parametry_{$netdevinfo.id}" OnClick="xajax_ONU_get_param_Xj({$netdevinfo.gponoltid},{$netdevinfo.gponoltnumport},{$netdevinfo.onuid},{$netdevinfo.id},'{$netdevinfo.name}');">
+			<div id="ONU_param_{$netdevinfo.id}"></div>
+		</TD>
+	</TR>
+	{/if}
+	<TR class="light">
+		<TD COLSPAN="2" class="fbottomu"></TD>
 	</TR>
 </TABLE>
 {if $devicepanel}

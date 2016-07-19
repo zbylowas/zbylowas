@@ -265,6 +265,12 @@
             		</TABLE>
         	</TD>
 	</TR>
+	<TR class="light">
+		<TD WIDTH="100%" class="flr" COLSPAN="3" ALIGN="RIGHT">
+			<A HREF="javascript:document.netdevedit.submit();" ACCESSKEY="S" id="xsd">{trans("Submit")} <IMG SRC="img/save.gif" alt=""></A>
+			<A HREF="?m=gpononuinfo&id={$netdevinfo.id}">{trans("Cancel")} <IMG SRC="img/cancel.gif" alt=""></A>
+		</TD>
+	</TR>	
 	{if $netdevinfo.gponoltid gt 0}
 	<TR class="light">
 		<TD WIDTH="100%" colspan="3" class="flr">
@@ -275,9 +281,6 @@
 	</TR>
 	{/if}
 	<TR class="light">
-		<TD WIDTH="100%" class="fbottomu" COLSPAN="3" ALIGN="RIGHT">
-			<A HREF="javascript:document.netdevedit.submit();" ACCESSKEY="S" id="xsd">{trans("Submit")} <IMG SRC="img/save.gif" alt=""></A>
-			<A HREF="?m=gpononuinfo&id={$netdevinfo.id}">{trans("Cancel")} <IMG SRC="img/cancel.gif" alt=""></A>
-		</TD>
-	</TR>	
+		<TD colspan="3" class="fbottomu"></TD>
+	</TR>
 </TABLE>

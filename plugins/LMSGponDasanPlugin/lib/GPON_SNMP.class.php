@@ -1072,7 +1072,10 @@ class GPON_SNMP {
 			$onchange=' onchange="this.style.borderColor=\'red\';"';
 			$snmp_result=$this->ONU_get_param($OLT_id,$ONU_id);
 			
-			$result='Dane z dnia: <b>'.date('Y-m-d H:i:s').'</b><br /><br />';
+			$result='<p class="text-center">
+			<input type="button" value="' . trans("Save changes via SNMP") . '" id="save_changes" OnClick="document.getElementById(\'save\').value=1;document.getElementById(\'snmpsend\').value=1;this.form.submit();">
+			</p>
+			<p class="text-center">Dane z dnia: <b>'.date('Y-m-d H:i:s').'</b></p>';
 			if(is_array($snmp_result) && count($snmp_result)>0)
 			{
 				$result.='
@@ -1390,7 +1393,6 @@ class GPON_SNMP {
 				$result .= '</table>
 				</td>
 				</tr>
-				<tr><td align="right" colspan="2"><input type="button" value="Zapisz zmiany na ONU" id="save_changes" OnClick="document.getElementById(\'save\').value=1;document.getElementById(\'snmpsend\').value=1;this.form.submit();" /></td></tr>
 				</table>
 				</form>
 				';

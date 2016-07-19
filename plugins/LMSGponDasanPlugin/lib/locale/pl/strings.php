@@ -57,4 +57,9 @@ $_LANG['Last DHCP address outside the network!'] = 'Ostatni adres DHCP spoza sie
 $_LANG['First DHCP address greater than last DHCP address!'] = 'Pierwszy adres DHCP jest większy niż ostatni adres DHCP!';
 $_LANG['Gateway address between first and last DHCP addresses!'] = 'Adres bramy pomiędzy pierwszym i ostatnim adresem DHCP!';
 
+$_LANG['Show SNMP settings'] = 'Pokaż ustawienia SNMP';
+$_LANG['Hide SNMP settings'] = 'Ukryj ustawienia SNMP';
+$_LANG['Refresh SNMP settings'] = 'Odśwież ustawienia SNMP';
+$_LANG['Save changes via SNMP'] = 'Zapisz zmiany poprzez SNMP';
+
 ?>

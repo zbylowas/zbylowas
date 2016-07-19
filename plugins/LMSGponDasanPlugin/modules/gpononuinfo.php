@@ -55,9 +55,14 @@ function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
 	$GPON->snmp->set_options($options_snmp);
 	$error_snmp=$GPON->snmp->get_correct_connect_snmp();
 	$table_param=$GPON->snmp->ONU_get_param_table($OLT_id,$ONU_id,$ONU_name);
-	$objResponse->script("document.getElementById('pokaz_parametry_".$id."').value='Ukryj parametry';"); 
-	$objResponse->script("document.getElementById('odswiez_parametry_".$id."').style.display='block';"); 
-	$objResponse->script("document.getElementById('pokaz_parametry_".$id."').onclick=function(){document.getElementById('ONU_param_".$id."').innerHTML='';document.getElementById('pokaz_parametry_".$id."').value='Pokaż parametry';document.getElementById('odswiez_parametry_".$id."').style.display='none';document.getElementById('pokaz_parametry_".$id."').onclick=function(){xajax_ONU_get_param_Xj(".$gponoltid.",".$OLT_id.",".$ONU_id.",".$id.",'".$ONU_name."');}};");
+	$objResponse->script("document.getElementById('pokaz_parametry_".$id."').value='" . trans("Hide SNMP settings") . "';");
+	$objResponse->script("document.getElementById('odswiez_parametry_".$id."').style.display='';");
+	$objResponse->script("document.getElementById('pokaz_parametry_".$id."').onclick=function()"
+		. "{document.getElementById('ONU_param_".$id."').innerHTML='';"
+		. "document.getElementById('pokaz_parametry_".$id."').value='" . trans("Show SNMP settings") . "';"
+		. "document.getElementById('odswiez_parametry_".$id."').style.display='none';"
+		. "document.getElementById('pokaz_parametry_".$id."').onclick=function()"
+		. "{xajax_ONU_get_param_Xj(".$gponoltid.",".$OLT_id.",".$ONU_id.",".$id.",'".$ONU_name."');}};");
 	$objResponse->assign("ONU_param_".$id,"innerHTML",$error_snmp.$table_param);
 	return $objResponse;
 }
