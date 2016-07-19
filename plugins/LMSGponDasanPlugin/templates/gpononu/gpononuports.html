@@ -1,14 +1,14 @@
 <tr class="light" id="portsettings"{if !ConfigHelper::checkConfig('gpon-dasan.use_radius') && !$netdevinfo.xmlprovisioning} style="display: none;"{/if}>
-	<TD style="width: 1%;">
-		<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
-	</td>
-	<TD style="width: 1%;" class="bold nobr">
-		{trans("<!gpon-dasan>Ports:")}
-	</TD>
-	<TD style="width: 98%;">
-		<table id="portsettingstable" CELLPADDING="2" border="1" rules="cols">
-			{include file="gpononu/gpononuporttable.html"}
-		</table>
+	<TD colspan="3">
+		<fieldset style="width: 1%;" class="nobr">
+			<legend class="bold">
+				<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
+				{trans("<!gpon-dasan>Ports:")}
+			</legend>
+			<table cellpadding="2" id="portsettingstable">
+				{include file="gpononu/gpononuporttable.html"}
+			</table>
+		</fieldset>
 	</TD>
 </tr>
 
