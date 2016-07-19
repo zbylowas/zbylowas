@@ -158,7 +158,9 @@ $xml_provisioning_filename = ConfigHelper::getConfig('gpon-dasan.xml_provisionin
 $query = "SELECT o.id AS gpononuid, o.name, o.properties, m.id AS modelid, m.name AS model,
 		p.name AS profile, o.onudescription AS description,
 		h1.details AS host1, h2.details AS host2, p1.details AS sip1, p2.details AS sip2,
-		disabledports.portnames, disabledports.portids
+		disabledports.portnames, disabledports.portids,
+		(SELECT customersid FROM gpononu2customers o2c
+			WHERE o2c.gpononuid = o.id ORDER BY id LIMIT 1) AS customerid
 	FROM gpononu o
 	JOIN gpononumodels m ON m.id = o.gpononumodelsid
 	JOIN gponoltprofiles p ON p.id = o.gponoltprofilesid
@@ -266,6 +268,8 @@ foreach ($onus as $onu) {
 		}
 		$i++;
 	}
+
+	$SMARTY->assign('customerid', intval($customerid));
 
 	$contents = $SMARTY->fetch('string:' . $models[$modelid]['xmltemplate']);
 

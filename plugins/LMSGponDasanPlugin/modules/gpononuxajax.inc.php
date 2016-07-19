@@ -60,9 +60,11 @@ function ONU_GenerateWifiSettings($onuid) {
 	$objResponse = new xajaxResponse();
 
 	$onu = $GPON->GetGponOnu($onuid);
+	$customers = $GPON->GetGponOnu2Customers($onuid);
 
 	$wifi_ssid = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_ssid', '');
 	$wifi_ssid = str_replace('%sn%', $onu['name'], $wifi_ssid);
+	$wifi_ssid = str_replace('%customerid%', empty($customers) ? 0 : intval($customers[0]['customersid']), $wifi_ssid);
 	$objResponse->assign("wifi_ssid", "value", $wifi_ssid);
 
 	$wifi_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_password', '');

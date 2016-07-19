@@ -41,6 +41,7 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
    {$telnet_password} - hasło usługi telnet na końcówce,
    {$web_port} - port tcp na którym działa interfejs www końcówki,
    {$modified_time} - data ostatniej modyfikacji automatycznie generowana przez skrypt,
+   {$customerid} - najniższy identyfikator klienta spośród klientów przypisanych do końcówki,
    {$wifi_ssid}, {$wifi_password} - ustawienie sieci bezprzewodowej na końcówce,
    {$host1_ip}, {$host1_mask}, {$host1_gateway} - ustawienia pierwszego hosta IP na końcówce pobrane
      z przypisanego pierwszego komputera lub urządzenia,
