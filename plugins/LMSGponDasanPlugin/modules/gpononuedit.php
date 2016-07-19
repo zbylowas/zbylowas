@@ -211,6 +211,8 @@ if (isset($_POST['netdev']) && (!isset($_POST['snmpsend']) || empty($_POST['snmp
 				$error['wifi_password'] = trans('WiFi password should contain at least 8 characters!');
 		} else
 			unset($netdevdata['properties']['wifi_ssid'], $netdevdata['properties']['wifi_password']);
+
+		validate_lan_network($netdevdata['properties'], $error);
 	}
 
 	if (!$error) {
@@ -546,11 +548,11 @@ function ONU_Host_hosts_Xj($id_clients,$host1_id,$host2_id,$disable=0)
 	return $objResponse;
 }
 
+$LMS->InitXajax();
+
 include('gpononuxajax.inc.php');
 
-$LMS->InitXajax();
-$LMS->RegisterXajaxFunction(array('GetFreeOltPort_Xj', 'ONU_get_param_Xj', 'ONU_Voip_Phone_Xj', 'ONU_Host_hosts_Xj',
-	'ONU_UpdateProperties', 'ONU_GenerateWifiSettings'));
+$LMS->RegisterXajaxFunction(array('GetFreeOltPort_Xj', 'ONU_get_param_Xj', 'ONU_Voip_Phone_Xj', 'ONU_Host_hosts_Xj'));
 $SMARTY->assign('xajax', $LMS->RunXajax());
 
 /* end AJAX plugin stuff */
@@ -618,6 +620,7 @@ $SMARTY->assign('replacelisttotal',$replacelisttotal);
 $SMARTY->assign('devlinktype',$SESSION->get('devlinktype'));
 $SMARTY->assign('nodelinktype',$SESSION->get('nodelinktype'));
 $SMARTY->assign('nastype', $LMS->GetNAStypes());
+$SMARTY->assign('lannetworks', parse_lan_networks());
 
 switch ($edit) {
 	case 'data':

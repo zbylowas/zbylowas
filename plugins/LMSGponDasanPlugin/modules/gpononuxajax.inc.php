@@ -31,19 +31,22 @@ function ONU_UpdateProperties($xmlprovisioning, $modelid) {
 	$objResponse = new xajaxResponse();
 
 	$wifisettings = 'none';
+	$lansettings = 'none';
 	if ($xmlprovisioning) {
 		$ports = $GPON->GetGponOnuModelPorts($modelid);
 		if (isset($ports['wifi']))
 			$wifisettings = '';
+		$lansettings = '';
 	}
 	$objResponse->assign("wifisettings", "style.display", $wifisettings);
+	$objResponse->assign("lansettings", "style.display", $lansettings);
 
 	if ($xmlprovisioning || ConfigHelper::checkConfig('gpon-dasan.use_radius')) {
 		$modelports = $GPON->GetGponOnuModelPorts($modelid);
 		$onuports = $GPON->GetGponOnuPorts($_GET['id']);
 		$netdevinfo['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
 		$SMARTY->assign('netdevinfo', $netdevinfo);
-		$contents = $SMARTY->fetch('gpononu/gpononuports.html');
+		$contents = $SMARTY->fetch('gpononu/gpononuporttable.html');
 		$objResponse->assign("portsettingstable", "innerHTML", $contents);
 		$portsettings = '';
 	} else
@@ -76,5 +79,35 @@ function ONU_GenerateWifiSettings($onuid) {
 
 	return $objResponse;
 }
+
+function ONU_LoadNetworkSettings($netname) {
+	// xajax response
+	$objResponse = new xajaxResponse();
+
+	if (empty($netname))
+		$lan_networks[0] = array(
+			'net' => '',
+			'mask' => '',
+			'gateway' => '',
+			'first_dhcp_ip' => '',
+			'last_dhcp_ip' => '',
+		);
+	else {
+		$lan_networks = parse_lan_networks($netname);
+		if (empty($lan_networks))
+			return $objResponse;
+	}
+
+	$network = $lan_networks[0];
+	$objResponse->assign('lan_netaddress', "value", $network['net']);
+	$objResponse->assign('lan_netmask', "value", $network['mask']);
+	$objResponse->assign('lan_gateway', "value", $network['gateway']);
+	$objResponse->assign('lan_firstdhcpip', "value", $network['first_dhcp_ip']);
+	$objResponse->assign('lan_lastdhcpip', "value", $network['last_dhcp_ip']);
+
+	return $objResponse;
+}
+
+$LMS->RegisterXajaxFunction(array('ONU_UpdateProperties', 'ONU_GenerateWifiSettings', 'ONU_LoadNetworkSettings'));
 
 ?>

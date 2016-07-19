@@ -203,6 +203,57 @@
 				</TD>
 				<TD WIDTH="50%" style="vertical-align:top;">
 				        <TABLE WIDTH="100%" CELLPADDING="3">
+		{if $netdevinfo.xmlprovisioning && $netdevinfo.properties.lan_netaddress}
+		<TR class="light">
+			<TD colspan="3">
+				<fieldset style="width: 1%;" class="nobr">
+					<legend class="bold"><IMG SRC="img/netdev.gif" ALT=""> {trans("LAN settings")}</legend>
+					<table cellpadding="2">
+						<tr>
+							<TD class="bold nobr">
+								{trans("Network address:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.lan_netaddress}
+							</TD>
+						</tr>
+						<tr>
+							<TD class="bold nobr">
+								{trans("Network mask:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.lan_netmask}
+							</TD>
+						</tr>
+						<tr>
+							<TD class="bold nobr">
+								{trans("Gateway:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.lan_gateway}
+							</TD>
+						</tr>
+						<tr>
+							<TD class="bold nobr">
+								{trans("First DHCP address:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.lan_firstdhcpip}
+							</TD>
+						</tr>
+						<tr>
+							<TD class="bold nobr">
+								{trans("Last DHCP address:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.lan_lastdhcpip}
+							</TD>
+						</tr>
+					</table>
+				</fieldset>
+			</TD>
+		</TR>
+		{/if}
 		{if $netdevinfo.xmlprovisioning && isset($netdevinfo.portdetails.wifi.portscount)}
 		{if $netdevinfo.properties.wifi_ssid || $netdevinfo.properties.wifi_password}
 		<TR class="light">

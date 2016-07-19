@@ -1,4 +1,4 @@
-Dodatek GPON Dasan do LMS w wersji git 18.07.2016
+Dodatek GPON Dasan do LMS w wersji git 19.07.2016
 
 ==========================================================
 Wymagania:
@@ -36,7 +36,9 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
    symbol specjalny %sn% za który wstawiany jest numer seryjny końcówki. Drugie ustawienie obsługuje
    symbol specjalny %14random% za który wstawiany jest losowy ciąg znaków o długości 14 (długość można
    zmieniać poprzez wpisane przed słowem random innej liczby).
-8. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
+8. Ustawienie gpon-dasan.xml_provisioning_lan_networks określa listę predefiniowanych konfiguracji sieci IP
+   dla sieci LAN na końcówce od strony klienta. Dobrym przykładem jest domyślna wartość tego pola.
+9. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
    {$admin_password} - hasło administratora końcówki,
    {$telnet_password} - hasło usługi telnet na końcówce,
    {$web_port} - port tcp na którym działa interfejs www końcówki,
@@ -57,5 +59,10 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
      VoIP przypisanego do końcówki,
    {$portsettings['...'].portdisable} - czy dany port końcówki ma być aktywny (jako indeksy wpisujemy np.
    'eth.1', 'eth.2', 'wifi.1', 'pots.1', 'pots.2', itd.),
+   {$lan_netaddress} - adres sieci LAN na końcówce od strony klienta
+   {$lan_netmask} - maska sieci LAN na końcówce od strony klienta
+   {$lan_gateway} - adres bramy w LAN na końcówce od strony klienta
+   {$lan_firstdhcpip} - pierwszy adres DHCP w LAN na końcówce od strony klienta
+   {$lan_lastdhcpip} - ostatni adres DHCP w LAN na końcówce od strony klienta
    Uwaga! Jako, że szablony xml są przetwarzane przez bibliotekę Smarty można w nich posługiwać się językiem
    szablonów identycznym jak w zwykłych szablonach Smarty.

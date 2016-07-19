@@ -184,7 +184,9 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'xml_provisioning_filename', '', 'szablon nazwy pliku w którym zapisywane są konfiguracje końcówek używane przy ich provisioningu', 1);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'xml_provisioning_default_enabled', 'true', 'czy w interfejsie użytkownika pole provisioningu xml jest automatycznie zaznaczone', 1);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'xml_provisioning_telnet_password', 'password', 'domyślne hasło dostępu przez telnet ustawiane przy provisioningu xml końcówek', 0);
+INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'xml_provisioning_lan_networks', '192.168.10.100-254/24|lan_podstawowy,172.16.1.100-254/24|lan_zapasowy,10.1.2.100-254/24|lan_awaryjnie_zapasowy',
+	'lista sieci ip oddzielonych spacjami, przecinkami lub średnikami proponowanych w ramach możliwości szybkiego skonfigurowania na końcówce sieci lokalnej abonenta', 0);
 
 INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016071500');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016071900');

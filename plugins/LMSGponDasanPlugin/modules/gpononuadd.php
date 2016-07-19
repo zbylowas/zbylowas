@@ -295,11 +295,11 @@ function ONU_Host_hosts_Xj($id_clients,$host1_id,$host2_id)
 	return $objResponse;
 }
 
+$LMS->InitXajax();
+
 include('gpononuxajax.inc.php');
 
-$LMS->InitXajax();
-$LMS->RegisterXajaxFunction(array('ONU_Voip_Phone_Xj', 'ONU_Host_hosts_Xj', 'ONU_UpdateProperties',
-	'ONU_GenerateWifiSettings'));
+$LMS->RegisterXajaxFunction(array('ONU_Voip_Phone_Xj', 'ONU_Host_hosts_Xj'));
 $SMARTY->assign('xajax', $LMS->RunXajax());
 
 /* end AJAX plugin stuff */
@@ -363,6 +363,7 @@ $SMARTY->assign('netdevinfo', $netdev_temp);
 $SMARTY->assign('netdevhosts', $GPON->GetHostForNetdevices());
 $SMARTY->assign('onucheck', $onucheck);
 $SMARTY->assign('notgpononudevices', $GPON->GetNotGponOnuDevices());
+$SMARTY->assign('lannetworks', parse_lan_networks());
 $SMARTY->display('gpononuadd.html');
 
 ?>

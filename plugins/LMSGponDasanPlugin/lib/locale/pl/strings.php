@@ -40,4 +40,21 @@ $_LANG['Generate automatically'] = 'Generuj automatycznie';
 $_LANG['<!gpon-dasan>Ports:'] = 'Porty:';
 $_LANG['<!gpon-dasan>Administrative status'] = 'Status administracyjny';
 
+$_LANG['LAN settings'] = 'Ustawienia LAN';
+$_LANG['Network mask:'] = 'Maska sieci:';
+$_LANG['First DHCP address:'] = 'Pierwszy adres z DHCP:';
+$_LANG['Last DHCP address:'] = 'Ostatni adres z DHCP:';
+$_LANG['4 octets'] = '4 oktety';
+$_LANG['Load settings:'] = 'Załaduj ustawienia:';
+
+$_LANG['Field should not be empty!'] = 'Pole nie powinno być puste!';
+$_LANG['Network address is ip address inside the network!'] = 'Adres sieci jest adresem ip wewnątrz sieci!';
+$_LANG['Gateway address outside the network!'] = 'Adres bramy jest spoza sieci!';
+$_LANG['Gateway address the same as network address!'] = 'Adres bramy jest taki sam jak adres sieci!';
+$_LANG['Gateway address the same as broadcast address!'] = 'Adres bramy jest taki sam jak adres rozgłoszeniowy!';
+$_LANG['First DHCP address outside the network!'] = 'Pierwszy adres DHCP spoza sieci!';
+$_LANG['Last DHCP address outside the network!'] = 'Ostatni adres DHCP spoza sieci!';
+$_LANG['First DHCP address greater than last DHCP address!'] = 'Pierwszy adres DHCP jest większy niż ostatni adres DHCP!';
+$_LANG['Gateway address between first and last DHCP addresses!'] = 'Adres bramy pomiędzy pierwszym i ostatnim adresem DHCP!';
+
 ?>

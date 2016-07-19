@@ -242,54 +242,9 @@
 				</TD>
 				<TD WIDTH="50%" style="vertical-align:top;">
 			                <TABLE WIDTH="100%" CELLPADDING="3">
-
-	<tr class="light" id="wifisettings"{if !$netdevinfo.xmlprovisioning || !isset($netdevinfo['portsettings']['wifi.1'])} style="display: none;"{/if}>
-		<TD colspan="3">
-			<fieldset style="width: 1%;" class="nobr">
-				<legend class="bold"><IMG SRC="img/wireless.gif" ALT=""> {trans("WiFi settings")}</legend>
-				<table cellpadding="2">
-					<tr>
-						<TD class="bold nobr">
-							{trans("SSID:")}
-						</TD>
-						<TD>
-							<input type="text" name="netdev[properties][wifi_ssid]" id="wifi_ssid" placeholder="{trans("minimum 8 characters")}" value="{$netdevinfo.properties.wifi_ssid}" size="25" {tip trigger="wifi_ssid"}>
-						</TD>
-					</tr>
-					<tr>
-						<TD class="bold nobr">
-							{trans("Password:")}
-						</TD>
-						<TD>
-							<input type="text" name="netdev[properties][wifi_password]" id="wifi_password" placeholder="{trans("minimum 8 characters")}" value="{$netdevinfo.properties.wifi_password}" size="25" {tip trigger="wifi_password"}>
-						</TD>
-					</tr>
-					{if ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_ssid', '') || ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_password', '')}
-					<tr>
-						<TD colspan="2" class="text-center">
-							<a onclick="javascript:xajax_ONU_GenerateWifiSettings({$netdevinfo.id});"><IMG src="img/reload.gif" alt=""> {trans("Generate automatically")}</a>
-						</TD>
-					</tr>
-					{/if}
-				</table>
-			</fieldset>
-		</td>
-	</tr>
-
-	<tr class="light" id="portsettings"{if !ConfigHelper::checkConfig('gpon-dasan.use_radius') && !$netdevinfo.xmlprovisioning} style="display: none;"{/if}>
-		<TD style="width: 1%;">
-			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT="">
-		</td>
-		<TD style="width: 1%;" class="bold nobr">
-			{trans("<!gpon-dasan>Ports:")}
-		</TD>
-		<TD style="width: 98%;">
-			<table id="portsettingstable" CELLPADDING="2" border="1" rules="cols">
-				{include file="gpononu/gpononuports.html"}
-			</table>
-		</TD>
-	</tr>
-
+	{include file="gpononu/gpononulansettings.html"}
+	{include file="gpononu/gpononuwifisettings.html"}
+	{include file="gpononu/gpononuports.html"}
 	<TR class="light">
 		<TD WIDTH="1%">
 			<IMG SRC="img/users.gif" ALT="">
