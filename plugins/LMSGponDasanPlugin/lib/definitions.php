@@ -82,15 +82,23 @@ function parse_lan_networks($name = '') {
 }
 
 function validate_lan_network(&$properties, &$error) {
+	$fields = array('lan_netaddress', 'lan_netmask', 'lan_gateway', 'lan_firstdhcpip', 'lan_lastdhcpip');
 	$return = false;
-	foreach (array('lan_netaddress', 'lan_netmask', 'lan_gateway', 'lan_firstdhcpip', 'lan_lastdhcpip') as $field)
+	$empties = 0;
+	foreach ($fields as $field)
 		if ($properties[$field] == '') {
 			$error[$field] = trans('Field should not be empty!');
+			$empties++;
 			$return = true;
 		} elseif (!check_ip($properties[$field])) {
 			$error[$field] = trans('Invalid format!');
 			$return = true;
 		}
+	if ($empties == count($fields)) {
+		foreach ($fields as $field)
+			unset($error[$field]);
+		$return = true;
+	}
 	if ($return)
 		return;
 
