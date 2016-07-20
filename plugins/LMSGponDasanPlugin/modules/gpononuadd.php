@@ -105,6 +105,13 @@ if(isset($_POST['netdev']))
 	if ($netdevdata['xmlprovisioning']) {
 		$ports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
 
+		foreach (array('admin', 'telnet', 'user') as $password_type)
+			if (!empty($netdevdata['properties'][$password_type . '_password'])) {
+				if (strlen($netdevdata['properties'][$password_type . '_password']) < 8)
+					$error[$password_type . '_password'] = trans('Password should contain at least 8 characters!');
+			} else
+				unset($netdevdata['properties'][$password_type . '_password']);
+
 		if (isset($ports['wifi'])) {
 			if (!empty($netdevdata['properties']['wifi_ssid']) && strlen($netdevdata['properties']['wifi_ssid']) < 8)
 				$error['wifi_ssid'] = trans('WiFi SSID should contain at least 8 characters!');

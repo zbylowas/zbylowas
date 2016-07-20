@@ -66,4 +66,6 @@ $_LANG['Telnet:'] = 'Telnet:';
 
 $_LANG['<!gpon-dasan>Passwords'] = 'Hasła';
 
+$_LANG['Password should contain at least 8 characters!'] = 'Hasło powinno zawierać co najmniej 8 znaków!';
+
 ?>
