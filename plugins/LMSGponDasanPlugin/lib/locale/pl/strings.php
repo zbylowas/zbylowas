@@ -65,6 +65,7 @@ $_LANG['Save changes via SNMP'] = 'Zapisz zmiany poprzez SNMP';
 $_LANG['Telnet:'] = 'Telnet:';
 
 $_LANG['<!gpon-dasan>Passwords'] = 'Hasła';
+$_LANG['<!gpon-dasan>- default -'] = '- domyślne -';
 
 $_LANG['Password should contain at least 8 characters!'] = 'Hasło powinno zawierać co najmniej 8 znaków!';
 

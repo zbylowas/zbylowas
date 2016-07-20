@@ -218,7 +218,7 @@
 								{trans("Administrator:")}
 							</TD>
 							<TD>
-								{$netdevinfo.properties.admin_password}
+								{$netdevinfo.properties.admin_password|default:trans("<!gpon-dasan>- default -")}
 							</TD>
 						</tr>
 						<tr>
@@ -226,7 +226,7 @@
 								{trans("Telnet:")}
 							</TD>
 							<TD>
-								{$netdevinfo.properties.telnet_password}
+								{$netdevinfo.properties.telnet_password|default:trans("<!gpon-dasan>- default -")}
 							</TD>
 						</tr>
 						<tr>
@@ -234,7 +234,7 @@
 								{trans("User:")}
 							</TD>
 							<TD>
-								{$netdevinfo.properties.user_password}
+								{$netdevinfo.properties.user_password|default:trans("- none -")}
 							</TD>
 						</tr>
 					</table>
