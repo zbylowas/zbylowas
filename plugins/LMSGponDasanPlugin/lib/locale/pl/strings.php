@@ -62,4 +62,6 @@ $_LANG['Hide SNMP settings'] = 'Ukryj ustawienia SNMP';
 $_LANG['Refresh SNMP settings'] = 'Odśwież ustawienia SNMP';
 $_LANG['Save changes via SNMP'] = 'Zapisz zmiany poprzez SNMP';
 
+$_LANG['Telnet:'] = 'Telnet:';
+
 ?>

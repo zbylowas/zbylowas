@@ -25,9 +25,11 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
 4. Ustawieniem gpon-dasan.xml_provisioning_filename wskazać ścieżkę do plików, które
    będzie generował skrypt bin/lms-xml-provisioning.php (może wystąpić symbol %sn%
    za który zostanie wstaiony numer seryjny końcówki).
-5. Ustawienia gpon-dasan.xml_provisioning_admin_password i gpon-dasan.xml_provisioning_telnet_password
-   ustalają odpowiednio domyślne hasła administratora końcówki i usługi telnet działającej
-    na końcówce.
+5. Ustawienia gpon-dasan.xml_provisioning_admin_password, gpon-dasan.xml_provisioning_telnet_password
+   i gpon-dasan.xml_provisioning_user_password ustalają odpowiednio domyślne hasła administratora końcówki,
+   usługi telnet działającej na końcówce oraz hasło użytkownika końcówki. W haśle użytkownika końcówki
+   może wystąpić symbol specjalny %14random% za który wstawiany jest losowy ciąg znaków o długości 14
+   (długość można zmieniać poprzez wpisane przed słowem random innej liczby).
 6. Ustawienie gpon-dasan.xml_provisioning_web_port ustala port tcp na którym
    działa interfejs www końcówki.
 7. Ustawienia gpon-dasan.xml_provisioning_default_wifi_ssid oraz gpon-dasan.xml_provisioning_default_wifi_password
@@ -39,8 +41,11 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
 8. Ustawienie gpon-dasan.xml_provisioning_lan_networks określa listę predefiniowanych konfiguracji sieci IP
    dla sieci LAN na końcówce od strony klienta. Dobrym przykładem jest domyślna wartość tego pola.
 9. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
-   {$admin_password} - hasło administratora końcówki,
-   {$telnet_password} - hasło usługi telnet na końcówce,
+   {$admin_password} - hasło administratora końcówki (pobrane z ustawienia końcówki lub ze zmiennej
+   konfiguracyjnej gpon-dasan.xml_provisioning_admin_password),
+   {$telnet_password} - hasło usługi telnet na końcówce (pobrane z ustawienia końcówki lub ze zmiennej
+   konfiguracyjnej gpon-dasan.xml_provisioning_telnet_password),
+   {$user_password} - hasło użytkownika końcówki (pobrane z ustawienia końcówki - może być puste!),
    {$web_port} - port tcp na którym działa interfejs www końcówki,
    {$modified_time} - data ostatniej modyfikacji automatycznie generowana przez skrypt,
    {$customerid} - najniższy identyfikator klienta spośród klientów przypisanych do końcówki,

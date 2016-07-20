@@ -202,6 +202,47 @@
 				</TD>
 				<TD WIDTH="50%" style="vertical-align:top;">
 				        <TABLE WIDTH="100%" CELLPADDING="3">
+		{if $netdevinfo.xmlprovisioning}
+		{if $netdevinfo.properties.admin_password || $netdevinfo.properties.telnet_password
+			|| $netdevinfo.properties.user_password}
+		<TR class="light">
+			<TD colspan="3">
+				<fieldset style="width: 1%;" class="nobr">
+					<legend class="bold">
+						<IMG SRC="img/passwd.gif" ALT="">
+						{trans("<!gpon-dasan>Passwords")}
+					</legend>
+					<table cellpadding="2">
+						<tr>
+							<TD class="bold nobr">
+								{trans("Administrator:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.admin_password}
+							</TD>
+						</tr>
+						<tr>
+							<TD class="bold nobr">
+								{trans("Telnet:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.telnet_password}
+							</TD>
+						</tr>
+						<tr>
+							<TD class="bold nobr">
+								{trans("User:")}
+							</TD>
+							<TD>
+								{$netdevinfo.properties.user_password}
+							</TD>
+						</tr>
+					</table>
+				</fieldset>
+			</TD>
+		</TR>
+		{/if}
+		{/if}
 		{if $netdevinfo.xmlprovisioning && $netdevinfo.properties.lan_netaddress}
 		<TR class="light">
 			<TD colspan="3">

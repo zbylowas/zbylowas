@@ -30,16 +30,19 @@ function ONU_UpdateProperties($xmlprovisioning, $modelid) {
 	// xajax response
 	$objResponse = new xajaxResponse();
 
-	$wifisettings = 'none';
+	$passwords = 'none';
 	$lansettings = 'none';
+	$wifisettings = 'none';
 	if ($xmlprovisioning) {
+		$passwords = '';
+		$lansettings = '';
 		$ports = $GPON->GetGponOnuModelPorts($modelid);
 		if (isset($ports['wifi']))
 			$wifisettings = '';
-		$lansettings = '';
 	}
-	$objResponse->assign("wifisettings", "style.display", $wifisettings);
+	$objResponse->assign("passwords", "style.display", $passwords);
 	$objResponse->assign("lansettings", "style.display", $lansettings);
+	$objResponse->assign("wifisettings", "style.display", $wifisettings);
 
 	if ($xmlprovisioning || ConfigHelper::checkConfig('gpon-dasan.use_radius')) {
 		$modelports = $GPON->GetGponOnuModelPorts($modelid);
@@ -52,6 +55,30 @@ function ONU_UpdateProperties($xmlprovisioning, $modelid) {
 	} else
 		$portsettings = 'none';
 	$objResponse->assign("portsettings", "style.display", $portsettings);
+
+	return $objResponse;
+}
+
+function ONU_GeneratePasswords() {
+	// xajax response
+	$objResponse = new xajaxResponse();
+
+	$admin_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_admin_password', '', true);
+	if ($admin_password)
+		$objResponse->assign("admin_password", "value", $admin_password);
+
+	$telnet_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_telnet_password', '', true);
+	if ($telnet_password)
+		$objResponse->assign("telnet_password", "value", $telnet_password);
+
+	$user_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_user_password', '', true);
+	if ($user_password) {
+		if (preg_match('/%(?<chars>[0-9]+)?random%/', $user_password, $m)) {
+			$chars = isset($m['chars']) ? intval($m['chars']) : 12;
+			$user_password = preg_replace('/%[0-9]*random%/', generate_random_string($chars), $user_password);
+		}
+		$objResponse->assign("user_password", "value", $user_password);
+	}
 
 	return $objResponse;
 }
@@ -121,7 +148,7 @@ function ONU_AutoFillNetworkSettings($netaddress, $netmask) {
 	return $objResponse;
 }
 
-$LMS->RegisterXajaxFunction(array('ONU_UpdateProperties', 'ONU_GenerateWifiSettings', 'ONU_LoadNetworkSettings',
-	'ONU_AutoFillNetworkSettings'));
+$LMS->RegisterXajaxFunction(array('ONU_UpdateProperties', 'ONU_GeneratePasswords',
+	'ONU_GenerateWifiSettings', 'ONU_LoadNetworkSettings', 'ONU_AutoFillNetworkSettings'));
 
 ?>
