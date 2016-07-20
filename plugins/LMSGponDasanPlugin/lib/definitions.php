@@ -144,4 +144,23 @@ function validate_lan_network(&$properties, &$error) {
 		$error['lan_gateway'] = trans('Gateway address between first and last DHCP addresses!');
 }
 
+function parse_vlans() {
+	$vlans = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_vlans', '', true);
+	if (empty($vlans))
+		return null;
+
+	$vlans = preg_split('/(\s+|[;,])/', $vlans);
+	$result = array();
+	foreach ($vlans as &$vlan) {
+		if (!preg_match('/^(?<id>[0-9]{1,4})\|(?<name>.+)$/', $vlan, $m))
+			continue;
+		$vlanid = intval($m['id']);
+		if ($vlanid < 1 || $vlanid > 4095)
+			continue;
+		$result[$m['name']] = $vlanid;
+	}
+	ksort($result);
+	return $result;
+}
+
 ?>

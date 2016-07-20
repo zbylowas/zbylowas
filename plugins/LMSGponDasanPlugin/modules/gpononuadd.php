@@ -317,6 +317,8 @@ $SMARTY->assign('xajax', $LMS->RunXajax());
 $layout['pagetitle'] = trans('New Device').': GPON-ONU';
 $SMARTY->assign('onu_customerlimit',$onu_customerlimit);
 
+$SMARTY->assign('vlans', parse_vlans());
+
 $SMARTY->assign('onu_check_add',$onu_check_add);
 $SMARTY->assign('customers', $LMS->GetCustomerNames());
 if($onu_check_add==1)

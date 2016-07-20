@@ -601,10 +601,14 @@ if($GPON->IsNodeIdNetDevice($netdevdata['host_id2']))
 if(ConfigHelper::checkConfig('gpon-dasan.use_radius'))
     $netdevdata['autoscript'] =0;
 
+$SMARTY->assign('vlans', parse_vlans());
+
 if (!isset($netdevdata['portsettings'])) {
 	$modelports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
 	$onuports = $GPON->GetGponOnuPorts($_GET['id']);
 	$netdevdata['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
+	foreach ($netdevdata['portsettings'] as &$portsettings)
+		$portsettings['vlan'] = array('id' => '', 'name' => '');
 }
 
 $SMARTY->assign('error',$error);

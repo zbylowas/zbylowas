@@ -333,16 +333,28 @@
 					</legend>
 					<table cellpadding="2">
 						<tr class="dark">
-							<td class="bold">{trans("Port")}</td>
-							<td class="bold">{trans("<!gpon-dasan>Administrative status")}</td>
+							<td class="bold nobr">{trans("Port")}</td>
+							<td class="bold nobr">{trans("<!gpon-dasan>Administrative status")}</td>
+							<td class="bold nobr">{trans("<!gpon-dasan>VLAN 802.1q")}</td>
 						</tr>
 						{foreach $netdevinfo.portsettings as $port}
+						{$portname = $port.name|cat:"."|cat:$port.portid}
 						<tr>
-							<td class="text-right">
-								{$port.name}.{$port.portid}
+							<td class="text-right nobr">
+								{$portname}
 							</td>
-							<td class="text-center">
+							<td class="text-center nobr">
 								{if $port.portdisable}{trans("- down -")}{else}{trans("- up -")}{/if}
+							</td>
+							<td class="text-center nobr">
+								{$vlanid = $netdevinfo.properties.vlans[$portname]}
+								{if $vlanid == ""}
+									{trans("<!gpon-dasan>- default -")}
+								{elseif $vlanid == "0"}
+									{trans("<!gpon-dasan>- tagged/trunk -")}
+								{else}
+									{t a=$vlans[$vlanid] b=$vlanid}$a (id: $b){/t}
+								{/if}
 							</td>
 						</tr>
 						{/foreach}

@@ -48,7 +48,13 @@ function ONU_UpdateProperties($xmlprovisioning, $modelid) {
 		$modelports = $GPON->GetGponOnuModelPorts($modelid);
 		$onuports = $GPON->GetGponOnuPorts($_GET['id']);
 		$netdevinfo['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
+		if (isset($_GET['id']))
+			$netdevinfo['properties'] = $GPON->GetGponOnuProperties($_GET['id']);
+		else
+			$netdevinfo['properties'] = array();
+		$netdevinfo['xmlprovisioning'] = $xmlprovisioning;
 		$SMARTY->assign('netdevinfo', $netdevinfo);
+		$SMARTY->assign('vlans', parse_vlans());
 		$contents = $SMARTY->fetch('gpononu/gpononuporttable.html');
 		$objResponse->assign("portsettingstable", "innerHTML", $contents);
 		$portsettings = '';

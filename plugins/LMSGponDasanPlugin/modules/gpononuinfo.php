@@ -192,6 +192,8 @@ $modelports = $GPON->GetGponOnuModelPorts($netdevinfo['gpononumodelsid']);
 $onuports = $GPON->GetGponOnuPorts($_GET['id']);
 $netdevinfo['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
 
+$SMARTY->assign('vlans', array_flip(parse_vlans()));
+
 $onulastauth = $GPON->GetGponOnuLastAuth($_GET['id']);
 if(sizeof($onulastauth) > 0)
 {

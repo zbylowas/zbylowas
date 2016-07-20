@@ -660,6 +660,11 @@ class GPON {
 		return $result;
 	}
 
+	public function GetGponOnuProperties($id) {
+		$properties = $this->DB->GetOne("SELECT properties FROM gpononu WHERE id = ?", array($id));
+		return unserialize($properties);
+	}
+
 	public function GetGponOnuFromName($name) {
 		$result = $this->DB->GetRow("SELECT g.*,
 			(SELECT SUM(portscount) FROM gpononuportstype2models WHERE gpononumodelsid=g.gpononumodelsid) AS ports,

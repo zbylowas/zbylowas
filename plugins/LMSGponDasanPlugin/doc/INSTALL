@@ -40,7 +40,10 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
    zmieniać poprzez wpisane przed słowem random innej liczby).
 8. Ustawienie gpon-dasan.xml_provisioning_lan_networks określa listę predefiniowanych konfiguracji sieci IP
    dla sieci LAN na końcówce od strony klienta. Dobrym przykładem jest domyślna wartość tego pola.
-9. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
+9. Ustawienie gpon-dasan.xml_provisioning_vlans określa listę obsługiwanych przez operatora vlanów, których
+   możliwość konfiguracji ma być dostępna na portach końcówki od strony klienta
+   (przykład: 16|BIURO,101|ADMIN - vlan 16 o nazwie BIURO i vlan 101 o nazwie ADMIN).
+10. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
    {$admin_password} - hasło administratora końcówki (pobrane z ustawienia końcówki lub ze zmiennej
    konfiguracyjnej gpon-dasan.xml_provisioning_admin_password),
    {$telnet_password} - hasło usługi telnet na końcówce (pobrane z ustawienia końcówki lub ze zmiennej
@@ -69,5 +72,10 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
    {$lan_gateway} - adres bramy w LAN na końcówce od strony klienta
    {$lan_firstdhcpip} - pierwszy adres DHCP w LAN na końcówce od strony klienta
    {$lan_lastdhcpip} - ostatni adres DHCP w LAN na końcówce od strony klienta
+   {$vlans['...']} - jakie vlany obsługuje dany port końcówki (jako indeksy wpisujemy np.
+   'eth.1', 'eth.2', 'wifi.1', 'pots.1', 'pots.2', itd.). Znaczenie wartości dla pojedynczego portu:
+     - pusta - ustawienia vlanów z profilu końcówki na OLT,
+     - 0 - port w trybie tagged/trunk - przenosi wszystkie możliwe vlany,
+     - wartość, np. 101 - port w trybie untagged/access - wskazanie konkretnego przenoszonego vlanu.
    Uwaga! Jako, że szablony xml są przetwarzane przez bibliotekę Smarty można w nich posługiwać się językiem
    szablonów identycznym jak w zwykłych szablonach Smarty.

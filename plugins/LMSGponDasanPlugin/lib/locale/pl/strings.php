@@ -69,4 +69,8 @@ $_LANG['<!gpon-dasan>- default -'] = '- domyślne -';
 
 $_LANG['Password should contain at least 8 characters!'] = 'Hasło powinno zawierać co najmniej 8 znaków!';
 
+$_LANG['<!gpon-dasan>VLAN 802.1q'] = 'VLAN 802.1q';
+$_LANG['<!gpon-dasan>$a (id: $b)'] = '$a (id: $b)';
+$_LANG['<!gpon-dasan>- tagged/trunk -'] = '- tagged/trunk -';
+
 ?>
