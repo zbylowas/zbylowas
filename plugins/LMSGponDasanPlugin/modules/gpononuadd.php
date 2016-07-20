@@ -314,14 +314,23 @@ unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['directio
 $SMARTY->assign('gpononumodels', $gpononumodels);
 
 if (isset($_POST['netdev'])) {
-	$modelports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
-	$onuports = $netdevdata['portsettings'];
-	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
+	$gpononumodelid = $netdevdata['gpononumodelsid'];
+	$modelports = $GPON->GetGponOnuModelPorts($gpononumodelid);
+	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $netdevdata['portsettings']);
 } else {
-	$onumodel = reset($gpononumodels);
-	$modelports = $GPON->GetGponOnuModelPorts($onumodel['id']);
-	$onuports = array();
-	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $onuports);
+	if ($onu_check_add == 1) {
+		if (!isset($netdev['gpononumodelsid']))
+			foreach ($gpononumodels as $model)
+				if ($model['name'] == $netdev['onu_model']) {
+					$gpononumodelid = $model['id'];
+					break;
+				}
+	} else {
+		$onumodel = reset($gpononumodels);
+		$gpononumodelid = $onumodel['id'];
+	}
+	$modelports = $GPON->GetGponOnuModelPorts($gpononumodelid);
+	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
 }
 
 $SMARTY->assign('onu_check_add',$onu_check_add);
@@ -348,12 +357,7 @@ if($onu_check_add==1)
 	}
 	$SMARTY->assign('netdevicesid', $_GET['netdevicesid']);
 
-	if (!isset($netdev['gpononumodelsid']))
-		foreach ($gpononumodels as $model)
-			if ($model['name'] == $netdev['onu_model']) {
-				$netdev['gpononumodelsid'] = $model['id'];
-				break;
-			}
+	$netdev['gpononumodelsid'] = $gpononumodelid;
 }
 
 $gponoltprofiles = $GPON->GetGponOltProfiles(is_array($netdev) && array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
