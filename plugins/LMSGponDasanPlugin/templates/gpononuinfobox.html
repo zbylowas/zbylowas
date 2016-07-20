@@ -323,7 +323,7 @@
 		</TR>
 		{/if}
 		{/if}
-		{if $netdevinfo.xmlprovisioning && $netdevinfo.portsettings}
+		{if ($netdevinfo.xmlprovisioning || ConfigHelper::checkConfig('gpon-dasan.use_radius')) && $netdevinfo.portsettings}
 		<TR class="light">
 			<TD colspan="3">
 				<fieldset style="width: 1%;" class="nobr">
@@ -335,7 +335,9 @@
 						<tr class="dark">
 							<td class="bold nobr">{trans("Port")}</td>
 							<td class="bold nobr">{trans("<!gpon-dasan>Administrative status")}</td>
+							{if $netdevinfo.xmlprovisioning}
 							<td class="bold nobr">{trans("<!gpon-dasan>VLAN 802.1q")}</td>
+							{/if}
 						</tr>
 						{foreach $netdevinfo.portsettings as $port}
 						{$portname = $port.name|cat:"."|cat:$port.portid}
@@ -346,6 +348,7 @@
 							<td class="text-center nobr">
 								{if $port.portdisable}{trans("- down -")}{else}{trans("- up -")}{/if}
 							</td>
+							{if $netdevinfo.xmlprovisioning}
 							<td class="text-center nobr">
 								{$vlanid = $netdevinfo.properties.vlans[$portname]}
 								{if $vlanid == ""}
@@ -356,6 +359,7 @@
 									{t a=$vlans[$vlanid] b=$vlanid}$a (id: $b){/t}
 								{/if}
 							</td>
+							{/if}
 						</tr>
 						{/foreach}
 					</table>

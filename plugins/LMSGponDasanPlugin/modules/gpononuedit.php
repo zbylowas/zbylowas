@@ -136,10 +136,12 @@ if (isset($_POST['netdev']) && (!isset($_POST['snmpsend']) || empty($_POST['snmp
 	$netdevdata_old = $GPON->GetGponOnu($_GET['id']);
 	$netdevdata = $_POST['netdev'];
 
-	if(!isset($netdevdata['autoprovisioning']))
-	{
-		$netdevdata['autoprovisioning']=0;
-	}
+	if (!isset($netdevdata['autoprovisioning']))
+		$netdevdata['autoprovisioning'] = 0;
+
+	if (!isset($netdevdata['xmlprovisioning']))
+		$netdevdata['xmlprovisioning'] = 0;
+
 	$netdevdata=array_merge($netdevdata_old,$netdevdata);
 	$netdevdata['id'] = $_GET['id'];
 	if(isset($_POST['voipaccountsid1']))
