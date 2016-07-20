@@ -138,12 +138,11 @@ if(isset($_POST['netdev']))
 					}
 				}
 			}
-			for($ii=0;$ii<intval(max($cust_list_num))+1;$ii++)	
-			{
+
+			for ($ii=0;$ii<intval(max($cust_list_num))+1;$ii++)
 				$GPON->GponOnuAddCustomer($netdevid,$netdevdata['customersid_'.$ii]);
-			}
-			if($onu_check_add==1 && $netdevid>0 && isset($_POST['netdevicesid']) && $_POST['netdevicesid']>0 && isset($_POST['olt_port']) && $_POST['olt_port']>0 && isset($_POST['onu_id']) && $_POST['onu_id']>0)
-			{
+			if ($onu_check_add==1 && intval($netdevid) && isset($_POST['netdevicesid']) && intval($_POST['netdevicesid'])
+				&& isset($_POST['olt_port']) && intval($_POST['olt_port']) && isset($_POST['onu_id']) && intval($_POST['onu_id'])) {
 				$GPON->GponOnuUpdateOnuId($netdevid,$_POST['onu_id']);
 				$GPON->GponOnuLink($_POST['netdevicesid'],$_POST['olt_port'],$netdevid);
 				//if(isset($_POST['onu_description_old']) && $netdevdata['onu_description']!=$_POST['onu_description_old'])
@@ -155,12 +154,8 @@ if(isset($_POST['netdev']))
 					$GPON->snmp->ONU_SetProfile($_POST['olt_port'], $_POST['onu_id'],
 						$gponoltprofiles_temp[$netdevdata['gponoltprofilesid']]['name']);
 				//}
-				$SESSION->redirect('?m=gpononucheck&id='.$_POST['netdevicesid']);
 			}
-			else 
-			{
-				$SESSION->redirect('?m=gpononuinfo&id='.$netdevid);
-			}
+			$SESSION->redirect('?m=gpononuinfo&id=' . $netdevid);
 
         }
 	
