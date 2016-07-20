@@ -37,7 +37,7 @@ $_LANG['WiFi password should contain at least 8 characters!'] = 'Hasło WiFi pow
 
 $_LANG['Generate automatically'] = 'Generuj automatycznie';
 
-$_LANG['<!gpon-dasan>Ports:'] = 'Porty:';
+$_LANG['<!gpon-dasan>Ports'] = 'Porty';
 $_LANG['<!gpon-dasan>Administrative status'] = 'Status administracyjny';
 
 $_LANG['LAN settings'] = 'Ustawienia LAN';
