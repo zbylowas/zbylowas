@@ -30,6 +30,11 @@ if(isset($_POST['onucheck']))
 {
 	$onu_check_add=1;
 }
+
+$gpononumodels = $GPON->GetGponOnuModelsList();
+unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['direction']);
+$SMARTY->assign('gpononumodels', $gpononumodels);
+
 $netdevdata['voipaccountsid1'] = 0;
 $netdevdata['voipaccountsid2'] = 0;
 $netdevdata['host_id1'] = 0;
@@ -158,8 +163,11 @@ if(isset($_POST['netdev']))
 			$SESSION->redirect('?m=gpononuinfo&id=' . $netdevid);
 
         }
-	
+
 	$SMARTY->assign('error', $error);
+
+	$modelports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
+	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $netdevdata['portsettings']);
 } else
 	$netdevdata['xmlprovisioning'] = ConfigHelper::checkConfig('gpon-dasan.xml_provisioning_default_enabled') ? 1 : 0;
 
@@ -309,30 +317,6 @@ $SMARTY->assign('xajax', $LMS->RunXajax());
 $layout['pagetitle'] = trans('New Device').': GPON-ONU';
 $SMARTY->assign('onu_customerlimit',$onu_customerlimit);
 
-$gpononumodels = $GPON->GetGponOnuModelsList();
-unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['direction']);
-$SMARTY->assign('gpononumodels', $gpononumodels);
-
-if (isset($_POST['netdev'])) {
-	$gpononumodelid = $netdevdata['gpononumodelsid'];
-	$modelports = $GPON->GetGponOnuModelPorts($gpononumodelid);
-	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $netdevdata['portsettings']);
-} else {
-	if ($onu_check_add == 1) {
-		if (!isset($netdev['gpononumodelsid']))
-			foreach ($gpononumodels as $model)
-				if ($model['name'] == $netdev['onu_model']) {
-					$gpononumodelid = $model['id'];
-					break;
-				}
-	} else {
-		$onumodel = reset($gpononumodels);
-		$gpononumodelid = $onumodel['id'];
-	}
-	$modelports = $GPON->GetGponOnuModelPorts($gpononumodelid);
-	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
-}
-
 $SMARTY->assign('onu_check_add',$onu_check_add);
 $SMARTY->assign('customers', $LMS->GetCustomerNames());
 if($onu_check_add==1)
@@ -357,7 +341,18 @@ if($onu_check_add==1)
 	}
 	$SMARTY->assign('netdevicesid', $_GET['netdevicesid']);
 
-	$netdev['gpononumodelsid'] = $gpononumodelid;
+	if (!isset($_POST['netdev']) && !isset($netdev['gpononumodelsid']))
+		foreach ($gpononumodels as $model)
+			if ($model['name'] == $netdev['onu_model']) {
+				$gpononumodelid = $model['id'];
+				break;
+			}
+	$modelports = $GPON->GetGponOnuModelPorts($gpononumodelid);
+	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
+} else {
+	$onumodel = reset($gpononumodels);
+	$modelports = $GPON->GetGponOnuModelPorts($onumodel['id']);
+	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
 }
 
 $gponoltprofiles = $GPON->GetGponOltProfiles(is_array($netdev) && array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
