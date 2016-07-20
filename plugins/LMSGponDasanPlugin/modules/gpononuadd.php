@@ -347,7 +347,11 @@ if($onu_check_add==1)
 		$netdev['onu_passwordResult']='auto-learning';
 	}
 	$SMARTY->assign('netdevicesid', $_GET['netdevicesid']);
-	
+
+	if (!isset($netdev['gpononumodelsid'])) {
+		$gpononumodel = each(reset($gpononumodels));
+		$netdev['gpononumodelsid'] = $gpononumodel['value'];
+	}
 }
 
 $gponoltprofiles = $GPON->GetGponOltProfiles(is_array($netdev) && array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
