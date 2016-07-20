@@ -350,8 +350,10 @@ if($onu_check_add==1)
 
 	if (!isset($netdev['gpononumodelsid']))
 		foreach ($gpononumodels as $model)
-			if ($model['name'] == $netdev['onu_model'])
+			if ($model['name'] == $netdev['onu_model']) {
 				$netdev['gpononumodelsid'] = $model['id'];
+				break;
+			}
 }
 
 $gponoltprofiles = $GPON->GetGponOltProfiles(is_array($netdev) && array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
