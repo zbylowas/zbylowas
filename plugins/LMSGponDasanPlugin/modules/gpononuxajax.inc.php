@@ -82,14 +82,19 @@ function ONU_GeneratePasswords() {
 	return $objResponse;
 }
 
-function ONU_GenerateWifiSettings($onuid) {
+function ONU_GenerateWifiSettings($onudata) {
 	global $GPON;
+
+	if (isset($onudata['id'])) {
+		$onu = $GPON->GetGponOnu($onudata['id']);
+		$customers = $GPON->GetGponOnu2Customers($onudata['id']);
+	} else {
+		$onu['name'] = $onudata['sn'];
+		$customers[0]['customersid'] = $onudata['customerid'];
+	}
 
 	// xajax response
 	$objResponse = new xajaxResponse();
-
-	$onu = $GPON->GetGponOnu($onuid);
-	$customers = $GPON->GetGponOnu2Customers($onuid);
 
 	$wifi_ssid = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_ssid', '');
 	$wifi_ssid = str_replace('%sn%', $onu['name'], $wifi_ssid);
