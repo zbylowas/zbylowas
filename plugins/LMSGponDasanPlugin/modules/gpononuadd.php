@@ -348,6 +348,7 @@ if($onu_check_add==1)
 				break;
 			}
 	$modelports = $GPON->GetGponOnuModelPorts($gpononumodelid);
+	$netdev['gpononumodelsid'] = $gpononumodelid;
 	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
 } else {
 	$onumodel = reset($gpononumodels);
