@@ -36,9 +36,10 @@ function parse_lan_networks($name = '') {
 		return array();
 	$lan_networks = array();
 	foreach ($nets as $net) {
-		if (!preg_match('/^(?<net>(?:(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))\.){3}(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5])))'
+		if (!preg_match('/^(?:(?<gateway>(?:(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))\.){3}(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5])))\|)?'
+			. '(?<net>(?:(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))\.){3}(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5])))'
 			. '-(?<lastaddress>(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))(?:\.(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))){0,3})'
-			. '\/(?<mask>(?:[8-9]|[1-2]\d|30))\|(?<name>.+)$/', $net, $m))
+			. '\|(?<mask>(?:[8-9]|[1-2]\d|30))\|(?<name>.+)$/', $net, $m))
 			continue;
 
 		$netmask = prefix2mask($m['mask']);
@@ -58,7 +59,7 @@ function parse_lan_networks($name = '') {
 		$netaddr = getnetaddr($first_dhcp_ip, $netmask);
 		$braddr = getbraddr($first_dhcp_ip, $netmask);
 		$lastaddr = ip_long($braddr) - 1;
-		$gateway = ip_long($netaddr) + 1;
+		$gateway = !empty($m['gateway']) ? ip_long($m['gateway']) : ip_long($netaddr) + 1;
 		if ($gateway >= $first_dhcp_ip_long) {
 			if ($lastaddr <= $last_dhcp_ip_long)
 				continue;
