@@ -348,10 +348,10 @@ if($onu_check_add==1)
 	}
 	$SMARTY->assign('netdevicesid', $_GET['netdevicesid']);
 
-	if (!isset($netdev['gpononumodelsid'])) {
-		$gpononumodel = each(reset($gpononumodels));
-		$netdev['gpononumodelsid'] = $gpononumodel['value'];
-	}
+	if (!isset($netdev['gpononumodelsid']))
+		foreach ($gpononumodels as $model)
+			if ($model['name'] == $netdev['onu_model'])
+				$netdev['gpononumodelsid'] = $model['id'];
 }
 
 $gponoltprofiles = $GPON->GetGponOltProfiles(is_array($netdev) && array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
