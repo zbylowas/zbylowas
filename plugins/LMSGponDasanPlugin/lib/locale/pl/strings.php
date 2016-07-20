@@ -64,4 +64,6 @@ $_LANG['Save changes via SNMP'] = 'Zapisz zmiany poprzez SNMP';
 
 $_LANG['Telnet:'] = 'Telnet:';
 
+$_LANG['<!gpon-dasan>Passwords'] = 'Hasła';
+
 ?>
