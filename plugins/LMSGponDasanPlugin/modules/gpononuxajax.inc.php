@@ -64,20 +64,19 @@ function ONU_GeneratePasswords() {
 	$objResponse = new xajaxResponse();
 
 	$admin_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_admin_password', '', true);
-	if ($admin_password)
-		$objResponse->assign("admin_password", "value", $admin_password);
-
 	$telnet_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_telnet_password', '', true);
-	if ($telnet_password)
-		$objResponse->assign("telnet_password", "value", $telnet_password);
-
 	$user_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_user_password', '', true);
-	if ($user_password) {
-		if (preg_match('/%(?<chars>[0-9]+)?random%/', $user_password, $m)) {
-			$chars = isset($m['chars']) ? intval($m['chars']) : 12;
-			$user_password = preg_replace('/%[0-9]*random%/', generate_random_string($chars), $user_password);
+	$passwords = compact('admin_password', 'telnet_password', 'user_password');
+
+	foreach (array_keys($passwords) as $password_type) {
+		$password = $passwords[$password_type];
+		if ($password) {
+			if (preg_match('/%(?<chars>[0-9]+)?random%/', $password, $m)) {
+				$chars = isset($m['chars']) ? intval($m['chars']) : 12;
+				$password = preg_replace('/%[0-9]*random%/', generate_random_string($chars), $password);
+			}
+			$objResponse->assign($password_type, "value", $password);
 		}
-		$objResponse->assign("user_password", "value", $user_password);
 	}
 
 	return $objResponse;
