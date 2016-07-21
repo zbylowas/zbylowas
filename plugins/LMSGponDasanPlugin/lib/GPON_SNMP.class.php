@@ -377,8 +377,8 @@ class GPON_SNMP {
 		}
 		return $result;
 	}
-	function set($OID,$type,$value,$path_OID='')
-	{
+
+	public function set($OID, $type, $value, $path_OID = '') {
 		$result=false;
 		$path_OID=$this->get_path_OID($path_OID);
 		$OID=$path_OID.$OID;
@@ -401,6 +401,52 @@ class GPON_SNMP {
 		}
 		return $result;
 	}
+
+	public function cli_result_to_snmp_result($cli_result) {
+		switch ($cli_result) {
+			case 0:
+				$snmp_result = true;
+				break;
+			case 1:
+				$snmp_result = trans('Unknown Object Identifier');
+				break;
+			case 2:
+				$snmp_result = trans('Error in packet. Reason: undoFailed');
+				break;
+			default:
+				$snmp_result = $cli_result;
+		}
+		return $snmp_result;
+	}
+
+	public function set_CLI($OID, $type, $value, $path_OID = '') {
+		$result = false;
+		$path_OID = $this->get_path_OID($path_OID);
+		$cmd = ConfigHelper::getConfig('gpon-dasan.snmpset_command', '/usr/bin/snmpset') . ' -v';
+		switch ($this->get_options('snmp_version')) {
+			case 1:
+				$cmd .= '1 -c ' . $this->get_options('snmp_community') . ' ' . $this->get_options('snmp_host') . ' ';
+				break;
+			case 2:
+				$cmd .= '2c -c ' . $this->get_options('snmp_community') . ' ' . $this->get_options('snmp_host') . ' ';
+				break;
+			case 3:
+				$cmd .= '3 -l ' . $this->get_options('snmp_sec_level') . ' -a ' . $this->get_options('snmp_auth_protocol')
+					. ' -u ' . $this->get_options('snmp_username') . ' -A ' . $this->get_options('snmp_password')
+					. ' -x ' . $this->get_options('snmp_privacy_protocol') . ' -X ' . $this->get_options('snmp_privacy_passphrase')
+					. ' ' . $this->get_options('snmp_host') . ' ';
+				break;
+		}
+		if (is_array($OID))
+			foreach ($OID as $key => $id)
+				$cmd .= $path_OID . $id . ' ' . $type[$key] . ' ' . $value[$key] . ' ';
+		else
+			$cmd .= $path_OID . $OID . ' ' . $type . ' ' . $value;
+		exec($cmd, $output, $ret);
+		$result = $this->cli_result_to_snmp_result($ret);
+		return $result;
+	}
+
 	function get($OID,$path_OID='')
 	{
 		$result=false;
@@ -2396,24 +2442,19 @@ class GPON_SNMP {
 		return $result;
 	}
 
-	function ONU_SetProfile($OLT_id,$ONU_id,$profile)
-	{
-		$result=array();
-		$OLT_id=intval($OLT_id);
-		$ONU_id=intval($ONU_id);
-		$profile=trim($profile);
-		if($OLT_id>0 && $ONU_id>0 && strlen($profile)>0)
-		{
-			$onu=$this->walk('sleGponOnuSerial');
-			if($this->search_array_key($onu,'sleGponOnuSerial.'.$OLT_id.'.'.$ONU_id))
-			{	
-				$result[]=$this->set('sleGponOnuControlRequest','i',3);
-				$result[]=$this->set('sleGponOnuControlOltId','i',$OLT_id);
-				$result[]=$this->set('sleGponOnuControlId','i',$ONU_id);
-				$result[]=$this->set('sleGponOnuControlProfile','s',$profile);
-				$result[]=$this->set('sleGponOnuControlTimer','u',0);
-				//echo'$OLT_id='.$OLT_id.', $ONU_id='.$ONU_id.', $profile='.$profile;
-			}
+	public function ONU_SetProfile($OLT_id, $ONU_id, $profile) {
+		$result = array();
+		$OLT_id = intval($OLT_id);
+		$ONU_id = intval($ONU_id);
+		$profile = trim($profile);
+		if ($OLT_id && $ONU_id && strlen($profile)) {
+			$onu = $this->walk('sleGponOnuSerial');
+			if ($this->search_array_key($onu, 'sleGponOnuSerial.' . $OLT_id . '.' . $ONU_id))
+				$result[] = $this->set_CLI(array('sleGponOnuControlRequest',
+						'sleGponOnuControlOltId', 'sleGponOnuControlId',
+						'sleGponOnuControlProfile', 'sleGponOnuControlTimer'),
+					array('i', 'i', 'i', 's', 'u'),
+					array(3, $OLT_id, $ONU_id, $profile, 0));
 		}
 		return array_unique($result);
 	}
