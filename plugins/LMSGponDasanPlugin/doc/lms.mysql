@@ -109,7 +109,7 @@ CREATE TABLE gpononumodels (
 	name varchar(32) NOT NULL,
 	description text,
 	producer varchar(64) DEFAULT NULL,
-	xmltemplate text DEFAULT '',
+	xmltemplate mediumtext DEFAULT '',
 	PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
@@ -191,4 +191,4 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 
 INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072001');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072100');
