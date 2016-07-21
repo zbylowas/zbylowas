@@ -77,6 +77,10 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
    'eth.1', 'eth.2', 'wifi.1', 'pots.1', 'pots.2', itd.). Znaczenie wartości dla pojedynczego portu:
      - pusta - ustawienia vlanów z profilu końcówki na OLT,
      - 0 - port w trybie tagged/trunk - przenosi wszystkie możliwe vlany,
-     - wartość, np. 101 - port w trybie untagged/access - wskazanie konkretnego przenoszonego vlanu.
+     - wartość, np. 101 - port w trybie untagged/access - wskazanie konkretnego przenoszonego vlanu,
+   {$vlan_ports['...']} - lista portów końcówki dla poszczególnych vlanów np.
+     - $vlan_ports['101'] = array('eth.1', 'eth.2') - porty eth.1 i eth.2 w trybie untagged/access dla vlan 101,
+     - $vlan_ports['0'] = array('eth.3') - port eth.3 w trybie tagged/trunk,
+     - $vlan_ports['default'] = array('eth.4') - port eth.4 w konfiguracji domyślnej wynikającej z profilu końcówki.
    Uwaga! Jako, że szablony xml są przetwarzane przez bibliotekę Smarty można w nich posługiwać się językiem
    szablonów identycznym jak w zwykłych szablonach Smarty.

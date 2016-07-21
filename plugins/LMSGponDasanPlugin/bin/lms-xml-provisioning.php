@@ -232,8 +232,19 @@ foreach ($onus as $onu) {
 	$SMARTY->assign($default_properties);
 	if (!empty($properties)) {
 		$properties = unserialize($properties);
-		if ($properties !== false)
+		if ($properties !== false) {
+			if (isset($properties['vlans'])) {
+				$properties['vlan_ports'] = array();
+				foreach ($properties['vlans'] as $portname => $vlanid) {
+					if ($vlanid == '')
+						$vlanid = 'default';
+					if (!isset($properties['vlan_ports'][$vlanid]))
+						$properties['vlan_ports'][$vlanid] = array();
+					$properties['vlan_ports'][$vlanid][] = $portname;
+				}
+			}
 			$SMARTY->assign($properties);
+		}
 	}
 
 	$SMARTY->assign('portsettings', $GPON->GetGponOnuPorts($gpononuid));
