@@ -235,12 +235,14 @@ foreach ($onus as $onu) {
 		if ($properties !== false) {
 			if (isset($properties['vlans'])) {
 				$properties['vlan_ports'] = array();
+				$ports = array_keys($properties['vlans']);
+				$ports = array_combine($ports, array_fill(0, count($ports), false));
 				foreach ($properties['vlans'] as $portname => $vlanid) {
 					if ($vlanid == '')
 						$vlanid = 'default';
 					if (!isset($properties['vlan_ports'][$vlanid]))
-						$properties['vlan_ports'][$vlanid] = array();
-					$properties['vlan_ports'][$vlanid][] = $portname;
+						$properties['vlan_ports'][$vlanid] = $ports;
+					$properties['vlan_ports'][$vlanid][$portname] = true;
 				}
 			}
 			$SMARTY->assign($properties);
