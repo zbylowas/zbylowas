@@ -73,4 +73,6 @@ $_LANG['<!gpon-dasan>VLAN 802.1q'] = 'VLAN 802.1q';
 $_LANG['<!gpon-dasan>$a (id: $b)'] = '$a (id: $b)';
 $_LANG['<!gpon-dasan>- tagged/trunk -'] = '- tagged/trunk -';
 
+$_LANG['DHCP server disabled'] = 'Serwer DHCP wyłączony';
+
 ?>

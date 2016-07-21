@@ -37,35 +37,44 @@ function parse_lan_networks($name = '') {
 	$lan_networks = array();
 	foreach ($nets as $net) {
 		if (!preg_match('/^(?:(?<gateway>(?:(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))\.){3}(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5])))\|)?'
-			. '(?<net>(?:(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))\.){3}(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5])))'
-			. '-(?<lastaddress>(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))(?:\.(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))){0,3})'
+			. '(?:(?<net>(?:(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))\.){3}(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5])))'
+			. '-(?<lastaddress>(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))(?:\.(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))){0,3}))?'
 			. '\|(?<mask>(?:[8-9]|[1-2]\d|30))\|(?<name>.+)$/', $net, $m))
 			continue;
 
 		$netmask = prefix2mask($m['mask']);
 		$netname = $m['name'];
 
-		$first_dhcp_ip = $m['net'];
-		$first_dhcp_ip_octets = explode('.', $first_dhcp_ip);
-		$last_dhcp_ip_octets = explode('.', $m['lastaddress']);
-		$last_dhcp_ip_octets = array_merge(array_slice($first_dhcp_ip_octets, 0, 4 - count($last_dhcp_ip_octets)), $last_dhcp_ip_octets);
-		$last_dhcp_ip = implode('.', $last_dhcp_ip_octets);
-
-		$first_dhcp_ip_long = ip_long($first_dhcp_ip);
-		$last_dhcp_ip_long = ip_long($last_dhcp_ip);
-		if ($last_dhcp_ip_long - $first_dhcp_ip_long < 4)
-			continue;
-
-		$netaddr = getnetaddr($first_dhcp_ip, $netmask);
-		$braddr = getbraddr($first_dhcp_ip, $netmask);
-		$lastaddr = ip_long($braddr) - 1;
-		$gateway = !empty($m['gateway']) ? ip_long($m['gateway']) : ip_long($netaddr) + 1;
-		if ($gateway >= $first_dhcp_ip_long) {
-			if ($lastaddr <= $last_dhcp_ip_long)
+		if (empty($m['net'])) {
+			$gateway = $m['gateway'];
+			if (empty($gateway))
 				continue;
-			$gateway = $lastaddr;
+
+			$first_dhcp_ip = $last_dhcp_ip = '';
+			$netaddr = getnetaddr($gateway, $netmask);
+		} else {
+			$first_dhcp_ip = $m['net'];
+			$first_dhcp_ip_octets = explode('.', $first_dhcp_ip);
+			$last_dhcp_ip_octets = explode('.', $m['lastaddress']);
+			$last_dhcp_ip_octets = array_merge(array_slice($first_dhcp_ip_octets, 0, 4 - count($last_dhcp_ip_octets)), $last_dhcp_ip_octets);
+			$last_dhcp_ip = implode('.', $last_dhcp_ip_octets);
+
+			$first_dhcp_ip_long = ip_long($first_dhcp_ip);
+			$last_dhcp_ip_long = ip_long($last_dhcp_ip);
+			if ($last_dhcp_ip_long - $first_dhcp_ip_long < 4)
+				continue;
+
+			$netaddr = getnetaddr($first_dhcp_ip, $netmask);
+			$braddr = getbraddr($first_dhcp_ip, $netmask);
+			$lastaddr = ip_long($braddr) - 1;
+			$gateway = !empty($m['gateway']) ? ip_long($m['gateway']) : ip_long($netaddr) + 1;
+			if ($gateway >= $first_dhcp_ip_long) {
+				if ($lastaddr <= $last_dhcp_ip_long)
+					continue;
+				$gateway = $lastaddr;
+			}
+			$gateway = long2ip($gateway);
 		}
-		$gateway = long2ip($gateway);
 
 		if (!empty($name) && $netname != $name)
 			continue;
@@ -83,7 +92,10 @@ function parse_lan_networks($name = '') {
 }
 
 function validate_lan_network(&$properties, &$error) {
-	$fields = array('lan_netaddress', 'lan_netmask', 'lan_gateway', 'lan_firstdhcpip', 'lan_lastdhcpip');
+	$fields = array('lan_netaddress', 'lan_netmask', 'lan_gateway');
+	if ($properties['lan_firstdhcpip'] != '' || $properties['lan_lastdhcpip'] != '')
+		$fields = array_merge($fields, array('lan_firstdhcpip', 'lan_lastdhcpip'));
+
 	$return = false;
 	$empties = 0;
 	foreach ($fields as $field)
@@ -122,6 +134,9 @@ function validate_lan_network(&$properties, &$error) {
 		$error['lan_gateway'] = trans('Gateway address the same as broadcast address!');
 		return;
 	}
+
+	if ($properties['lan_firstdhcpip'] == '' && $properties['lan_lastdhcpip'] == '')
+		return;
 
 	$netaddress_long = ip_long($netaddress);
 	$braddress_long = ip_long($braddress);

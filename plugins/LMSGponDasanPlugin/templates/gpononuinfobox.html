@@ -273,6 +273,7 @@
 								{$netdevinfo.properties.lan_gateway}
 							</TD>
 						</tr>
+						{if $netdevinfo.properties.lan_firstdhcpip != '' && $netdevinfo.properties.lan_lastdhcpip != ''}
 						<tr>
 							<TD class="bold nobr">
 								{trans("First DHCP address:")}
@@ -289,6 +290,13 @@
 								{$netdevinfo.properties.lan_lastdhcpip}
 							</TD>
 						</tr>
+						{else}
+						<tr>
+							<TD class="bold text-center nobr" colspan="2">
+								{trans("DHCP server disabled")}
+							</TD>
+						</tr>
+						{/if}
 					</table>
 				</fieldset>
 			</TD>
