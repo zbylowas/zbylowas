@@ -75,4 +75,17 @@ $_LANG['<!gpon-dasan>- tagged/trunk -'] = '- tagged/trunk -';
 
 $_LANG['DHCP server disabled'] = 'Serwer DHCP wyłączony';
 
+$_LANG['OLT list'] = 'Lista OLT-ów';
+$_LANG['New OLT'] = 'Nowy OLT';
+$_LANG['OLT search'] = 'Szukanie OLT-a';
+$_LANG['Detect ONU'] = 'Wykryj ONU';
+$_LANG['ONU list'] = 'Lista ONU';
+$_LANG['New ONU'] = 'Nowe ONU';
+$_LANG['ONU search'] = 'Szukanie ONU';
+$_LANG['ONU model list'] = 'Lista modeli ONU';
+$_LANG['New ONU model'] = 'Nowy model ONU';
+$_LANG['TV channel list'] = 'Lista kanałów TV';
+$_LANG['New TV channel'] = 'Nowy kanał TV';
+$_LANG['ONU auto-connection'] = 'Auto podłączanie ONU';
+
 ?>

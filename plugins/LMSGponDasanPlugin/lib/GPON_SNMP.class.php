@@ -1125,7 +1125,7 @@ class GPON_DASAN_SNMP {
 			if(is_array($snmp_result) && count($snmp_result)>0)
 			{
 				$result.='
-				<FORM ID="myform" name="myform" METHOD="POST" ACTION="?m=gpononuedit&id='.$id.'">
+				<FORM ID="myform" name="myform" METHOD="POST" ACTION="?m=gpondasanonuedit&id='.$id.'">
 				<input type="hidden" name="snmpsend" id="snmpsend" value="0" />
 				<input type="hidden" name="onureset" id="onureset" value="0" />
 				<input type="hidden" name="clear_mac" id="clear_mac" value="0" />
@@ -1692,7 +1692,7 @@ class GPON_DASAN_SNMP {
 		if(is_array($snmp_result) && count($snmp_result)>0)
 		{
 			$result.='
-			<FORM ID="oltedit" name="oltedit" METHOD="POST" ACTION="?m=gponoltedit&id='.$OLT_id.'">
+			<FORM ID="oltedit" name="oltedit" METHOD="POST" ACTION="?m=gpondasanoltedit&id='.$OLT_id.'">
 			<input type="hidden" name="snmpsend" id="snmpsend" value="1" />
 			<input type="hidden" name="save" id="save" value="1" />
 			<table cellspacing="3" cellpadding="1" border="1" width="99%" rules="none">';
