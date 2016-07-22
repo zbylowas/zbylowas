@@ -53,7 +53,7 @@ if (!file_exists($rrdtool))
 	die("No rrdtool binary found on path $rrdtool!" . PHP_EOL);
 
 $AUTH = null;
-$GPON = new GPON($DB, $AUTH);
+$GPON = new GPON_DASAN();
 
 function update_signal_onu_rrd($onuid, $signal, $oltrx) {
 	global $rrdtool;
@@ -86,8 +86,8 @@ function update_signal_onu_rrd($onuid, $signal, $oltrx) {
 
 $minute = intval(strftime("%M"));
 
-$olts = $DB->GetAll("SELECT g.*, nd.id AS netdevid, nd.name FROM gponolt g
-	JOIN netdevices nd ON nd.gponoltid = g.id");
+$olts = $DB->GetAll("SELECT g.*, nd.id AS netdevid, nd.name FROM " . GPON_DASAN::SQL_TABLE_GPONOLT . " g
+	JOIN netdevices nd ON nd.id = g.netdeviceid");
 if (!empty($olts))
 	foreach ($olts as $olt) {
 		$GPON->snmp->clear_options();
@@ -103,8 +103,8 @@ if (!empty($olts))
 		foreach ($signals as $snmpid => $signal) {
 			if (!preg_match('/sleGponOnuRxPower\.([0-9]+)\.([0-9]+)/', $snmpid, $matchids))
 				continue;
-			$onuid = $DB->GetOne("SELECT o.id  FROM gpononu o 
-				JOIN gpononu2olt p ON p.gpononuid=o.id
+			$onuid = $DB->GetOne("SELECT o.id FROM " . GPON_DASAN::SQL_TABLE_GPONONU . " o
+				JOIN " . GPON_DASAN::SQL_TABLE_GPONONU2OLT . " p ON p.gpononuid=o.id
 				WHERE netdevicesid = ? AND numport =? AND onuid = ?", array($olt['netdevid'], $matchids[1], $matchids[2]));
 			if (!$onuid)
 				continue;
