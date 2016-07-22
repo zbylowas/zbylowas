@@ -143,7 +143,7 @@ require_once(PLUGINS_DIR . DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_dire
 //require_once(LIB_DIR . DIRECTORY_SEPARATOR . 'common.php');
 
 $AUTH = null;
-$GPON = new GPON($DB, $AUTH);
+$GPON = new GPON_DASAN();
 
 //$xml_provisioning_admin_login = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_admin_login', 'admin');
 $xml_provisioning_admin_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_admin_password', 'password');
@@ -159,11 +159,11 @@ $query = "SELECT o.id AS gpononuid, o.name, o.properties, m.id AS modelid, m.nam
 		p.name AS profile, o.onudescription AS description,
 		h1.details AS host1, h2.details AS host2, p1.details AS sip1, p2.details AS sip2,
 		disabledports.portnames, disabledports.portids,
-		(SELECT customersid FROM gpononu2customers o2c
+		(SELECT customersid FROM " . GPON_DASAN::SQL_TABLE_GPONONU2CUSTOMERS . " o2c
 			WHERE o2c.gpononuid = o.id ORDER BY id LIMIT 1) AS customerid
-	FROM gpononu o
-	JOIN gpononumodels m ON m.id = o.gpononumodelsid
-	JOIN gponoltprofiles p ON p.id = o.gponoltprofilesid
+	FROM " . GPON_DASAN::SQL_TABLE_GPONONU . " o
+	JOIN " . GPON_DASAN::SQL_TABLE_GPONONUMODELS . " m ON m.id = o.gpononumodelsid
+	JOIN " . GPON_DASAN::SQL_TABLE_GPONOLTPROFILES . " p ON p.id = o.gponoltprofilesid
 	LEFT JOIN (
 		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'n.name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details
 		FROM nodes n
@@ -184,8 +184,8 @@ $query = "SELECT o.id AS gpononuid, o.name, o.properties, m.id AS modelid, m.nam
 		SELECT onuid,
 			(" . $DB->GroupConcat('t.name') . ") AS portnames,
 			(" . $DB->GroupConcat('portid') . ") AS portids
-		FROM gpononuport p
-		JOIN gpononuportstype t ON t.id = p.typeid
+		FROM " . GPON_DASAN::SQL_TABLE_GPONONUPORTS . " p
+		JOIN " . GPON_DASAN::SQL_TABLE_GPONONUPORTTYPES . " t ON t.id = p.typeid
 		WHERE portdisable = 1
 		GROUP BY onuid
 	) disabledports ON disabledports.onuid = o.id
@@ -196,8 +196,8 @@ $onus = $DB->GetAll($query);
 if (empty($onus))
 	die("No gpon onus found!" . PHP_EOL);
 
-$models = $DB->GetAllByKey("SELECT id, name, xmltemplate FROM gpononumodels
-	WHERE xmltemplate <> ''", 'id');
+$models = $DB->GetAllByKey("SELECT id, name, xmltemplate FROM " . GPON_DASAN::SQL_TABLE_GPONONUMODELS
+	. " WHERE xmltemplate <> ''", 'id');
 if (empty($models)) {
 	if (!$quiet)
 		echo "No gpon onu models found!" . PHP_EOL;

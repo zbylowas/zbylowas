@@ -25,7 +25,8 @@
  */
 
 function ONU_UpdateProperties($xmlprovisioning, $modelid) {
-	global $GPON, $SMARTY;
+	global $SMARTY;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 
 	// xajax response
 	$objResponse = new xajaxResponse();
@@ -89,7 +90,7 @@ function ONU_GeneratePasswords() {
 }
 
 function ONU_GenerateWifiSettings($onudata) {
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 
 	if (isset($onudata['id'])) {
 		$onu = $GPON->GetGponOnu($onudata['id']);

@@ -31,7 +31,9 @@
  */
 class GponDasanCustomerHandler {
 	public function customerInfoBeforeDisplay(array $hook_data) {
-		global $LMS, $GPON;
+		global $LMS;
+
+		$GPON = LMSGponDasanPlugin::getGponInstance();
 
 		$SMARTY = $hook_data['smarty'];
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
@@ -40,7 +42,9 @@ class GponDasanCustomerHandler {
 	}
 
 	public function customerEditBeforeDisplay(array $hook_data) {
-		global $LMS, $GPON;
+		global $LMS;
+
+		$GPON = LMSGponDasanPlugin::getGponInstance();
 
 		$SMARTY = $hook_data['smarty'];
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');

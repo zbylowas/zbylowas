@@ -24,6 +24,8 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 $onu_customerlimit = ConfigHelper::getConfig('gpon-dasan.onu_customerlimit', 1);
 $onu_check_add=isset($_GET['onu_check_add'])?intval($_GET['onu_check_add']):0;
 if(isset($_POST['onucheck']))
@@ -177,7 +179,7 @@ if(isset($_POST['netdev']))
 function ONU_Voip_Phone_Xj($id_clients,$pot1_id,$pot2_id)
 {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$clients=explode(';',$id_clients);
 	if(is_array($clients) && count($clients)>0)
@@ -243,7 +245,7 @@ function ONU_Voip_Phone_Xj($id_clients,$pot1_id,$pot2_id)
 function ONU_Host_hosts_Xj($id_clients,$host1_id,$host2_id)
 {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$clients=explode(';',$id_clients);
 	if(is_array($clients) && count($clients)>0)

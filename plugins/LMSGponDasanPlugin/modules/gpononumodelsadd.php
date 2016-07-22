@@ -24,6 +24,8 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 if(isset($_POST['netdev']))
 {
 	$netdevdata = $_POST['netdev'];

@@ -24,6 +24,8 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 $gpon_onu_autoscript_debug = ConfigHelper::checkConfig('gpon-dasan.onu_autoscript_debug');
 
 $output=$GPON->GetGponAutoScript($gpon_onu_autoscript_debug);

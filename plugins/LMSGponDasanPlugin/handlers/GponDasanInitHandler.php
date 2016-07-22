@@ -36,16 +36,12 @@ class GponDasanInitHandler {
      * @param LMS $hook_data Hook data
      */
 	public function lmsInit(LMS $hook_data) {
-		global $GPON;
-
 		$db = $hook_data->getDb();
 		$auth = $hook_data->getAuth();
 
 		$hook_data->SetNetDevManager(
 			new GponDasanLMSNetDevManager($db, $auth, $hook_data->getCache(), $hook_data->getSyslog())
 		);
-
-		$GPON = new GPON($db, $auth);
 
 		return $hook_data;
 	}

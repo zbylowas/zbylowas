@@ -24,6 +24,8 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 $layout['pagetitle'] = 'Wykryte GPON-ONU';
 
 $oltdevid = 0;

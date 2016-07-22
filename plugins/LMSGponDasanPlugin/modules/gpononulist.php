@@ -24,6 +24,8 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 $layout['pagetitle'] = 'GPON-ONU';
 
 if(!isset($_GET['o']))
@@ -44,7 +46,7 @@ unset($netdevlist['direction']);
 	function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='')
 	{
 		// xajax response
-		global $GPON;
+		$GPON = LMSGponDasanPlugin::getGponInstance();
 		$objResponse = new xajaxResponse();
 		$options_snmp=$GPON->GetGponOlt($gponoltid);
 		$GPON->snmp->set_options($options_snmp);

@@ -24,10 +24,13 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 function NetDevSearch($order='name,asc', $search=NULL, $sqlskey='AND')
 {
-	global $DB, $GPON;
-	
+	$DB = LMSDB::getInstance();
+	$GPON = LMSGponDasanPlugin::getGponInstance();
+
 	list($order,$direction) = sscanf($order, '%[^,],%s');
 	
 	($direction=='desc') ? $direction = 'desc' : $direction = 'asc';
@@ -100,16 +103,17 @@ function NetDevSearch($order='name,asc', $search=NULL, $sqlskey='AND')
 	}
 	
 	if(isset($searchargs))
-                $searchargs = ' AND ('.implode(' '.$sqlskey.' ',$searchargs).')';
-	$sql_query='SELECT DISTINCT d.id, d.name, nd.location, d.onudescription, d.onuid, gm.producer, go.netdevicesid,
-			    nd.name AS oltname, go.numport, nd.model AS oltmodel, gp.name AS profil,
-				gm.name as model, d.serialnumber, (select count(gpononuportstypeid) from gpononuportstype2models where gpononumodelsid=d.gpononumodelsid) as ports
-	        		FROM gpononu d
-	        		inner join gpononumodels gm on gm.id=d.gpononumodelsid
-				LEFT JOIN gpononu2olt go ON go.gpononuid=d.id
+		$searchargs = ' AND ('.implode(' '.$sqlskey.' ',$searchargs).')';
+		$sql_query='SELECT DISTINCT d.id, d.name, nd.location, d.onudescription, d.onuid, gm.producer, go.netdevicesid,
+				nd.name AS oltname, go.numport, nd.model AS oltmodel, gp.name AS profil,
+				gm.name as model, d.serialnumber,
+					(SELECT COUNT(gpononuportstypeid) FROM ' . GPON_DASAN::SQL_TABLE_GPONONUPORTTYPE2MODELS . '
+						WHERE gpononumodelsid=d.gpononumodelsid) AS ports
+				FROM ' . GPON_DASAN::SQL_TABLE_GPONONU . ' d
+				JOIN ' . GPON_DASAN::SQL_TABLE_GPONONUMODELS . ' gm on gm.id=d.gpononumodelsid
+				LEFT JOIN ' . GPON_DASAN::SQL_TABLE_GPONONU2OLT . ' go ON go.gpononuid=d.id
 				LEFT JOIN netdevices nd ON nd.id = go.netdevicesid
-				LEFT JOIN gponoltprofiles gp ON gp.id = d.gponoltprofilesid
-	        		'
+				LEFT JOIN ' . GPON_DASAN::SQL_TABLE_GPONOLTPROFILES . ' gp ON gp.id = d.gponoltprofilesid '
 				.' WHERE 1=1 '
 				.(isset($searchargs) ? $searchargs : '')
 				.($sqlord != '' ? $sqlord.' '.$direction : '');

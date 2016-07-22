@@ -31,7 +31,9 @@
  */
 class GponDasanNodeHandler {
 	public function nodeAddBeforeDisplay(array $hook_data) {
-		global $LMS, $GPON;
+		global $LMS;
+
+		$GPON = LMSGponDasanPlugin::getGponInstance();
 
 		$SMARTY = $hook_data['smarty'];
 		$oldid = $_GET['id'];
@@ -43,7 +45,9 @@ class GponDasanNodeHandler {
 	}
 
 	public function nodeInfoBeforeDisplay(array $hook_data) {
-		global $LMS, $GPON;
+		global $LMS;
+
+		$GPON = LMSGponDasanPlugin::getGponInstance();
 
 		$SMARTY = $hook_data['smarty'];
 		$oldid = $_GET['id'];
@@ -55,7 +59,9 @@ class GponDasanNodeHandler {
 	}
 
 	public function nodeEditBeforeDisplay(array $hook_data) {
-		global $LMS, $GPON;
+		global $LMS;
+
+		$GPON = LMSGponDasanPlugin::getGponInstance();
 
 		$SMARTY = $hook_data['smarty'];
 		$oldid = $_GET['id'];
@@ -67,7 +73,10 @@ class GponDasanNodeHandler {
 	}
 
 	public function nodeScanOnLoad() {
-		global $SMARTY, $LMS, $GPON;
+		global $SMARTY, $LMS;
+
+		$GPON = LMSGponDasanPlugin::getGponInstance();
+
 		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
 	}
 }

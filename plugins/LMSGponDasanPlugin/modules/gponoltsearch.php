@@ -26,7 +26,7 @@
 
 function NetDevSearch($order='name,asc', $search=NULL, $sqlskey='AND')
 {
-	global $DB;
+	$DB = LMSDB::getInstance();
 	
 	list($order,$direction) = sscanf($order, '%[^,],%s');
 	

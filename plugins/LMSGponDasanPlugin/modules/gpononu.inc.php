@@ -23,12 +23,13 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
 $netdevconnected = $GPON->GetGponOnuCustomersNames($_GET['id']);
 
 /* Using AJAX plugins */
 function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$options_snmp=$GPON->GetGponOlt($gponoltid);
 	$GPON->snmp->set_options($options_snmp);

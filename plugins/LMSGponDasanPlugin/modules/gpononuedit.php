@@ -24,6 +24,8 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 if (!$GPON->GponOnuExists($_GET['id']))
 	$SESSION->redirect('?m=gpononulist');
 
@@ -386,7 +388,7 @@ if (!isset($_POST['xjxfun'])) {
 function GetFreeOltPort_Xj($netdevicesid)
 {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$freeports=$GPON->GetFreeOltPort($netdevicesid);
 	if(is_array($freeports) && count($freeports)>0)
@@ -405,7 +407,7 @@ function GetFreeOltPort_Xj($netdevicesid)
 function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='')
 {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$phonesvoip=$GPON->GetGponOnuPhoneVoip($id);
 	$options_snmp=$GPON->GetGponOlt($gponoltid);
@@ -419,7 +421,7 @@ function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='')
 function ONU_Voip_Phone_Xj($id_clients,$pot1_id,$pot2_id,$disable=0)
 {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$clients=explode(';',$id_clients);
 	if(is_array($clients) && count($clients)>0)
@@ -490,7 +492,7 @@ function ONU_Voip_Phone_Xj($id_clients,$pot1_id,$pot2_id,$disable=0)
 function ONU_Host_hosts_Xj($id_clients,$host1_id,$host2_id,$disable=0)
 {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$clients=explode(';',$id_clients);
 	if(is_array($clients) && count($clients)>0)

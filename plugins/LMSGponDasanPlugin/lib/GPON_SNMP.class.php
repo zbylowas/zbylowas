@@ -1,6 +1,6 @@
 <?php
 
-class GPON_SNMP {
+class GPON_DASAN_SNMP {
 	private $GPON;
 	private $options = array();
 	private $error = array();

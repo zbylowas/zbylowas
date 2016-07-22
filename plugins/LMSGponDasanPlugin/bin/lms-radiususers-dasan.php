@@ -172,9 +172,9 @@ $query = "SELECT o.name, m.name AS model, p.name AS profile, o.onudescription AS
 		phone2.phone AS sipnumber2, phone2.auth AS sipauth2,
 		disabledports.portnames, disabledports.portids,
 		xmlprovisioning
-	FROM gpononu o
-	JOIN gpononumodels m ON m.id = o.gpononumodelsid
-	JOIN gponoltprofiles p ON p.id = o.gponoltprofilesid
+	FROM " . GPON_DASAN::SQL_TABLE_GPONONU . " o
+	JOIN " . GPON_DASAN::SQL_TABLE_GPONONUMODELS . " m ON m.id = o.gpononumodelsid
+	JOIN " . GPON_DASAN::SQL_TABLE_GPONOLTPROFILES . " p ON p.id = o.gponoltprofilesid
 	LEFT JOIN (
 		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'MASK2PREFIX(INET_ATON(mask))', "' '", 'gateway') . ") AS ip FROM nodes n
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
@@ -193,8 +193,8 @@ $query = "SELECT o.name, m.name AS model, p.name AS profile, o.onudescription AS
 		SELECT onuid,
 			(" . $DB->GroupConcat('t.name') . ") AS portnames,
 			(" . $DB->GroupConcat('portid') . ") AS portids
-		FROM gpononuport p
-		JOIN gpononuportstype t ON t.id = p.typeid
+		FROM " . GPON_DASAN::SQL_TABLE_GPONONUPORTS . " p
+		JOIN " . GPON_DASAN::SQL_TABLE_GPONONUPORTTYPES . " t ON t.id = p.typeid
 		WHERE portdisable = 1
 		GROUP BY onuid
 	) disabledports ON disabledports.onuid = o.id";

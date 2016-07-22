@@ -24,6 +24,8 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 $layout['pagetitle'] = 'GPON-ONU-MODELE';
 
 if (!isset($_GET['o']))

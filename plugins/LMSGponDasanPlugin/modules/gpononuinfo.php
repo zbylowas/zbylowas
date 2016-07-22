@@ -24,13 +24,15 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 if (!$GPON->GponOnuExists($_GET['id']))
 	$SESSION->redirect('?m=gpononulist');
 
 /* Using AJAX plugins */
 function GetFreeOltPort_Xj($netdevicesid) {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$freeports=$GPON->GetFreeOltPort($netdevicesid);
 	if(is_array($freeports) && count($freeports)>0)
@@ -49,7 +51,7 @@ function GetFreeOltPort_Xj($netdevicesid) {
 
 function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$options_snmp=$GPON->GetGponOlt($gponoltid);
 	$GPON->snmp->set_options($options_snmp);
@@ -68,7 +70,7 @@ function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
 }
 
 function gpononu_reset($id) {
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 
 	$netdevdata = $GPON->GetGponOnu($id);
 
@@ -90,29 +92,13 @@ function ONU_reset($id) {
 	return $objResponse;
 }
 
-function gpononu_radius_disconnect($id) {
-	$DB = LMSDB::getInstance();
-	$rdata = $DB->GetRow("SELECT INET_NTOA(ipaddr) AS nas, numport AS oltport, g.name, d.secret FROM gpononu g
-		JOIN gpononu2olt go ON go.gpononuid = g.id
-		JOIN netdevices d ON go.netdevicesid = d.id
-		JOIN nodes n ON n.netdev = d.id
-		WHERE g.id = ? AND ownerid = 0", array($id));
-
-	$cmd = ConfigHelper::getConfig('gpon-dasan.radius_disconnect_helper',
-		"echo \"Dasan-Gpon-Olt-Id=%port%,Dasan-Gpon-Onu-Serial-Num=%sn%\"| radclient -r 1 %nas% disconnect %secret%");
-	$cmd = str_replace(array('%port%', '%sn%', '%nas%', '%secret%'),
-		array($rdata['oltport'], $rdata['name'], $rdata['nas'], $rdata['secret']), $cmd);
-	$res = 0;
-	system($cmd . " >/dev/null", $res);
-
-	return $res;
-}
-
 function ONU_radius_disconnect($id) {
+	$GPON = LMSGponDasanPlugin::getGponInstance();
+
 	// xajax response
 	$objResponse = new xajaxResponse();
 
-	$res = gpononu_radius_disconnect($id);
+	$res = $GPON->GponOnuRadiusDisconnect($id);
 	$objResponse->assign("disconnectbutton", "style.display", "");
 	if ($res)
 		$objResponse->script("alert('" . trans("<!gpon-dasan>Failed!") . "');");
@@ -121,6 +107,8 @@ function ONU_radius_disconnect($id) {
 }
 
 function ONU_xml_provisioning($id) {
+	$GPON = LMSGponDasanPlugin::getGponInstance();
+
 	// xajax response
 	$objResponse = new xajaxResponse();
 
@@ -133,7 +121,7 @@ function ONU_xml_provisioning($id) {
 
 	if (!$res) {
 		if (ConfigHelper::checkConfig('gpon-dasan.use_radius'))
-			$res = gpononu_radius_disconnect($id);
+			$res = $GPON->GponOnuRadiusDisconnect($id);
 		else {
 			$res = gpononu_reset($id);
 			if (is_array($res) && $res[0] == 1)

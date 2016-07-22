@@ -24,6 +24,8 @@
  *  $Id$
  */
 
+$GPON = LMSGponDasanPlugin::getGponInstance();
+
 if(! $LMS->NetDevExists($_GET['id']))
 {
 	$SESSION->redirect('?m=gponoltlist');
@@ -78,7 +80,7 @@ $listdata['filtr'] = $f;
 function OLT_ONU_walk_Xj($gponoltid)
 {
 	// xajax response
-	global $GPON;
+	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
 	$options_snmp=$GPON->GetGponOlt($gponoltid);
 	$GPON->snmp->set_options($options_snmp);

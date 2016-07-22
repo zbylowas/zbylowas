@@ -35,7 +35,7 @@ class GponDasanNetDevHandler {
 		$db = LMSDB::getInstance();
 
 		$netdevinfo = $smarty->getTemplateVars('netdevinfo');
-		$netdevinfo['gpononuid'] = $db->GetOne('SELECT id FROM gpononu WHERE netdevid = ?',
+		$netdevinfo['gpononuid'] = $db->GetOne('SELECT id FROM ' . GPON_DASAN::SQL_TABLE_GPONONU . ' WHERE netdevid = ?',
 			array($netdevinfo['id']));
 		$smarty->assign('netdevinfo', $netdevinfo);
 

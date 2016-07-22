@@ -36,6 +36,14 @@ class LMSGponDasanPlugin extends LMSPlugin {
 	const PLUGIN_DESCRIPTION = 'GPON Dasan Hardware Support';
 	const PLUGIN_AUTHOR = 'Tomasz Chiliński &lt;tomasz.chilinski@chilan.com&gt;,<br>AP-Media';
 
+	private static $gpon = null;
+
+	public static function getGponInstance() {
+		if (empty(self::$gpon))
+			self::$gpon = new GPON_DASAN();
+		return self::$gpon;
+	}
+
 	public function registerHandlers() {
 		$this->handlers = array(
 			'lms_initialized' => array(
