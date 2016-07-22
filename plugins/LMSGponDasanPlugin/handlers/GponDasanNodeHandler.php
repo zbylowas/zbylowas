@@ -38,7 +38,7 @@ class GponDasanNodeHandler {
 		$SMARTY = $hook_data['smarty'];
 		$oldid = $_GET['id'];
 		$_GET['id'] = $_GET['ownerid'];
-		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpondasanonu.inc.php');
 		$_GET['id'] = $oldid;
 
 		return $hook_data;
@@ -52,7 +52,7 @@ class GponDasanNodeHandler {
 		$SMARTY = $hook_data['smarty'];
 		$oldid = $_GET['id'];
 		$_GET['id'] = LMSDB::GetInstance()->GetOne('SELECT ownerid FROM nodes WHERE id = ?', array($_GET['id']));
-		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpondasanonu.inc.php');
 		$_GET['id'] = $oldid;
 
 		return $hook_data;
@@ -66,7 +66,7 @@ class GponDasanNodeHandler {
 		$SMARTY = $hook_data['smarty'];
 		$oldid = $_GET['id'];
 		$_GET['id'] = LMSDB::GetInstance()->GetOne('SELECT ownerid FROM nodes WHERE id = ?', array($_GET['id']));
-		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpondasanonu.inc.php');
 		$_GET['id'] = $oldid;
 
 		return $hook_data;
@@ -77,7 +77,7 @@ class GponDasanNodeHandler {
 
 		$GPON = LMSGponDasanPlugin::getGponInstance();
 
-		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpondasanonu.inc.php');
 	}
 }
 

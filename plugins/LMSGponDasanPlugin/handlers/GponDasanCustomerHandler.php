@@ -36,7 +36,7 @@ class GponDasanCustomerHandler {
 		$GPON = LMSGponDasanPlugin::getGponInstance();
 
 		$SMARTY = $hook_data['smarty'];
-		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpondasanonu.inc.php');
 
 		return $hook_data;
 	}
@@ -47,7 +47,7 @@ class GponDasanCustomerHandler {
 		$GPON = LMSGponDasanPlugin::getGponInstance();
 
 		$SMARTY = $hook_data['smarty'];
-		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpononu.inc.php');
+		require_once(PLUGINS_DIR . '/' . LMSGponDasanPlugin::plugin_directory_name . '/modules/gpondasanonu.inc.php');
 
 		return $hook_data;
 	}
