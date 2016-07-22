@@ -309,7 +309,7 @@ class GPON_DASAN {
 	public function IsGponOnuLink2olt($gpononuid) {
 		$gpononuid = intval($gpononuid);
 		return $this->DB->GetOne('SELECT COUNT(id) AS liczba FROM ' . self::SQL_TABLE_GPONONU2OLT
-			. 'WHERE gpononuid=?', array($gpononuid));
+			. ' WHERE gpononuid=?', array($gpononuid));
 	}
 
 	public function IsGponOnuLink($netdeviceid, $numport, $gpononuid) {
