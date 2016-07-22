@@ -26,36 +26,31 @@
 
 $GPON = LMSGponDasanPlugin::getGponInstance();
 
-if(! $LMS->NetDevExists($_GET['id']))
-{
+if (!$LMS->NetDevExists($_GET['id']))
 	$SESSION->redirect('?m=gpondasanoltlist');
-}
 
 $netdevinfo = $LMS->GetNetDev($_GET['id']);
 //-GPON-OLT
 //Dane OLT
-if($netdevinfo['gponoltid'] > 0)
-{
-	$gponoltdata=$GPON->GetGponOlt($netdevinfo['gponoltid']);
-	$netdevinfo=array_merge($gponoltdata,$netdevinfo);
-	$gponoltportsdata=$GPON->GetGponOltPorts($netdevinfo['gponoltid']);
-}
-else
-{
-	$SESSION->redirect('?m=netdevinfo&id='.$_GET['id']);
-}
+$netdevinfo['gponoltid'] = $GPON->GetGponOltIdByNetdeviceId($netdevinfo['id']);
+if ($netdevinfo['gponoltid']) {
+	$gponoltdata = $GPON->GetGponOlt($netdevinfo['gponoltid']);
+	$netdevinfo = array_merge($gponoltdata, $netdevinfo);
+	$gponoltportsdata = $GPON->GetGponOltPorts($netdevinfo['gponoltid']);
+} else
+	$SESSION->redirect('?m=netdevinfo&id=' . $_GET['id']);
 //-GPON-OLT
 
-if(!isset($_GET['o']))
-        $SESSION->restore('goltio', $o);
+if (!isset($_GET['o']))
+	$SESSION->restore('goltio', $o);
 else
-        $o = $_GET['o'];
+	$o = $_GET['o'];
 $SESSION->save('goltio', $o);
 
-if(!isset($_GET['f']))
-        $SESSION->restore('goltif', $f);
+if (!isset($_GET['f']))
+	$SESSION->restore('goltif', $f);
 else
-        $f = $_GET['f'];
+	$f = $_GET['f'];
 $SESSION->save('goltif', $f);
 
 $netdevconnected = $GPON->GetGponOnuConnectedNames($_GET['id'], $o, $f);

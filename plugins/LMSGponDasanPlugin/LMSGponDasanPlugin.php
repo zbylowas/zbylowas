@@ -31,7 +31,7 @@
  */
 class LMSGponDasanPlugin extends LMSPlugin {
 	const plugin_directory_name = 'LMSGponDasanPlugin';
-	const PLUGIN_DBVERSION = '2016072100';
+	const PLUGIN_DBVERSION = '2016072200';
 	const PLUGIN_NAME = 'GPON Dasan';
 	const PLUGIN_DESCRIPTION = 'GPON Dasan Hardware Support';
 	const PLUGIN_AUTHOR = 'Tomasz Chiliński &lt;tomasz.chilinski@chilan.com&gt;,<br>AP-Media';
@@ -46,10 +46,6 @@ class LMSGponDasanPlugin extends LMSPlugin {
 
 	public function registerHandlers() {
 		$this->handlers = array(
-			'lms_initialized' => array(
-				'class' => 'GponDasanInitHandler',
-				'method' => 'lmsInit'
-			),
 			'smarty_initialized' => array(
 				'class' => 'GponDasanInitHandler',
 				'method' => 'smartyInit'

@@ -31,22 +31,6 @@
  */
 class GponDasanInitHandler {
     /**
-     * Sets plugin managers
-     * 
-     * @param LMS $hook_data Hook data
-     */
-	public function lmsInit(LMS $hook_data) {
-		$db = $hook_data->getDb();
-		$auth = $hook_data->getAuth();
-
-		$hook_data->SetNetDevManager(
-			new GponDasanLMSNetDevManager($db, $auth, $hook_data->getCache(), $hook_data->getSyslog())
-		);
-
-		return $hook_data;
-	}
-
-    /**
      * Sets plugin Smarty templates directory
      * 
      * @param Smarty $hook_data Hook data

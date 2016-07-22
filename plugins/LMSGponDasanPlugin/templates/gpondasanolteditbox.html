@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 <SCRIPT TYPE="text/javascript" SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpon.js""></SCRIPT>
-<FORM NAME="netdevedit" METHOD="POST" ACTION="?m=gpondasanoltedit&id={$netdevinfo.id}">
+<FORM NAME="netdevedit" METHOD="POST" ACTION="?m=gpondasanoltedit&id={$netdevinfo.netdeviceid}">
 	<INPUT type="submit" class="hiddenbtn">
 	<INPUT TYPE="HIDDEN" NAME="netdev[gponoltid]" VALUE="{$netdevinfo.gponoltid}">
 <TABLE WIDTH="100%" class="lmsbox-inner" CELLPADDING="3">
@@ -39,7 +39,7 @@
 		<TD style="width: 98%;">
 			<SELECT name="netdev[netdevid]" {tip text="Select assigned network device"}>
 				{foreach $notgponoltdevices as $device}
-				<OPTION value="{$device.id}"{if $netdevinfo.id == $device.id} selected{/if}>{$device.name}</OPTION>
+				<OPTION value="{$device.id}"{if $netdevinfo.netdeviceid == $device.id} selected{/if}>{$device.name}</OPTION>
 				{/foreach}
 			</SELECT>
 		</TD>
@@ -245,7 +245,7 @@ function UpdateGponPorts(countPorts) {
 
 		{$snmpoltdata}
 		<br>
-		<FORM ID="myformaddprofile" name="myformaddprofile" METHOD="POST" ACTION="?m=gpondasanoltedit&id={$netdevinfo.id}">
+		<FORM ID="myformaddprofile" name="myformaddprofile" METHOD="POST" ACTION="?m=gpondasanoltedit&id={$netdevinfo.netdeviceid}">
 		<input type="hidden" name="gponprofileadd" id="gponprofileadd" value="0" />
 		<input type="hidden" name="profile_edit" id="profile_edit" value="{$temp_post.profile_edit}" />
 		<b>ONU Profile:</b><br /><br />
@@ -279,12 +279,12 @@ function UpdateGponPorts(countPorts) {
 		<td><select name="status_4"><option value="1" {if $temp_post.status_4 eq "enable(1)"} selected="selected" {/if}>włącz</option><option value="2" {if $temp_post.status_4 eq "disable(2)"} selected="selected" {/if}>wyłącz(off)</option></select></td>
 		</tr>
 		<tr><td colspan="5" align="right"><input type="button" name="add_profile" value="{if $temp_post.profile_edit eq 1}Zmień{else}Dodaj{/if} profil ONU" OnClick="document.getElementById('gponprofileadd').value=1;this.form.submit();" />
-		{if $temp_post.profile_edit eq 1}<br /><a href="?m=gpondasanoltedit&id={$netdevinfo.id}">dodaj nowy</a> {/if}</td></tr>
+		{if $temp_post.profile_edit eq 1}<br /><a href="?m=gpondasanoltedit&id={$netdevinfo.netdeviceid}">dodaj nowy</a> {/if}</td></tr>
 		</table>
 		<b>Dodane profile:</b><br /><br />
 		<table cellpadding="3" cellspacing="3" border="1">
 		{foreach from=$gponoltprofiles key=key item=name}
-			<tr><td align="right">{$key}.</td><td>{$name}</td><td><a href="?m=gpondasanoltedit&id={$netdevinfo.id}&prof={$name|replace:'&nbsp;':'::'}">edytuj</a></td></tr>
+			<tr><td align="right">{$key}.</td><td>{$name}</td><td><a href="?m=gpondasanoltedit&id={$netdevinfo.netdeviceid}&prof={$name|replace:'&nbsp;':'::'}">edytuj</a></td></tr>
 		{/foreach}
 		</TD>
 		</table>
@@ -316,7 +316,7 @@ function UpdateGponPorts(countPorts) {
 	<TR>
 		<TD COLSPAN="3" class="fbottomu text-right">
 			<A HREF="javascript:document.netdevedit.submit();" ACCESSKEY="S">{trans("Submit")} <IMG SRC="img/save.gif" alt=""></A>
-			<A HREF="?m=gpondasanoltinfo&id={$netdevinfo.id}">{trans("Cancel")} <IMG SRC="img/cancel.gif" alt=""></A>
+			<A HREF="?m=gpondasanoltinfo&id={$netdevinfo.netdeviceid}">{trans("Cancel")} <IMG SRC="img/cancel.gif" alt=""></A>
 		</TD>
 	</TR>
 	</TBODY>

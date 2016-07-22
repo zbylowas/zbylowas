@@ -1,7 +1,3 @@
-/* netdevices */
-ALTER TABLE netdevices ADD gponoltid integer DEFAULT NULL;
-CREATE INDEX netdevices_gponoltid_idx ON netdevices (gponoltid);
-
 /* gponauthlog */
 CREATE SEQUENCE gponauthlog_id_seq;
 CREATE table gponauthlog (
@@ -33,6 +29,8 @@ CREATE TABLE gponolt (
 	snmp_sec_level sec_level NOT NULL,
 	snmp_privacy_passphrase varchar(255) NOT NULL,
 	snmp_privacy_protocol privacy_protocol NOT NULL,
+	netdeviceid integer NOT NULL
+		REFERENCES netdevices (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id)
 );
 
@@ -208,4 +206,4 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 
 INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072100');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072200');
