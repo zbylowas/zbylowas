@@ -26,18 +26,18 @@
 
 class GPON_DASAN {
 	const SQL_TABLE_SYSLOG = 'syslog';
-	const SQL_TABLE_GPONOLT = 'gponolt';
-	const SQL_TABLE_GPONOLTPORTS = 'gponoltports';
-	const SQL_TABLE_GPONONU2OLT = 'gpononu2olt';
-	const SQL_TABLE_GPONOLTPROFILES = 'gponoltprofiles';
-	const SQL_TABLE_GPONONU = 'gpononu';
-	const SQL_TABLE_GPONONU2CUSTOMERS = 'gpononu2customers';
-	const SQL_TABLE_GPONONUMODELS = 'gpononumodels';
-	const SQL_TABLE_GPONONUPORTTYPE2MODELS = 'gpononuportstype2models';
-	const SQL_TABLE_GPONONUPORTTYPES = 'gpononuportstype';
-	const SQL_TABLE_GPONONUPORTS = 'gpononuport';
-	const SQL_TABLE_GPONONUTV = 'gpononutv';
-	const SQL_TABLE_GPONAUTHLOG = 'gponauthlog';
+	const SQL_TABLE_GPONOLT = 'gpondasanolts';
+	const SQL_TABLE_GPONOLTPORTS = 'gpondasanoltports';
+	const SQL_TABLE_GPONONU2OLT = 'gpondasanonu2olts';
+	const SQL_TABLE_GPONOLTPROFILES = 'gpondasanoltprofiles';
+	const SQL_TABLE_GPONONU = 'gpondasanonus';
+	const SQL_TABLE_GPONONU2CUSTOMERS = 'gpondasanonu2customers';
+	const SQL_TABLE_GPONONUMODELS = 'gpondasanonumodels';
+	const SQL_TABLE_GPONONUPORTTYPE2MODELS = 'gpondasanonuporttype2models';
+	const SQL_TABLE_GPONONUPORTTYPES = 'gpondasanonuporttypes';
+	const SQL_TABLE_GPONONUPORTS = 'gpondasanonuports';
+	const SQL_TABLE_GPONONUTV = 'gpondasanonutv';
+	const SQL_TABLE_GPONAUTHLOG = 'gpondasanauthlog';
 
 	private $DB;			// database object
 	private $AUTH;			// object from Session.class.php (session management)
@@ -431,10 +431,11 @@ class GPON_DASAN {
 	}
 
 	public function GetGponOnu2Customers($gpononuid) {
-		return $this->DB->GetAll("SELECT g2c.id,c.id as customersid, (" . $this->DB->Concat('c.lastname', "' '", 'c.name') . ") as customersname 
-			FROM gpononu2customers g2c
-			INNER JOIN customers c On c.id=g2c.customersid
-			WHERE g2c.gpononuid=? ORDER BY g2c.id ASC", array($gpononuid));
+		return $this->DB->GetAll("SELECT g2c.id,c.id as customersid,
+				(" . $this->DB->Concat('c.lastname', "' '", 'c.name') . ") as customersname
+			FROM " . self::SQL_TABLE_GPONONU2CUSTOMERS . " g2c
+			JOIN customers c On c.id = g2c.customersid
+			WHERE g2c.gpononuid = ? ORDER BY g2c.id ASC", array($gpononuid));
 	}
 
 	public function GponOnuClearCustomers($gpononuid) {

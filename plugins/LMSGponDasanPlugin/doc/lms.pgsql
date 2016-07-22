@@ -1,7 +1,7 @@
-/* gponauthlog */
-CREATE SEQUENCE gponauthlog_id_seq;
-CREATE table gponauthlog (
-	id integer DEFAULT nextval('gponauthlog_id_seq'::text) NOT NULL,
+/* gpondasanauthlog */
+CREATE SEQUENCE gpondasanauthlog_id_seq;
+CREATE TABLE gpondasanauthlog (
+	id integer DEFAULT nextval('gpondasanauthlog_id_seq'::text) NOT NULL,
 	time timestamp with time zone,
 	onuid integer NOT NULL,
 	nas varchar(15) NOT NULL DEFAULT '',
@@ -10,15 +10,15 @@ CREATE table gponauthlog (
 	version varchar(20),
 	PRIMARY KEY (id)
 );
-CREATE INDEX gponauthlog_onuid_time ON gponauthlog (onuid, time DESC);
+CREATE INDEX gpondasanauthlog_onuid_time ON gpondasanauthlog (onuid, time DESC);
 
-/* gponolt */
+/* gpondasanolt */
 CREATE TYPE auth_protocol AS ENUM ('MD5','SHA','');
 CREATE TYPE sec_level AS ENUM ('noAuthNoPriv','authNoPriv','authPriv','');
 CREATE TYPE privacy_protocol AS ENUM ('DES','AES','');
-CREATE SEQUENCE gponolt_id_seq;
-CREATE TABLE gponolt (
-	id integer DEFAULT nextval('gponolt_id_seq'::text) NOT NULL,
+CREATE SEQUENCE gpondasanolts_id_seq;
+CREATE TABLE gpondasanolts (
+	id integer DEFAULT nextval('gpondasanolts_id_seq'::text) NOT NULL,
 	snmp_version smallint NOT NULL,
 	snmp_description varchar(255) NOT NULL,
 	snmp_host varchar(100) NOT NULL,
@@ -34,31 +34,31 @@ CREATE TABLE gponolt (
 	PRIMARY KEY (id)
 );
 
-/* gponoltports */
-CREATE SEQUENCE gponoltports_id_seq;
-CREATE TABLE gponoltports (
-	id integer DEFAULT nextval('gponoltports_id_seq'::text) NOT NULL,
+/* gpondasanoltports */
+CREATE SEQUENCE gpondasanoltports_id_seq;
+CREATE TABLE gpondasanoltports (
+	id integer DEFAULT nextval('gpondasanoltports_id_seq'::text) NOT NULL,
 	gponoltid integer NOT NULL,
 	numport integer NOT NULL,
 	maxonu integer NOT NULL,
 	PRIMARY KEY (id)
 );
-CREATE INDEX gponoltports_gponoltid_idx ON gponoltports (gponoltid);
+CREATE INDEX gpondasanoltports_gponoltid_idx ON gpondasanoltports (gponoltid);
 
-/* gponoltprofiles */
-CREATE SEQUENCE gponoltprofiles_id_seq;
-CREATE TABLE gponoltprofiles (
-	id integer DEFAULT nextval('gponoltprofiles_id_seq'::text) NOT NULL,
+/* gpondasanoltprofiles */
+CREATE SEQUENCE gpondasanoltprofiles_id_seq;
+CREATE TABLE gpondasanoltprofiles (
+	id integer DEFAULT nextval('gpondasanoltprofiles_id_seq'::text) NOT NULL,
 	name varchar(100) NOT NULL,
 	gponoltid integer DEFAULT NULL
-		REFERENCES gponolt (id) ON DELETE CASCADE ON UPDATE CASCADE,
+		REFERENCES gpondasanolts (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id)
 );
 
-/* gpononu */
-CREATE SEQUENCE gpononu_id_seq;
-CREATE TABLE gpononu (
-	id integer DEFAULT nextval('gpononu_id_seq'::text) NOT NULL,
+/* gpondasanonus */
+CREATE SEQUENCE gpondasanonus_id_seq;
+CREATE TABLE gpondasanonus (
+	id integer DEFAULT nextval('gpondasanonus_id_seq'::text) NOT NULL,
 	name varchar(100) NOT NULL,
 	gpononumodelsid integer NOT NULL,
 	password varchar(100) NOT NULL,
@@ -84,37 +84,37 @@ CREATE TABLE gpononu (
 	PRIMARY KEY (id),
 	UNIQUE (name)
 );
-CREATE INDEX gpononu_gpononumodelsid_idx ON gpononu (gpononumodelsid);
+CREATE INDEX gpondasanonus_gpononumodelsid_idx ON gpondasanonus (gpononumodelsid);
 
-/* gpononu2customers */
-CREATE SEQUENCE gpononu2customers_id_seq;
-CREATE TABLE gpononu2customers (
-	id integer DEFAULT nextval('gpononu2customers_id_seq'::text) NOT NULL,
+/* gpondasanonu2customers */
+CREATE SEQUENCE gpondasanonu2customers_id_seq;
+CREATE TABLE gpondasanonu2customers (
+	id integer DEFAULT nextval('gpondasanonu2customers_id_seq'::text) NOT NULL,
 	gpononuid integer NOT NULL
-		REFERENCES gpononu (id) ON DELETE CASCADE ON UPDATE CASCADE,
+		REFERENCES gpondasanonus (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	customersid integer NOT NULL
 		REFERENCES customers (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id)
 );
-CREATE INDEX gpononu2customers_gpononuid_idx ON gpononu2customers (gpononuid);
-CREATE INDEX gpononu2customers_customersid_idx ON gpononu2customers (customersid);
+CREATE INDEX gpondasanonu2customers_gpononuid_idx ON gpondasanonu2customers (gpononuid);
+CREATE INDEX gpondasanonu2customers_customersid_idx ON gpondasanonu2customers (customersid);
 
-/* gpononu2olt */
-CREATE SEQUENCE gpononu2olt_id_seq;
-CREATE TABLE gpononu2olt (
-	id integer DEFAULT nextval('gpononu2olt_id_seq'::text) NOT NULL,
+/* gpondasanonu2olts */
+CREATE SEQUENCE gpondasanonu2olts_id_seq;
+CREATE TABLE gpondasanonu2olts (
+	id integer DEFAULT nextval('gpondasanonu2olts_id_seq'::text) NOT NULL,
 	netdevicesid integer NOT NULL,
 	gpononuid integer NOT NULL,
 	numport smallint NOT NULL,
 	PRIMARY KEY (id),
 	UNIQUE (gpononuid)
 );
-CREATE INDEX gpononu2olt_netdevicesid_idx ON gpononu2olt (netdevicesid);
+CREATE INDEX gpondasanonu2olts_netdevicesid_idx ON gpondasanonu2olts (netdevicesid);
 
-/* gpononumodels */
-CREATE SEQUENCE gpononumodels_id_seq;
-CREATE TABLE gpononumodels (
-	id integer DEFAULT nextval('gpononumodels_id_seq'::text) NOT NULL,
+/* gpondasanonumodels */
+CREATE SEQUENCE gpondasanonumodels_id_seq;
+CREATE TABLE gpondasanonumodels (
+	id integer DEFAULT nextval('gpondasanonumodels_id_seq'::text) NOT NULL,
 	name varchar(32) NOT NULL,
 	description text,
 	producer varchar(64) DEFAULT NULL,
@@ -122,42 +122,42 @@ CREATE TABLE gpononumodels (
 	PRIMARY KEY (id)
 );
 
-/* gpononuportstype */
-CREATE SEQUENCE gpononuportstype_id_seq;
-CREATE TABLE gpononuportstype (
-	id integer DEFAULT nextval('gpononuportstype_id_seq'::text) NOT NULL,
+/* gpondasanonuporttypes */
+CREATE SEQUENCE gpondasanonuporttypes_id_seq;
+CREATE TABLE gpondasanonuporttypes (
+	id integer DEFAULT nextval('gpondasanonuporttypes_id_seq'::text) NOT NULL,
 	name varchar(100) NOT NULL,
 	PRIMARY KEY (id)
 );
 
-/* gpononuport */
-CREATE SEQUENCE gpononuport_id_seq;
-CREATE TABLE gpononuport (
-	id integer DEFAULT nextval('gpononuport_id_seq'::text) NOT NULL,
+/* gpondasanonuports */
+CREATE SEQUENCE gpondasanonuports_id_seq;
+CREATE TABLE gpondasanonuports (
+	id integer DEFAULT nextval('gpondasanonuports_id_seq'::text) NOT NULL,
 	onuid integer NOT NULL
-		REFERENCES gpononu (id) ON DELETE CASCADE ON UPDATE CASCADE,
+		REFERENCES gpondasanonus (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	typeid integer DEFAULT NULL
-		REFERENCES gpononuportstype (id) ON DELETE SET NULL ON UPDATE CASCADE,
+		REFERENCES gpondasanonuporttypes (id) ON DELETE SET NULL ON UPDATE CASCADE,
 	portid integer DEFAULT NULL,
 	portdisable smallint,
 	PRIMARY KEY (id),
 	UNIQUE (onuid, typeid, portid)
 );
 
-/* gpononuportstype2models */
-CREATE TABLE gpononuportstype2models (
+/* gpondasanonuporttype2models */
+CREATE TABLE gpondasanonuporttype2models (
 	gpononuportstypeid integer DEFAULT NULL
-		REFERENCES gpononuportstype (id) ON DELETE SET NULL ON UPDATE CASCADE,
+		REFERENCES gpondasanonuporttypes (id) ON DELETE SET NULL ON UPDATE CASCADE,
 	gpononumodelsid integer NOT NULL
-		REFERENCES gpononumodels (id) ON DELETE CASCADE ON UPDATE CASCADE,
+		REFERENCES gpondasanonumodels (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	portscount integer NOT NULL
 );
-CREATE INDEX gpononuportstype2models_gpononuportstypeid_gpononumodelsid_idx ON gpononuportstype2models (gpononuportstypeid, gpononumodelsid);
+CREATE INDEX gpondasanonuporttype2models_gpononuportstypeid_gpononumodelsid_idx ON gpondasanonuporttype2models (gpononuportstypeid, gpononumodelsid);
 
-/* gpononutv */
-CREATE SEQUENCE gpononutv_id_seq;
-CREATE TABLE gpononutv (
-	id integer DEFAULT nextval('gpononutv_id_seq'::text) NOT NULL,
+/* gpondasanonutv */
+CREATE SEQUENCE gpondasanonutv_id_seq;
+CREATE TABLE gpondasanonutv (
+	id integer DEFAULT nextval('gpondasanonutv_id_seq'::text) NOT NULL,
 	ipaddr bigint NOT NULL,
 	channel varchar(100) NOT NULL,
 	PRIMARY KEY (id),
@@ -171,13 +171,13 @@ CREATE OR REPLACE FUNCTION log_onu_auth (username varchar(100), nas_ip varchar(1
 		onu_id integer;
 	BEGIN
 		SELECT INTO dev_id netdev FROM nodes n WHERE inet_ntoa(ipaddr) = nas_ip AND ownerid = 0;
-		SELECT INTO onu_id id FROM gpononu WHERE name = username;
-		INSERT INTO gponauthlog(time, onuid, nas, oltport, onuoltid, version) VALUES(NOW(), onu_id, nas_ip::inet, olt, onu, ver);
-		UPDATE gpononu SET onuid = onu WHERE id = onu_id;
+		SELECT INTO onu_id id FROM gpondasanonus WHERE name = username;
+		INSERT INTO gpondasanauthlog (time, onuid, nas, oltport, onuoltid, version) VALUES(NOW(), onu_id, nas_ip::inet, olt, onu, ver);
+		UPDATE gpondasanonus SET onuid = onu WHERE id = onu_id;
 
-		UPDATE gpononu2olt SET numport = olt WHERE gpononuid = onu_id AND netdevicesid = dev_id;
+		UPDATE gpondasanonu2olts SET numport = olt WHERE gpononuid = onu_id AND netdevicesid = dev_id;
 		IF NOT FOUND THEN
-			INSERT INTO gpononu2olt(netdevicesid, gpononuid, numport)
+			INSERT INTO gpondasanonu2olts (netdevicesid, gpononuid, numport)
 				VALUES(dev_id, onu_id, olt);
 		END IF;
 	END;
@@ -204,6 +204,6 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'xml_provisioning_user_password', '%14random%',
 	'domyślne hasło użytkownika na końcówce używane podczas provisioningu xml', 0);
 
-INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
+INSERT INTO gpondasanonuporttypes (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072200');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072300');

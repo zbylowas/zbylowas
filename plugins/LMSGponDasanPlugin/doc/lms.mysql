@@ -1,5 +1,5 @@
--- gponauthlog --
-CREATE table gponauthlog (
+-- gpondasanauthlog --
+CREATE TABLE gpondasanauthlog (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	time datetime NULL DEFAULT NULL,
 	onuid int(11) NOT NULL,
@@ -11,8 +11,8 @@ CREATE table gponauthlog (
 	KEY gponauthlog_onuid_time (onuid, time DESC)
 ) ENGINE=InnoDB;
 
--- gponolt --
-CREATE TABLE gponolt (
+-- gpondasanolts --
+CREATE TABLE gpondasanolts (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	snmp_version tinyint(4) NOT NULL,
 	snmp_description varchar(255) NOT NULL,
@@ -29,8 +29,8 @@ CREATE TABLE gponolt (
 	FOREIGN KEY (netdeviceid) REFERENCES netdevices (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- gponoltports --
-CREATE TABLE gponoltports (
+-- gpondasanoltports --
+CREATE TABLE gpondasanoltports (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	gponoltid int(11) NOT NULL,
 	numport int(11) NOT NULL,
@@ -39,17 +39,17 @@ CREATE TABLE gponoltports (
 	KEY gponoltid (gponoltid)
 ) ENGINE=InnoDB;
 
--- gponoltprofiles --
-CREATE TABLE gponoltprofiles (
+-- gpondasanoltprofiles --
+CREATE TABLE gpondasanoltprofiles (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(100) NOT NULL,
 	gponoltid int(11) DEFAULT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (gponoltid) REFERENCES gponolt (id) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (gponoltid) REFERENCES gpondasanolts (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- gpononu --
-CREATE TABLE gpononu (
+-- gpondasanonus --
+CREATE TABLE gpondasanonus (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(100) NOT NULL,
 	gpononumodelsid int(11) NOT NULL,
@@ -78,20 +78,20 @@ CREATE TABLE gpononu (
 	FOREIGN KEY (netdevid) REFERENCES netdevices (id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- gpononu2customers --
-CREATE TABLE gpononu2customers (
+-- gpondasanonu2customers --
+CREATE TABLE gpondasanonu2customers (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	gpononuid int(11) NOT NULL,
 	customersid int(11) NOT NULL,
 	PRIMARY KEY (id),
 	KEY IXgpononuid (gpononuid),
 	KEY IXcustomersid (customersid),
-	FOREIGN KEY (gpononuid) REFERENCES gpononu (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (gpononuid) REFERENCES gpondasanonus (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (customersid) REFERENCES customers (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- gpononu2olt --
-CREATE TABLE gpononu2olt (
+-- gpondasanonu2olts --
+CREATE TABLE gpondasanonu2olts (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	netdevicesid int(11) NOT NULL,
 	gpononuid int(11) NOT NULL,
@@ -101,8 +101,8 @@ CREATE TABLE gpononu2olt (
 	KEY gponoltid (netdevicesid)
 ) ENGINE=InnoDB;
 
--- gpononumodels --
-CREATE TABLE gpononumodels (
+-- gpondasanonumodels --
+CREATE TABLE gpondasanonumodels (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(32) NOT NULL,
 	description text,
@@ -111,15 +111,15 @@ CREATE TABLE gpononumodels (
 	PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
--- gpononuportstype --
-CREATE TABLE gpononuportstype (
+-- gpondasanonuportstypes --
+CREATE TABLE gpondasanonuporttypes (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(100) NOT NULL,
 	PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
--- gpononuport --
-CREATE TABLE gpononuport (
+-- gpondasanonuports --
+CREATE TABLE gpondasanonuports (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	onuid int(11) NOT NULL,
 	typeid int(11) DEFAULT NULL,
@@ -127,22 +127,22 @@ CREATE TABLE gpononuport (
 	portdisable tinyint(4),
 	PRIMARY KEY (id),
 	UNIQUE KEY onu_type_port (onuid, typeid, portid),
-	FOREIGN KEY (onuid) REFERENCES gpononu (id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (typeid) REFERENCES gpononuportstype (id) ON DELETE SET NULL ON UPDATE CASCADE
+	FOREIGN KEY (onuid) REFERENCES gpondasanonus (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (typeid) REFERENCES gpondasanonuporttypes (id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- gpononuportstype2models --
-CREATE TABLE gpononuportstype2models (
+-- gpondasanonuporttype2models --
+CREATE TABLE gpondasanonuporttype2models (
 	gpononuportstypeid int(11) DEFAULT NULL,
 	gpononumodelsid int(11) NOT NULL,
 	portscount int(11) NOT NULL,
 	KEY gpononuportstypeid (gpononuportstypeid, gpononumodelsid),
-	FOREIGN KEY (gpononuportstypeid) REFERENCES gpononuportstype (id) ON DELETE SET NULL ON UPDATE CASCADE,
-	FOREIGN KEY (gpononumodelsid) REFERENCES gpononumodels (id) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (gpononuportstypeid) REFERENCES gpondasanonuporttypes (id) ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (gpononumodelsid) REFERENCES gpondasanonumodels (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- gpononutv --
-CREATE TABLE gpononutv (
+-- gpondasanonutv --
+CREATE TABLE gpondasanonutv (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	ipaddr int(16) unsigned NOT NULL,
 	channel varchar(100) NOT NULL,
@@ -157,11 +157,11 @@ CREATE PROCEDURE log_onu_auth (username varchar(100), nas_ip varchar(15), olt in
 	BEGIN
 		DECLARE  dev_id, onu_id int ;
 		SELECT netdev INTO dev_id FROM nodes n WHERE inet_ntoa(ipaddr) = nas_ip AND ownerid = 0;
-		SELECT id INTO onu_id FROM gpononu WHERE name = username;
-		INSERT INTO gponauthlog(time, onuid, nas, oltport, onuoltid, version) VALUES(NOW(), onu_id, nas_ip, olt, onu, ver);
-		UPDATE gpononu SET onuid = onu WHERE id = onu_id;
+		SELECT id INTO onu_id FROM gpondasanonus WHERE name = username;
+		INSERT INTO gpondasanauthlog (time, onuid, nas, oltport, onuoltid, version) VALUES(NOW(), onu_id, nas_ip, olt, onu, ver);
+		UPDATE gpondasanonus SET onuid = onu WHERE id = onu_id;
 
-		REPLACE INTO gpononu2olt(netdevicesid, gpononuid, numport) VALUES(dev_id, onu_id, olt);
+		REPLACE INTO gpondasanonu2olts (netdevicesid, gpononuid, numport) VALUES (dev_id, onu_id, olt);
 	END;
 $$
 DELIMITER ;
@@ -187,6 +187,6 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'xml_provisioning_user_password', '%14random%',
 	'domyślne hasło użytkownika na końcówce używane podczas provisioningu xml', 0);
 
-INSERT INTO gpononuportstype (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
+INSERT INTO gpondasanonuporttypes (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072200');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072300');
