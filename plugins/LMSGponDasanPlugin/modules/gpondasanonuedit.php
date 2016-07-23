@@ -39,11 +39,11 @@ switch ($action) {
 
 case 'disconnectnode':
 	$LMS->NetDevLinkNode($_GET['nodeid'],0);
-	$SESSION->redirect('m=gpononuinfo&id='.$_GET['id']);
+	$SESSION->redirect('m=gpondasanonuinfo&id='.$_GET['id']);
 
 case 'nas':
 	$DB->Execute('UPDATE nodes SET nas=? WHERE id=?', array($_GET['nas'], $_GET['ip']));
-	$SESSION->redirect('m=gpononuinfo&id='.$_GET['id'].'&ip='.$_GET['ip']);
+	$SESSION->redirect('m=gpondasanonuinfo&id='.$_GET['id'].'&ip='.$_GET['ip']);
 case 'disconnect':
 	$GPON->snmp->clear_options();
 	$netdevdata=$LMS->GetNetDev($_GET['devid']);

@@ -26,10 +26,8 @@
 
 $GPON = LMSGponDasanPlugin::getGponInstance();
 
-if(! $GPON->GponOnuModelsExists($_GET['id']))
-{
-	$SESSION->redirect('m=gpononumodelslist');
-}		
+if (!$GPON->GponOnuModelsExists($_GET['id']))
+	$SESSION->redirect('m=gpondasanonumodelslist');
 
 $action = !empty($_GET['action']) ? $_GET['action'] : '';
 $edit = '';
