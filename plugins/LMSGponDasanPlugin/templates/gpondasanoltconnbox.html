@@ -33,7 +33,7 @@
 			<IMG src="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu_takenports.gif" ALT=""><A href="?m=gpondasanoltinfo&id={$netdevinfo.id}&o=numport{if $listdata.direction eq "asc" && $listdata.order eq "numport"},desc{/if}">Port OLT:</A> {if $listdata.order eq "numport"}<IMG src="img/{if $listdata.direction eq "desc"}asc{else}desc{/if}_order.gif" alt="">{/if} <BR>Filtr:
 			<FORM METHOD="GET" ACTION="?m={$layout.module}" NAME="choosefilter">
                             <INPUT type="submit" class="hiddenbtn">
-                            <INPUT TYPE="HIDDEN" NAME="m" VALUE="gponoltinfo">
+                            <INPUT TYPE="HIDDEN" NAME="m" VALUE="gpondasanoltinfo">
                             <INPUT TYPE="HIDDEN" NAME="id" VALUE="{$netdevinfo.id}">
                             <SELECT SIZE="1" NAME="f" ONCHANGE="document.choosefilter.submit();">
 			    <option value="0">- {t}all{/t} -</option>
@@ -113,7 +113,7 @@
 			{else}
 			<FORM METHOD="GET" ACTION="?m=gpondasanoltedit" NAME="connect">
 			<INPUT type="submit" class="hiddenbtn">
-			<INPUT TYPE="HIDDEN" NAME="m" VALUE="gponoltedit">
+			<INPUT TYPE="HIDDEN" NAME="m" VALUE="gpondasanoltedit">
 			<INPUT TYPE="HIDDEN" NAME="id" VALUE="{$netdevinfo.id}">
 			<INPUT TYPE="HIDDEN" NAME="action" VALUE="connect">
 			<TABLE width="100%">
