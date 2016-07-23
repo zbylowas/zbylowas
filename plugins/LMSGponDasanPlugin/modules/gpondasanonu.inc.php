@@ -24,26 +24,30 @@
  */
 
 $GPON = LMSGponDasanPlugin::getGponInstance();
-$netdevconnected = $GPON->GetGponOnuCustomersNames($_GET['id']);
+$gpondasanonus = $GPON->GetGponOnuCustomersNames($_GET['id']);
 
 /* Using AJAX plugins */
-function ONU_get_param_Xj($gponoltid,$OLT_id,$ONU_id,$id,$ONU_name='') {
+function ONU_get_param_Xj($gponoltid, $OLT_id, $ONU_id, $id, $ONU_name = '') {
 	// xajax response
 	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
-	$options_snmp=$GPON->GetGponOlt($gponoltid);
+	$options_snmp = $GPON->GetGponOlt($gponoltid);
 	$GPON->snmp->set_options($options_snmp);
-	$error_snmp=$GPON->snmp->get_correct_connect_snmp();
-	$table_param=$GPON->snmp->ONU_get_param_table($OLT_id,$ONU_id,$ONU_name);
-	$objResponse->script("document.getElementById('pokaz_parametry_".$id."').value='Ukryj parametry';"); 
-	$objResponse->script("document.getElementById('pokaz_parametry_".$id."').onclick=function(){document.getElementById('ONU_param_".$id."').innerHTML='';document.getElementById('pokaz_parametry_".$id."').value='Pokaż parametry';document.getElementById('pokaz_parametry_".$id."').onclick=function(){xajax_ONU_get_param_Xj(".$gponoltid.",".$OLT_id.",".$ONU_id.",".$id.",'".$ONU_name."');}};"); 
-	$objResponse->assign("ONU_param_".$id,"innerHTML",$error_snmp.$table_param);
+	$error_snmp = $GPON->snmp->get_correct_connect_snmp();
+	$table_param = $GPON->snmp->ONU_get_param_table($OLT_id, $ONU_id, $ONU_name);
+	$objResponse->script("document.getElementById('pokaz_parametry_" . $id . "').value='" . trans("Hide SNMP settings") . "';");
+	$objResponse->script("document.getElementById('pokaz_parametry_" . $id . "').onclick=function()"
+		. "{document.getElementById('ONU_param_" . $id . "').innerHTML='';"
+		. "document.getElementById('pokaz_parametry_" . $id . "').value='" . trans("Show SNMP settings") . "';"
+		. "document.getElementById('pokaz_parametry_" . $id . "').onclick=function()"
+		. "{xajax_ONU_get_param_Xj(" . $gponoltid . "," . $OLT_id . "," . $ONU_id . "," . $id . ",'" . $ONU_name . "');}};");
+	$objResponse->assign("ONU_param_" . $id, "innerHTML", $error_snmp . $table_param);
 	return $objResponse;
 }
 
 $LMS->RegisterXajaxFunction('ONU_get_param_Xj');
 /* end AJAX plugin stuff */
 
-$SMARTY->assign('netdevlist', $netdevconnected);
+$SMARTY->assign('gpondasanonus', $gpondasanonus);
 
 ?>
