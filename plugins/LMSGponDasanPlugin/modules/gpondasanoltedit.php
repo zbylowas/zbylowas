@@ -87,7 +87,7 @@ switch ($action) {
 		$GPON->snmp->clear_options();
 		$netdevdata = $LMS->GetNetDev($_GET['id']);
 		$netdevdata['gponoltid'] = $GPON->GetGponOltIdByNetdeviceId($netdevdata['id']);
-		if ($netdevdata['gponoltid'])) {
+		if ($netdevdata['gponoltid']) {
 			$options_snmp = $GPON->GetGponOlt($netdevdata['gponoltid']);
 			$GPON->snmp->set_options($options_snmp);
 			$GPON->snmp->OLT_write_config();
