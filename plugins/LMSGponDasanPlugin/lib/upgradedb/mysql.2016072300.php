@@ -169,19 +169,19 @@ $this->Execute("
 $this->Execute("DROP PROCEDURE IF EXISTS log_onu_auth");
 
 $this->Execute("
-	DELIMITER $$
-	CREATE PROCEDURE log_onu_auth (username varchar(100), nas_ip varchar(15), olt int(11), onu int(11), ver char(20))
-		BEGIN
-			DECLARE  dev_id, onu_id int ;
-			SELECT netdev INTO dev_id FROM nodes n WHERE inet_ntoa(ipaddr) = nas_ip AND ownerid = 0;
-			SELECT id INTO onu_id FROM gpondasanonus WHERE name = username;
-			INSERT INTO gpondasanauthlog (time, onuid, nas, oltport, onuoltid, version) VALUES (NOW(), onu_id, nas_ip, olt, onu, ver);
-			UPDATE gpondasanonus SET onuid = onu WHERE id = onu_id;
+DELIMITER $$
+CREATE PROCEDURE log_onu_auth (username varchar(100), nas_ip varchar(15), olt int(11), onu int(11), ver char(20))
+	BEGIN
+		DECLARE  dev_id, onu_id int ;
+		SELECT netdev INTO dev_id FROM nodes n WHERE inet_ntoa(ipaddr) = nas_ip AND ownerid = 0;
+		SELECT id INTO onu_id FROM gpondasanonus WHERE name = username;
+		INSERT INTO gpondasanauthlog (time, onuid, nas, oltport, onuoltid, version) VALUES (NOW(), onu_id, nas_ip, olt, onu, ver);
+		UPDATE gpondasanonus SET onuid = onu WHERE id = onu_id;
 
-			REPLACE INTO gpondasanonu2olts (netdevicesid, gpononuid, numport) VALUES (dev_id, onu_id, olt);
-		END;
-	$$
-	DELIMITER
+		REPLACE INTO gpondasanonu2olts (netdevicesid, gpononuid, numport) VALUES (dev_id, onu_id, olt);
+	END;
+$$
+DELIMITER ;
 ");
 
 $this->Execute("INSERT INTO gpondasanauthlog (id, time, onuid, nas, oltport, onuoltid, version)
