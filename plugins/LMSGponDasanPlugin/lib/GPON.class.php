@@ -64,8 +64,8 @@ class GPON_DASAN {
 	public function GponOltAdd($gponoltdata) {
 		if ($this->DB->Execute('INSERT INTO ' . self::SQL_TABLE_GPONOLT . ' (snmp_version, snmp_description, snmp_host,
 				snmp_community, snmp_auth_protocol, snmp_username, snmp_password, snmp_sec_level,
-				snmp_privacy_passphrase, snmp_privacy_protocol)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+				snmp_privacy_passphrase, snmp_privacy_protocol, netdeviceid)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 				array(
 					$gponoltdata['snmp_version'],
 					$gponoltdata['snmp_description'],
@@ -76,7 +76,8 @@ class GPON_DASAN {
 					$gponoltdata['snmp_password'],
 					$gponoltdata['snmp_sec_level'],
 					$gponoltdata['snmp_privacy_passphrase'],
-					$gponoltdata['snmp_privacy_protocol']
+					$gponoltdata['snmp_privacy_protocol'],
+					$gponoltdata['netdevid'],
 			))) {
 			$id = $this->DB->GetLastInsertID(self::SQL_TABLE_GPONOLT);
 			$dump = var_export($gponoltdata, true);
