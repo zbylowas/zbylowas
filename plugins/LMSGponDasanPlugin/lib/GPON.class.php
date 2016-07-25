@@ -105,7 +105,7 @@ class GPON_DASAN {
 	}
 
 	public function GetGponOltList($o) {
-		return $this->DB->GetAll('SELECT nd.id, COUNT(gp.*) AS gponports,
+		return $this->DB->GetAll('SELECT nd.id, COUNT(gp.id) AS gponports,
 				nd.name, nd.location, nd.description, nd.producer, nd.model, nd.serialnumber,
 				nd.ports, go.id AS gponoltid
 			FROM ' . self::SQL_TABLE_GPONOLT . ' go
