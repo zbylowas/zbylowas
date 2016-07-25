@@ -491,52 +491,44 @@ class GPON_DASAN_SNMP {
 		}
 		return array_unique($result);
 	}
-	
-	function ONU_add($OLT_id,$ONU_name,$ONU_password='',$ONU_description='')
-	{
-		$result=array();
-		$OLT_id=intval($OLT_id);
-		$ONU_name=trim($ONU_name);
-		$ONU_password=trim($ONU_password);
-		$ONU_description=trim($ONU_description);
-		if($OLT_id>0 && strlen($ONU_name)>0 && strlen($ONU_password)<11)
-		{
-			$onus=$this->walk('sleGponOnuSerial');
-			//$ONU_id=intval($this->get_max_last($onus,$this->get_path_OID().'sleGponOnuSerial.'.$OLT_id.'.'))+1;
-			$ONU_id=intval($this->get_min_free($onus,$this->get_path_OID().'sleGponOnuSerial.'.$OLT_id.'.'));
-			if(!$this->search_array_key($onus,'sleGponOnuSerial.'.$OLT_id.'.'.$ONU_id))
-			{
-				if($ONU_id>0)
-				{
-					$result[]=$this->set('sleGponOnuControlRequest','i',1);
-					$result[]=$this->set('sleGponOnuControlOltId','i',$OLT_id);
-					$result[]=$this->set('sleGponOnuControlId','i',$ONU_id);
-					$result[]=$this->set('sleGponOnuControlSerial','s',$ONU_name);
-					if(strlen($ONU_password)==0)
-					{
-						$result[]=$this->set('sleGponOnuControlPasswdMode','i',1);//auto-learning
+
+	public function ONU_add($OLT_numport, $ONU_name, $ONU_password = '', $ONU_description = '') {
+		$result = array();
+		$OLT_numport = intval($OLT_numport);
+		$ONU_name = trim($ONU_name);
+		$ONU_password = trim($ONU_password);
+		$ONU_description = trim($ONU_description);
+		if ($OLT_numport && strlen($ONU_name) && strlen($ONU_password) < 11) {
+			$onus = $this->walk('sleGponOnuSerial');
+			//$ONU_id=intval($this->get_max_last($onus,$this->get_path_OID().'sleGponOnuSerial.'.$OLT_numport.'.'))+1;
+			$ONU_id = intval($this->get_min_free($onus, $this->get_path_OID() . 'sleGponOnuSerial.' . $OLT_numport . '.'));
+			if (!$ONU_id)
+				$ONU_id = 1;
+			if (!$this->search_array_key($onus, 'sleGponOnuSerial.' . $OLT_numport . '.' . $ONU_id)) {
+				if ($ONU_id) {
+					$result[] = $this->set('sleGponOnuControlRequest', 'i', 1);
+					$result[] = $this->set('sleGponOnuControlOltId', 'i', $OLT_numport);
+					$result[] = $this->set('sleGponOnuControlId', 'i', $ONU_id);
+					$result[] = $this->set('sleGponOnuControlSerial', 's', $ONU_name);
+					if (!strlen($ONU_password))
+						$result[] = $this->set('sleGponOnuControlPasswdMode', 'i', 1);//auto-learning
+					else {
+						$result[] = $this->set('sleGponOnuControlPasswdMode', 'i', 2);
+						$result[] = $this->set('sleGponOnuControlPasswd', 'x', $this->strToHex($ONU_password));
 					}
-					else 
-					{
-						$result[]=$this->set('sleGponOnuControlPasswdMode','i',2);
-						$result[]=$this->set('sleGponOnuControlPasswd','x',$this->strToHex($ONU_password));
-					}
-					$result[]=$this->set('sleGponOnuControlTimer','u',2);
-					if(strlen($ONU_description)>0)
-					{
-						$this->ONU_set_description($OLT_id,$ONU_id,$ONU_description);
-					}
-					$result=array_unique($result);
-					if(strlen($this->parse_result_error($result))==0)
-					{
+					$result[] = $this->set('sleGponOnuControlTimer', 'u', 2);
+					if (strlen($ONU_description))
+						$this->ONU_set_description($OLT_numport, $ONU_id, $ONU_description);
+					$result = array_unique($result);
+					if (!strlen($this->parse_result_error($result)))
 						$result['ONU_id']=$ONU_id;
-					}
 				}
 			}
-			$this->GPON->Log(4, 'SNMP gponolt', $this->options['id'], 'Added Onu '.$ONU_id.', serial '.$ONU_name.', olt '.$OLT_id);
+			$this->GPON->Log(4, 'SNMP gponolt', $this->options['id'], 'Added Onu '.$ONU_id.', serial '.$ONU_name.', olt ' . $OLT_numport);
 		}
-		return $result;	
+		return $result;
 	}
+
 	function ONU_set_password($OLT_id,$ONU_id,$ONU_name,$ONU_password='')
 	{
 		$result=array();
