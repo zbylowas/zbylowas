@@ -149,7 +149,7 @@ class GPON_DASAN {
 		$gponoltid = $this->GetGponOltIdByNetdeviceId($id);
 		$this->DB->Execute('DELETE FROM ' . self::SQL_TABLE_GPONOLT . ' WHERE id = ?', array($gponoltid));
 		$this->DB->Execute('DELETE FROM ' . self::SQL_TABLE_GPONOLTPORTS . ' WHERE gponoltid = ?', array($gponoltid));
-		$this->Log(4, self::SQL_TABLE_GPONOLT_SQL_TABLE, $gponoltid, 'deleted, devid: '.$id);
+		$this->Log(4, self::SQL_TABLE_GPONOLT, $gponoltid, 'deleted, devid: '.$id);
 		$this->DB->CommitTrans();
 	}
 

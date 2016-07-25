@@ -39,11 +39,11 @@ else {
 		$body = '<P>'.trans('Are you sure, you want to delete that device?').'</P>'; 
 		$body .= '<P><A HREF="?m=gpondasanoltlist&id='.$_GET['id'].'&is_sure=1">'.trans('Yes, I am sure.').'</A></P>';
 	} else {
-		header('Location: ?m=gpondasanoltlist');
 		$body = '<P>'.trans('Device has been deleted.').'</P>';
 		$GPON->DeleteGponOlt($_GET['id']);
 		if (isset($_GET['netdev']))
 			$LMS->DeleteNetDev($_GET['id']);
+		header('Location: ?m=gpondasanoltlist');
 	}
 }
 
