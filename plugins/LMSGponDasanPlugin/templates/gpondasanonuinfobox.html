@@ -1,16 +1,23 @@
 <!--// $Id$ //-->
 {$xajax}
-<TABLE WIDTH="100%" CELLPADDING="3">
-	<TR class="dark">
-		<TD WIDTH="1%" class="fleftu">
+<TABLE WIDTH="100%" class="lmsbox">
+	<COLGROUP>
+		<COL style="width: 1%;">
+		<COL style="width: 99%;">
+	</COLGROUP>
+	<THEAD>
+	<TR>
+		<TD>
 			<IMG SRC="img/{LMSGponDasanPlugin::plugin_directory_name}/gpononu.gif" ALT="">
 		</TD>
-		<TD WIDTH="99%" class="frightu">
-			<B>{$netdevinfo.name} ({$netdevinfo.id|string_format:"%04d"})</B>
+		<TD class="bold">
+			{$netdevinfo.name} ({$netdevinfo.id|string_format:"%04d"})
 		</TD>
 	</TR>
-	<TR class="light">
-	        <TD WIDTH="100%" COLSPAN="2" class="flr">
+	</THEAD>
+	<TBODY>
+	<TR>
+		<TD COLSPAN="2">
 			<TABLE WIDTH="100%" CELLPADDING="0">
 				<TR class="light">
 					<TD WIDTH="50%" style="vertical-align:top;">
@@ -157,16 +164,22 @@
 	{/if}
 	<table>
 	<TR class="light">
-		<TD WIDTH="1%">
+		<TD style="width: 1%;">
 			<IMG SRC="img/node.gif" ALT="">
 		</TD>
-		<TD WIDTH="1%" NOWRAP>
+		<TD style="width: 1%;" class="bold nobr">
 			<B>Host:</B>
 		</TD>
-		<TD WIDTH="98%" id="ONU_Host_id" align="left">
+		<TD style="width: 98%;" id="ONU_Host_id" class="text-left">
 			<table>
-			<tr><td align="right">1.</td><td>{$netdevinfo.host_id1_host}</td></tr>
-			<tr><td align="right">2.</td><td>{$netdevinfo.host_id2_host}</td></tr>
+				<tr>
+					<td class="text-right">1.</td>
+					<td>{$netdevinfo.host_id1_host|default:trans("- none -")}</td>
+				</tr>
+				<tr>
+					<td class="text-right">2.</td>
+					<td>{$netdevinfo.host_id2_host|default:trans("- none -")}</td>
+				</tr>
 			</table>
 		</TD>
 	</TR> 
@@ -407,8 +420,8 @@
 			</TABLE>
 		</TD>
 	</TR>
-	<TR class="light">
-		<TD WIDTH="100%" COLSPAN="2" class="flr" ALIGN="RIGHT">
+	<TR>
+		<TD COLSPAN="2" class="text-right">
 			{if ConfigHelper::checkConfig('gpon-dasan.use_radius')}
 			<a href="#" id="disconnectbutton" onclick="if (confirm('{trans("Are you sure you want to disconnect ONU?")}')) { this.style.display = 'none'; xajax_ONU_radius_disconnect({$netdevinfo.id}); } else return false;">{trans("<!gpon-dasan>Disconnect")} <IMG SRC="img/radius.gif" ALT=""></a>
 			{/if}
@@ -420,9 +433,9 @@
 			<A href="?m=gpondasanonudel&id={$netdevinfo.id}" OnClick="return confirmLink(this, '{t a=$netdevinfo.name}Are you sure, you want to remove device \'$a\' from database?{/t}');">{trans("Delete")} <img src="img/delete.gif" ALT=""></A>
 		</TD>
 	</TR>
-	{if $netdevinfo.gponoltid gt 0}
-	<TR class="light">
-		<TD COLSPAN="2" class="flr text-center">
+	{if $netdevinfo.gponoltid > 0}
+	<TR>
+		<TD COLSPAN="2" class="text-center">
 			<HR>
 			<input type="button" value="{trans("Show SNMP settings")}" id="pokaz_parametry_{$netdevinfo.id}" OnClick="xajax_ONU_get_param_Xj({$netdevinfo.gponoltid},{$netdevinfo.gponoltnumport},{$netdevinfo.onuid},{$netdevinfo.id},'{$netdevinfo.name}');">
 			<br>
@@ -431,9 +444,10 @@
 		</TD>
 	</TR>
 	{/if}
-	<TR class="light">
-		<TD COLSPAN="2" class="fbottomu"></TD>
+	<TR>
+		<TD COLSPAN="2"></TD>
 	</TR>
+	</TBODY>
 </TABLE>
 {if $devicepanel}
 <SCRIPT type="text/javascript">
