@@ -54,12 +54,12 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
    {$modified_time} - data ostatniej modyfikacji automatycznie generowana przez skrypt,
    {$customerid} - najniższy identyfikator klienta spośród klientów przypisanych do końcówki,
    {$wifi_ssid}, {$wifi_password} - ustawienie sieci bezprzewodowej na końcówce,
-   {$host1_ip}, {$host1_mask}, {$host1_gateway} - ustawienia pierwszego hosta IP na końcówce pobrane
-     z przypisanego pierwszego komputera lub urządzenia,
+   {$host1_ip}, {$host1_mask}, {$host1_gateway}, {$host1_vlanid} - ustawienia pierwszego hosta IP na końcówce
+     pobrane z przypisanego pierwszego komputera lub urządzenia,
    {$host1_login}, {$host1_password}, {$host1_authtype} - ustawienia loginu/nazwy, hasła oraz typu połączenia
      pierwszego komputera/urządzenia przypisanego do końcówki,
-   {$host2_ip}, {$host2_mask}, {$host2_gateway} - ustawienia drugiego hosta IP na końcówce pobrane
-     z przypisanego drugiego komputera lub urządzenia,
+   {$host2_ip}, {$host2_mask}, {$host2_gateway}, {$host2_vlanid} - ustawienia drugiego hosta IP na końcówce
+     pobrane z przypisanego drugiego komputera lub urządzenia,
    {$host2_login}, {$host2_password}, {$host2_authtype} - ustawienia loginu/nazwy, hasła oraz typu połączenia
      drugiego komputera/urządzenia przypisanego do końcówki,
    {$sip1_login}, {$sip1_password}, {$sip1_phone} - login, hasło i numer telefonu pobrane z pierwszego konta

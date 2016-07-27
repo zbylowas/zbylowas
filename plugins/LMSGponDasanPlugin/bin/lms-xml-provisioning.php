@@ -165,12 +165,12 @@ $query = "SELECT o.id AS gpononuid, o.name, o.properties, m.id AS modelid, m.nam
 	JOIN " . GPON_DASAN::SQL_TABLE_GPONONUMODELS . " m ON m.id = o.gpononumodelsid
 	JOIN " . GPON_DASAN::SQL_TABLE_GPONOLTPROFILES . " p ON p.id = o.gponoltprofilesid
 	LEFT JOIN (
-		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'n.name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details
+		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'n.name', "'/'", 'passwd', "'/'", 'authtype', "'/'", 'vlanid') . ") AS details
 		FROM nodes n
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
 	) h1 ON h1.id = o.host_id1
 	LEFT JOIN (
-		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'n.name', "'/'", 'passwd', "'/'", 'authtype') . ") AS details
+		SELECT n.id, (" . $DB->Concat('INET_NTOA(ipaddr)', "'/'", 'mask', "'/'", 'gateway', "'/'", 'n.name', "'/'", 'passwd', "'/'", 'authtype', "'/'", 'vlanid') . ") AS details
 		FROM nodes n
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
 	) h2 ON h2.id = o.host_id2
@@ -254,7 +254,7 @@ foreach ($onus as $onu) {
 	$i = 1;
 	foreach (array($host1, $host2) as $host) {
 		if (!empty($host)) {
-			list ($host_ip, $host_mask, $host_gateway, $host_login, $host_password, $host_authtype) =
+			list ($host_ip, $host_mask, $host_gateway, $host_login, $host_password, $host_authtype, $host_vlanid) =
 				explode('/', $host);
 			$SMARTY->assign(array(
 				'host' . $i . '_ip' => $host_ip,
@@ -263,6 +263,7 @@ foreach ($onus as $onu) {
 				'host' . $i . '_login' => $host_login,
 				'host' . $i . '_password' => $host_password,
 				'host' . $i . '_authtype' => $host_authtype,
+				'host' . $i . '_vlanid' => $host_vlanid,
 			));
 		}
 		$i++;
