@@ -248,7 +248,7 @@ class GPON_DASAN {
 	}
 
 	public function GetGponOltConnectedNames($gpononuid) {
-		if ($list = $this->DB->GetAll('SELECT nd.*, go2o.numport
+		if ($list = $this->DB->GetAll('SELECT nd.*, go2o.numport, g.id AS gponoltid
 			FROM ' . self::SQL_TABLE_GPONOLT . ' g
 			JOIN netdevices nd ON nd.id = g.netdeviceid
 			JOIN ' . self::SQL_TABLE_GPONONU2OLT . ' go2o ON go2o.netdevicesid = nd.id
