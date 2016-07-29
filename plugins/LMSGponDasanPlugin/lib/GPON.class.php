@@ -294,7 +294,7 @@ class GPON_DASAN {
 	public function GetNotGponOltDevices($gponoltid = null) {
 		return $this->DB->GetAll('SELECT n.id, n.name FROM netdevices n
 			LEFT JOIN ' . self::SQL_TABLE_GPONOLT . ' g ON g.netdeviceid = n.id
-			WHERE g.id IS NULL OR g.id = ?
+			WHERE g.netdeviceid IS NULL OR g.id = ?
 			ORDER BY name', array($gponoltid));
 	}
 
