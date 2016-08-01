@@ -27,11 +27,9 @@
 $GPON = LMSGponDasanPlugin::getGponInstance();
 
 $onu_customerlimit = ConfigHelper::getConfig('gpon-dasan.onu_customerlimit', 1);
-$onu_check_add=isset($_GET['onu_check_add'])?intval($_GET['onu_check_add']):0;
-if(isset($_POST['onucheck']))
-{
-	$onu_check_add=1;
-}
+$onu_check_add = isset($_GET['onu_check_add']) ? intval($_GET['onu_check_add']) : 0;
+if (isset($_POST['onucheck']))
+	$onu_check_add = 1;
 
 $gpononumodels = $GPON->GetGponOnuModelsList();
 unset($gpononumodels['total'], $gpononumodels['order'], $gpononumodels['direction']);
@@ -110,7 +108,7 @@ if(isset($_POST['netdev']))
 	} */
 
 	if ($netdevdata['xmlprovisioning']) {
-		$ports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
+		$ports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelid']);
 
 		foreach (array('admin', 'telnet', 'user') as $password_type)
 			if (!empty($netdevdata['properties'][$password_type . '_password'])) {
@@ -168,8 +166,9 @@ if(isset($_POST['netdev']))
 
 	$SMARTY->assign('error', $error);
 
-	$modelports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelsid']);
-	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $netdevdata['portsettings']);
+	$onu_keys = array('onu_description', 'gpononumodelid');
+	for ($i = 0; $i < $onu_customerlist; $i++)
+		$onu_keys[] = 'customersid_' . $i;
 } else
 	$netdevdata['xmlprovisioning'] = ConfigHelper::checkConfig('gpon-dasan.xml_provisioning_default_enabled') ? 1 : 0;
 
@@ -321,52 +320,60 @@ $SMARTY->assign('onu_customerlimit',$onu_customerlimit);
 
 $SMARTY->assign('vlans', parse_vlans());
 
-$SMARTY->assign('onu_check_add',$onu_check_add);
 $SMARTY->assign('customers', $LMS->GetCustomerNames());
-if($onu_check_add==1)
-{
-	if(isset($_POST['onucheck']) && is_array($_POST['onucheck']) && count($_POST['onucheck'])>0)
-	{
-		foreach($_POST['onucheck'] as $k=>$v)
-		{
-			$netdev[$k]=$v;
-			$onucheck[$k]=$v;
+
+$SMARTY->assign('onu_check_add', $onu_check_add);
+if ($onu_check_add) {
+	if (isset($_POST['onucheck']) && is_array($_POST['onucheck']) && count($_POST['onucheck']))
+		foreach ($_POST['onucheck'] as $k => $v) {
+			$netdev[$k] = $v;
+			$onucheck[$k] = $v;
 		}
-	}
-	$netdev['olt_data']='<A href="?m=gpondasanoltinfo&id='.$_POST['onucheck']['netdevicesid'].'">'.$_POST['onucheck']['olt_name'].'</A>  Port: <b>'.$_POST['onucheck']['olt_port'].'</b>';
-	$netdev['name'] = $_POST['onucheck']['onu_serial'];
-	$netdev['onu_description_old']=$_POST['onucheck']['onu_description'];
-	
-	$netdev['onu_passwordResult']=$netdev['onu_password'];
-	if($_POST['onucheck']['onu_passwordMode']=='enable(1)' || strlen($_POST['onucheck']['onu_passwordMode'])==0)
-	{
-		$netdev['onu_password']='';
-		$netdev['onu_passwordResult']='auto-learning';
+	$netdev['olt_data'] = '<A href="?m=gpondasanoltinfo&id='.$onucheck['netdevicesid'].'">'.$onucheck['olt_name'].'</A>  Port: <b>'.$onucheck['olt_port'].'</b>';
+	$netdev['name'] = $onucheck['onu_serial'];
+	$netdev['onu_description_old'] = $onucheck['onu_description'];
+	$netdev['onu_passwordResult'] = $netdev['onu_password'];
+	if ($onucheck['onu_passwordMode'] == 'enable(1)' || !strlen($onucheck['onu_passwordMode'])) {
+		$netdev['onu_password'] = '';
+		$netdev['onu_passwordResult'] = 'auto-learning';
 	}
 	$SMARTY->assign('netdevicesid', $_GET['netdevicesid']);
 
-	if (!isset($_POST['netdev']) && !isset($netdev['gpononumodelsid']))
+	if (isset($_POST['netdev'])) {
+		foreach ($onu_keys as $key)
+			$netdev[$key] = $netdevdata[$key];
+		$modelports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelid']);
+		$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $netdevdata['portsettings']);
+	} elseif (!isset($netdev['gpononumodelid'])) {
 		foreach ($gpononumodels as $model)
 			if ($model['name'] == $netdev['onu_model']) {
 				$gpononumodelid = $model['id'];
 				break;
 			}
-	$modelports = $GPON->GetGponOnuModelPorts($gpononumodelid);
-	$netdev['gpononumodelsid'] = $gpononumodelid;
-	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
+		$modelports = $GPON->GetGponOnuModelPorts($gpononumodelid);
+		$netdev['gpononumodelid'] = $gpononumodelid;
+		$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
+	}
 } else {
-	$onumodel = reset($gpononumodels);
-	$modelports = $GPON->GetGponOnuModelPorts($onumodel['id']);
-	$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
+	if (isset($_POST['netdev'])) {
+		foreach ($onu_keys as $key)
+			$netdev[$key] = $netdevdata[$key];
+		$modelports = $GPON->GetGponOnuModelPorts($netdevdata['gpononumodelid']);
+		$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, $netdevdata['portsettings']);
+	} else {
+		$onumodel = reset($gpononumodels);
+		$modelports = $GPON->GetGponOnuModelPorts($onumodel['id']);
+		$netdev['portsettings'] = $GPON->GetGponOnuAllPorts($modelports, array());
+	}
 }
 
 $gponoltprofiles = $GPON->GetGponOltProfiles(is_array($netdev) && array_key_exists('gponoltid', $netdev) ? $netdev['gponoltid'] : null);
 $SMARTY->assign('gponoltprofiles', $gponoltprofiles);
 
-$netdev_temp=is_array($netdev)?$netdev:array();
+$netdev_temp = is_array($netdev) ? $netdev : array();
 if (isset($_POST['netdev'])) {
-	$netdev_temp=array_merge($netdevdata,$netdev_temp);
-	$netdev_temp['name']=isset($netdev['name'])?$netdev['name']:$netdev_temp['name'];
+	$netdev_temp = array_merge($netdevdata, $netdev_temp);
+	$netdev_temp['name'] = isset($netdev['name']) ? $netdev['name'] : $netdev_temp['name'];
 } else
 	$netdev_temp['xmlprovisioning'] = ConfigHelper::checkConfig('gpon-dasan.xml_provisioning_default_enabled') ? 1 : 0;
 

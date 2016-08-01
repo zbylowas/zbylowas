@@ -50,10 +50,9 @@
 			<b>Auto podłączony</b>
 			{else}
 			<form method="POST" name="olt_{$netdevlist[netdevlist].olt_netdevicesid}_{$netdevlist[netdevlist].olt_port}_{$netdevlist[netdevlist].onu_id}" action="?m=gpondasanonuadd">
-			{foreach from=$netdevlist[netdevlist] key=k item=v}
-   <INPUT TYPE="hidden" NAME="onucheck[{$k}]" VALUE="{$v}"> 
-{/foreach}
-			
+				{foreach from=$netdevlist[netdevlist] key=k item=v}
+				<INPUT TYPE="hidden" NAME="onucheck[{$k}]" VALUE="{$v}"> 
+				{/foreach}
 			</form>
 			{if $netdevlist[netdevlist].onu_model}
 			<a href="#" onclick="document.forms['olt_{$netdevlist[netdevlist].olt_netdevicesid}_{$netdevlist[netdevlist].olt_port}_{$netdevlist[netdevlist].onu_id}'].submit(); return false;"><IMG src="img/add.gif" alt="[ {trans("Add")} ]" title="[ {trans("Add")} ]"></A>
