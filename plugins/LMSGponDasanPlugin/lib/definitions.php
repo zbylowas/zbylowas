@@ -24,10 +24,6 @@
  *  $Id$
  */
 
-// SNMP_OID_OUTPUT_MODULE constant definition for PHP <= 5.3.5
-if (!defined('SNMP_OID_OUTPUT_MODULE'))
-	define('SNMP_OID_OUTPUT_MODULE', 2);
-
 function parse_lan_networks($name = '') {
 	$lan_networks = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_lan_networks', '', true);
 
