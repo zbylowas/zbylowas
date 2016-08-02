@@ -192,12 +192,12 @@ class GponDasanInitHandler {
 	public function accessTableInit() {
 		$access = AccessRights::getInstance();
 
-		$access->insertPermission(new Permission('gpon_full_access', trans('GPON - module management'), '^gpon.*$'),
+		$access->insertPermission(new Permission('gpondasan_full_access', trans('GPON - module management'), '^gpon.*$'),
 			AccessRights::FIRST_FORBIDDEN_PERMISSION);
-		$access->insertPermission(new Permission('gpon_read_only', trans('GPON - information review'),
+		$access->insertPermission(new Permission('gpondasan_read_only', trans('GPON - information review'),
 			'^((gponolt|gpononu|gpononumodels)(info|list|search|tvinfo|tvlist|signalimage)|gponoffline)$'),
 			AccessRights::FIRST_FORBIDDEN_PERMISSION);
-		$access->insertPermission(new Permission('gpon_auto_provisioning', trans('GPON - auto provisioning (new onu)'),
+		$access->insertPermission(new Permission('gpondasan_auto_provisioning', trans('GPON - auto provisioning (new onu)'),
 			'^(gpononu(add|script|edit|check))$'), AccessRights::FIRST_FORBIDDEN_PERMISSION);
 	}
 }
