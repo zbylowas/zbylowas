@@ -16,6 +16,12 @@ Instalacja:
    mibdirs +<lms-path>/plugins/LMSGponDasanPlugin/mibs:<lms-path>/plugins/LMSGponDasanPlugin/mibs/SLE:<lms-path>/plugins/LMSGponDasanPlugin/mibs/DSSHE
 4. Zrestartować serwer www.
 
+Statystyki poziomu sygnału (skrypt bin/gponsignalrrd.php):
+1. Zainstalować pakiet narzędziowy rrdtool.
+2. Ustawieniem konfiguracyjnym gpon-dasan.rrdtool wskazać ścieżkę programu rrdtool (domyślnie /usr/bin/rrdtool).
+3. Skonfigurować cykliczne uruchamianie skryptu co godzinę np. z cron.
+4. Wykresy powinny pokazywać poziom sygnału co najmniej 2h po skonfigurowaniu skryptu.
+
 Provisioning XML (skrypt bin/lms-xml-provisioning.php):
 1. Ustawić adres URL wskazujący plik xml konfiguracji końcówki wstawiany jako jeden z atrybutów
    serwera Radius - gpon-dasan.xml_provisioning_url, np. ftp://login:password@ftp-server.pl/%sn%.xml
