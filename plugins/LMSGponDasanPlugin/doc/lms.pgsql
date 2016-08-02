@@ -1,3 +1,17 @@
+DO $$
+BEGIN
+	IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'auth_protocol') THEN
+		CREATE TYPE auth_protocol AS ENUM ('MD5','SHA','');
+	END IF;
+	IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'sec_level') THEN
+		CREATE TYPE sec_level AS ENUM ('noAuthNoPriv','authNoPriv','authPriv','');
+	END IF;
+	IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'privacy_protocol') THEN
+		CREATE TYPE privacy_protocol AS ENUM ('DES','AES','');
+	END IF;
+END
+$$;
+
 /* gpondasanauthlog */
 CREATE SEQUENCE gpondasanauthlog_id_seq;
 CREATE TABLE gpondasanauthlog (
@@ -13,9 +27,6 @@ CREATE TABLE gpondasanauthlog (
 CREATE INDEX gpondasanauthlog_onuid_time ON gpondasanauthlog (onuid, time DESC);
 
 /* gpondasanolt */
-CREATE TYPE auth_protocol AS ENUM ('MD5','SHA','');
-CREATE TYPE sec_level AS ENUM ('noAuthNoPriv','authNoPriv','authPriv','');
-CREATE TYPE privacy_protocol AS ENUM ('DES','AES','');
 CREATE SEQUENCE gpondasanolts_id_seq;
 CREATE TABLE gpondasanolts (
 	id integer DEFAULT nextval('gpondasanolts_id_seq'::text) NOT NULL,
