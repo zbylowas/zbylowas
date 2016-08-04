@@ -46,26 +46,23 @@ case 'nas':
 	$SESSION->redirect('m=gpondasanonuinfo&id='.$_GET['id'].'&ip='.$_GET['ip']);
 case 'disconnect':
 	$GPON->snmp->clear_options();
-	$netdevdata=$LMS->GetNetDev($_GET['devid']);
-	$options_snmp=$GPON->GetGponOlt($netdevdata['gponoltid']);
-	if($netdevdata['gponoltid']>0)
-	{
+	$netdevdata = $LMS->GetNetDev($_GET['devid']);
+	$netdevdata['gponoltid'] = $GPON->GetGponOltIdByNetdeviceId($_GET['devid']);
+	$options_snmp = $GPON->GetGponOlt($netdevdata['gponoltid']);
+	if (!empty($netdevdata['gponoltid'])) {
 		$GPON->snmp->set_options($options_snmp);
-		$gpon_onu=$GPON->GetGponOnu($_GET['id']);
-		$snmp_result=$GPON->snmp->ONU_delete($_GET['numport'],$gpon_onu['onuid']);
-		$snmp_error=$GPON->snmp->parse_result_error($snmp_result);
-		if(strlen($snmp_error)>0)
-		{
+		$gpon_onu = $GPON->GetGponOnu($_GET['id']);
+		$snmp_result = $GPON->snmp->ONU_delete($_GET['numport'],$gpon_onu['onuid']);
+		$snmp_error = $GPON->snmp->parse_result_error($snmp_result);
+		if (strlen($snmp_error)) {
 			$dev['linkolt'] = 'Nie można usunąć przypisania tego ONU - Błąd SNMP. '.$snmp_error;
 			$SMARTY->assign('connect', $dev);
-		}
-		else 
-		{
+		} else {
 			$GPON->GponOnuUnLink($_GET['devid'],$_GET['numport'],$_GET['id']);
 			$SESSION->redirect('?m=gpondasanonuinfo&id='.$_GET['id']);
 		}
 	}
-	
+	break;
 case 'connect':
 	$portexist=intval($GPON->GetGponOltPortsExists($_GET['netdevicesid'],$_GET['numport']));
 	if($portexist==0)
@@ -93,6 +90,7 @@ case 'connect':
 	{
 		$GPON->snmp->clear_options();
 		$netdevdata=$LMS->GetNetDev($_GET['netdevicesid']);
+		$netdevdata['gponoltid'] = $GPON->GetGponOltIdByNetdeviceId($_GET['netdevicesid']);
 		$options_snmp=$GPON->GetGponOlt($netdevdata['gponoltid']);
 		if($netdevdata['gponoltid']>0)
 		{
@@ -254,7 +252,8 @@ if (isset($_POST['netdev']) && (!isset($_POST['snmpsend']) || empty($_POST['snmp
 		{
 			$GPON->snmp->clear_options();
 			$netdevdata_tmp=$LMS->GetNetDev($netdevdata_now['gponoltnetdevicesid']);
-			$options_snmp=$GPON->GetGponOlt($netdevdata_tmp['gponoltid']);
+			$netdevdata_tmp['gponoltid'] = $GPON->GetGponOltIdByNetdeviceId($netdevdata_now['gponoltnetdevicesid']);
+			$options_snmp = $GPON->GetGponOlt($netdevdata_tmp['gponoltid']);
 			$GPON->snmp->set_options($options_snmp);
 			if($netdevdata_tmp['gponoltid']>0)
 			{
