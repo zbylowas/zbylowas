@@ -36,7 +36,7 @@
 			<INPUT TYPE="hidden" NAME="netdevicesid" VALUE="{$netdevinfo.olt_netdevicesid}">
 			<INPUT TYPE="hidden" NAME="onu_id" VALUE="{$netdevinfo.onu_id}">
 			<INPUT TYPE="hidden" NAME="netdev[onu_model]" VALUE="{$netdevinfo.onu_model}">
-			<INPUT TYPE="hidden" NAME="netdev[gpononumodelid]" VALUE="{$netdevinfo.gpononumodelid}">
+			<INPUT TYPE="hidden" NAME="netdev[gpononumodelid]" id="gpononumodelid" VALUE="{$netdevinfo.gpononumodelid}">
 			<INPUT TYPE="hidden" NAME="gponoltid" VALUE="{$netdevinfo.gponoltid}">
 			{else}
 			<INPUT TYPE="TEXT" NAME="netdev[name]" id="netdevname" VALUE="{$netdevinfo.name}" MAXLENGTH="20" {tip trigger="name" text="Enter ONU device name (for Dasan ONUs it should begin with 'DSNW')" bold=1}>
