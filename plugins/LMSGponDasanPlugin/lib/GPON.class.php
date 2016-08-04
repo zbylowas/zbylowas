@@ -696,7 +696,7 @@ class GPON_DASAN {
 					WHERE go2o.gpononuid = g.id) AS gponoltnumport,
 				(SELECT go.id FROM " . self::SQL_TABLE_GPONONU2OLT . " go2o
 					JOIN netdevices nd ON nd.id = go2o.netdevicesid
-					JOIN " . self::SQL_TABLE_GPONOLT . " go.netdeviceid = nd.id
+					JOIN " . self::SQL_TABLE_GPONOLT . " go ON go.netdeviceid = nd.id
 					WHERE go2o.gpononuid=g.id) AS gponoltid,
 				(SELECT gop.name FROM " . self::SQL_TABLE_GPONOLTPROFILES . " gop
 					WHERE gop.id = g.gponoltprofilesid) AS profil_olt,
