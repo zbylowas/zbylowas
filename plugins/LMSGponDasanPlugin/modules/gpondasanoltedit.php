@@ -47,7 +47,7 @@ function OLT_ONU_walk_Xj($gponoltid) {
 				{
 					if($k=='RxPower')
 					{
-						$v1='<font color="'.$GPON->snmp->style_gpon_tx_output_power_weak($v1,0).'">'.$v1.'</font>';
+						$v1='<font color="'.$GPON->snmp->style_gpon_rx_power($v1,0).'">'.$v1.'</font>';
 					}
 					$objResponse->assign($k."_ONU_".$k1,"innerHTML",$v1);
 				}

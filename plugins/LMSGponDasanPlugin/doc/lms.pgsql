@@ -200,7 +200,8 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'onu_pagelimit', '100', 'Limit wyświetlanych rekordów na jednej stronie listy ONU.', 0);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'olt_pagelimit', '100', 'Limit wyświetlanych rekordów na jednej stronie listy OLT.', 0);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'onu_customerlimit', '5', 'Maksymalna liczba Klientów przypisanych do ONU', 0);
-INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'tx_output_power_weak', '-26', 'Niski poziom mocy optycznej RX Output Power', 0);
+INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'rx_power_weak', '-26', 'Niski poziom odbieranej mocy optycznej', 0);
+INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'rx_power_overload', '-4', 'Wysoki poziom odbieranej mocy optycznej', 0);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'onu_autoscript_debug', '1', '', 1);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'use_radius', 0, 'Czy gpon (olty) mają używać radiusa', 0);
 INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-dasan', 'syslog', 0, 'Jeśli mamy tabele syslog to możemy logować zdarzenia (custom lms).  syslog(time integer, userid integer, level smallint, what character varying(128), xid integer, message text, detail text)', 0);
@@ -217,4 +218,4 @@ INSERT INTO uiconfig (section, var, value, description, disabled) VALUES ('gpon-
 
 INSERT INTO gpondasanonuporttypes (name) VALUES ('eth'), ('pots'), ('ces'), ('video'), ('virtual-eth'), ('wifi');
 
-INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016072300');
+INSERT INTO dbinfo (keytype, keyvalue) VALUES ('dbversion_LMSGponDasanPlugin', '2016080800');

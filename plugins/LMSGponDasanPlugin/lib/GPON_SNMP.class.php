@@ -878,29 +878,33 @@ class GPON_DASAN_SNMP {
 		}
 		return $result;
 	}
-	function style_gpon_tx_output_power_weak($rxpower,$style=1)
-	{
-		$result='';
-		if(ConfigHelper::getConfig('gpon-dasan.tx_output_power_weak'))
-		{
-			$rxpower=(float)str_replace(',','.',str_replace('dBm','',$rxpower));
-			$gpon_tx_output_power_weak=(float)str_replace(',','.',str_replace('dBm','',ConfigHelper::getConfig('gpon-dasan.tx_output_power_weak')));
-			if($rxpower<=$gpon_tx_output_power_weak)
-			{
-				if($style==1)
-				{
+
+	public function style_gpon_rx_power($rxpower, $style = 1) {
+		$result = '';
+		$gpon_rx_power_weak = ConfigHelper::getConfig('gpon-dasan.rx_power_weak');
+		if ($gpon_rx_power_weak) {
+			$rxpower = (float) str_replace(',','.',str_replace('dBm','',$rxpower));
+			$gpon_rx_power_weak = (float) str_replace(',','.',str_replace('dBm','', $gpon_rx_power_weak));
+			if ($rxpower <= $gpon_rx_power_weak)
+				if ($style == 1)
 					$result=' style="background-color:#FF0000;color:#FFFFFF;" ';
-				}
-				else 
-				{
+				else
 					$result='#FF0000';
+			else {
+				$gpon_rx_power_overload = ConfigHelper::getConfig('gpon-dasan.rx_power_overload');
+				if ($gpon_rx_power_overload) {
+					$gpon_rx_power_overload = (float) str_replace(',','.',str_replace('dBm','', $gpon_rx_power_overload));
+					if ($rxpower >= $gpon_rx_power_overload)
+						if ($style == 1)
+							$result=' style="background-color:#FFFF00;color:#FFFFFF;" ';
+						else
+							$result='#FFFF00';
 				}
 			}
 		}
 		return $result;
 	}
-	
-	
+
 	function ONU_get_param_table($OLT_id,$ONU_id,$ONU_name='')
 	{
 		$result='';
@@ -931,7 +935,7 @@ class GPON_DASAN_SNMP {
 					<tr><td><b>ONU Profil:</b></td><td>'.$snmp_result['Profile'].'</td></tr>
 					<tr><td><b>Status:</b></td><td>'.$snmp_result['Status'].'</td></tr>
 					<tr><td><b>Powód odłączenia:</b></td><td>'.$snmp_result['Deactive Reason'].'</td></tr>
-					<tr><td><b>Poziom sygnału 1490nm<br />odbieranego na ONU:</b></td><td'.$this->style_gpon_tx_output_power_weak($snmp_result['Rx Power']).'>'.$snmp_result['Rx Power'].'</td></tr>
+					<tr><td><b>Poziom sygnału 1490nm<br />odbieranego na ONU:</b></td><td'.$this->style_gpon_rx_power($snmp_result['Rx Power']).'>'.$snmp_result['Rx Power'].'</td></tr>
 					<tr><td><b>Tłumienie trasy do abonenta:</b></td><td>'.$tlumienie.' dBm</td></tr>
 					<tr><td><b>Dystans:</b></td><td>'.$snmp_result['Distance'].'</td></tr>
 					<tr><td><b>Czas pracy:</b></td><td>'.$snmp_result['Link Up Time'].'</td></tr>
@@ -1183,7 +1187,7 @@ class GPON_DASAN_SNMP {
 					
 					$result.='</td></tr>
 					<tr><td><b>Powód odłączenia:</b></td><td>'.$snmp_result['Deactive Reason'].'</td></tr>
-					<tr><td><b>Poziom sygnału 1490nm<br />odbieranego na ONU:</b></td><td'.$this->style_gpon_tx_output_power_weak($snmp_result['Rx Power']).'>'.$snmp_result['Rx Power'].'</td></tr>
+					<tr><td><b>Poziom sygnału 1490nm<br />odbieranego na ONU:</b></td><td'.$this->style_gpon_rx_power($snmp_result['Rx Power']).'>'.$snmp_result['Rx Power'].'</td></tr>
 					<tr><td><b>Dystans:</b></td><td>'.$snmp_result['Distance'].'</td></tr>
 					<tr><td><b>Czas pracy:</b></td><td>'.$snmp_result['Link Up Time'].'</td></tr>
 					<tr><td><b>Adres MAC ONU:</b></td><td>'.$snmp_result['Mac'].'</td></tr>
