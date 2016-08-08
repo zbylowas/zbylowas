@@ -896,7 +896,7 @@ class GPON_DASAN_SNMP {
 					$gpon_rx_power_overload = (float) str_replace(',','.',str_replace('dBm','', $gpon_rx_power_overload));
 					if ($rxpower >= $gpon_rx_power_overload)
 						if ($style == 1)
-							$result=' style="background-color:#FFFF00;color:#FFFFFF;" ';
+							$result=' style="background-color:#FFFF00;color:#000000;" ';
 						else
 							$result='#FFFF00';
 				}
