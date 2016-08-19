@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 $CONFIG_FILE = DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms.ini';
@@ -31,9 +32,7 @@ if (file_exists($composer_autoload_path))
 else
 	die("Composer autoload not found. Run 'composer install' command from LMS directory and try again. More informations at https://getcomposer.org/" . PHP_EOL);
 
-$CONFIG['directories']['rrd_dir'] = (!isset($CONFIG['directories']['rrd_dir']) ? PLUGINS_DIR . DIRECTORY_SEPARATOR
-	. LMSGponDasanPlugin::plugin_directory_name . DIRECTORY_SEPARATOR . 'rrd' : $CONFIG['directories']['rrd_dir']);
-define('RRD_DIR', $CONFIG['directories']['rrd_dir']);
+define('RRD_DIR', LMSGponDasanPlugin::getRrdDirectory());
 
 // Init database
 
@@ -47,7 +46,7 @@ try {
 	die("Fatal error: cannot connect to database!" . PHP_EOL);
 }
 
-$rrdtool = ConfigHelper::getConfig('gpon-dasan.rrdtool', '/usr/bin/rrdtool');
+$rrdtool = ConfigHelper::getConfig('gpon-dasan.rrdtool_binary', '/usr/bin/rrdtool');
 
 if (!file_exists($rrdtool))
 	die("No rrdtool binary found on path $rrdtool!" . PHP_EOL);

@@ -44,6 +44,11 @@ class LMSGponDasanPlugin extends LMSPlugin {
 		return self::$gpon;
 	}
 
+	public static function getRrdDirectory() {
+		return ConfigHelper::getConfig('gpon-dasan.rrd_directory', PLUGINS_DIR . DIRECTORY_SEPARATOR
+			. self::plugin_directory_name . DIRECTORY_SEPARATOR . 'rrd');
+	}
+
 	public function registerHandlers() {
 		$this->handlers = array(
 			'smarty_initialized' => array(

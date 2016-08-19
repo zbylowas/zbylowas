@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 $CONFIG_FILE = DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'lms' . DIRECTORY_SEPARATOR . 'lms.ini';

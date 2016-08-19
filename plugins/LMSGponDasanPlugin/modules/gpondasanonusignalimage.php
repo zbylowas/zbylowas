@@ -1,12 +1,10 @@
 <?php
 
-$CONFIG['directories']['rrd_dir'] = (!isset($CONFIG['directories']['rrd_dir']) ? PLUGINS_DIR . DIRECTORY_SEPARATOR
-	. LMSGponDasanPlugin::plugin_directory_name . DIRECTORY_SEPARATOR . 'rrd' : $CONFIG['directories']['rrd_dir']);
-define('RRD_DIR', $CONFIG['directories']['rrd_dir']);
+$rrd_dir = LMSGponDasanPlugin::getRrdDirectory();
 
-$rrdtool = ConfigHelper::getConfig('phpui.rrdtool', '/usr/bin/rrdtool');
+$rrdtool = ConfigHelper::getConfig('gpon-dasan.rrdtool_binary', '/usr/bin/rrdtool');
 
-$filerrd = RRD_DIR . DIRECTORY_SEPARATOR . 'signal_onu_' . intval($_GET['id']) . '.rrd';
+$filerrd = $rrd_dir . DIRECTORY_SEPARATOR . 'signal_onu_' . intval($_GET['id']) . '.rrd';
 
 if (!file_exists($filerrd))
 	die;
