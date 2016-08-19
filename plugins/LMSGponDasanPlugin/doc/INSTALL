@@ -18,7 +18,7 @@ Instalacja:
 
 Statystyki poziomu sygnału (skrypt bin/gponsignalrrd.php):
 1. Zainstalować pakiet narzędziowy rrdtool.
-2. Ustawieniem konfiguracyjnym gpon-dasan.rrdtool wskazać ścieżkę programu rrdtool (domyślnie /usr/bin/rrdtool).
+2. Ustawieniem konfiguracyjnym gpon-dasan.rrdtool_binary wskazać ścieżkę programu rrdtool (domyślnie /usr/bin/rrdtool).
 3. Skonfigurować cykliczne uruchamianie skryptu co godzinę np. z cron.
 4. Wykresy powinny pokazywać poziom sygnału co najmniej 2h po skonfigurowaniu skryptu.
 

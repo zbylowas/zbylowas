@@ -33,6 +33,7 @@ else
 	die("Composer autoload not found. Run 'composer install' command from LMS directory and try again. More informations at https://getcomposer.org/" . PHP_EOL);
 
 define('RRD_DIR', LMSGponDasanPlugin::getRrdDirectory());
+define('RRDTOOL_BINARY', ConfigHelper::getConfig('gpon-dasan.rrdtool_binary', '/usr/bin/rrdtool'));
 
 // Init database
 
@@ -46,23 +47,20 @@ try {
 	die("Fatal error: cannot connect to database!" . PHP_EOL);
 }
 
-$rrdtool = ConfigHelper::getConfig('gpon-dasan.rrdtool_binary', '/usr/bin/rrdtool');
-
-if (!file_exists($rrdtool))
-	die("No rrdtool binary found on path $rrdtool!" . PHP_EOL);
+if (!file_exists(RRDTOOL_BINARY))
+	die("No rrdtool binary found on path " . RRDTOOL_BINARY . "!" . PHP_EOL);
 
 $AUTH = null;
 $GPON = new GPON_DASAN();
 
 function update_signal_onu_rrd($onuid, $signal, $oltrx) {
-	global $rrdtool;
 	if ((strlen($onuid) == 0) || (strlen($signal) == 0))
 		return;
 
 	$fname = RRD_DIR . DIRECTORY_SEPARATOR . 'signal_onu_' . $onuid . '.rrd';
 	if (!file_exists($fname)) {
 		//create rrd
-		$cmd  = $rrdtool." create $fname --step 3600 ";
+		$cmd  = RRDTOOL_BINARY . " create $fname --step 3600 ";
 		$cmd .= "DS:Signal:GAUGE:7200:-50:10 ";
 		$cmd .= "DS:oltrx:GAUGE:7200:-50:10 ";
 		$cmd .= "RRA:AVERAGE:0.5:1:288 "; //12 dni co godzine
@@ -77,7 +75,7 @@ function update_signal_onu_rrd($onuid, $signal, $oltrx) {
 		exec($cmd);
 	}
 	//update rrd file
-	$cmd  = $rrdtool . " update $fname N:$signal:$oltrx";
+	$cmd  = RRDTOOL_BINARY . " update $fname N:$signal:$oltrx";
 	//update via rrdcached deamon, tylko ze jesli to dziala raz na godzine to nie ma to sensu ;)
 	//$cmd  = "/usr/bin/rrdupdate $fname --daemon /var/run/rrdcached.sock N:$signal:$oltrx";
 	exec($cmd);
