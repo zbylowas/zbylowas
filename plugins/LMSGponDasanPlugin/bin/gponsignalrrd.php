@@ -32,9 +32,6 @@ if (file_exists($composer_autoload_path))
 else
 	die("Composer autoload not found. Run 'composer install' command from LMS directory and try again. More informations at https://getcomposer.org/" . PHP_EOL);
 
-define('RRD_DIR', LMSGponDasanPlugin::getRrdDirectory());
-define('RRDTOOL_BINARY', ConfigHelper::getConfig('gpon-dasan.rrdtool_binary', '/usr/bin/rrdtool'));
-
 // Init database
 
 $DB = null;
@@ -46,6 +43,9 @@ try {
 	// can't working without database
 	die("Fatal error: cannot connect to database!" . PHP_EOL);
 }
+
+define('RRD_DIR', LMSGponDasanPlugin::getRrdDirectory());
+define('RRDTOOL_BINARY', ConfigHelper::getConfig('gpon-dasan.rrdtool_binary', '/usr/bin/rrdtool'));
 
 if (!file_exists(RRDTOOL_BINARY))
 	die("No rrdtool binary found on path " . RRDTOOL_BINARY . "!" . PHP_EOL);
