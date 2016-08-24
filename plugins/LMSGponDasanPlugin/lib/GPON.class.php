@@ -1652,6 +1652,23 @@ class GPON_DASAN {
 		return $this->DB->GetAll("SELECT * FROM " . self::SQL_TABLE_GPONAUTHLOG
 			. " WHERE onuid = ? ORDER BY time DESC", array($onuid));
 	}
+
+	public function GponOnuXmlProvisioning($params) {
+		if (!isset($params['id']))
+			return -1;
+
+		$id = intval($params['id']);
+		if (empty($id))
+			return -1;
+
+		$cmd = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_helper', SYS_DIR . DIRECTORY_SEPARATOR . 'plugins'
+			. DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name . DIRECTORY_SEPARATOR
+			. 'bin' . DIRECTORY_SEPARATOR . 'lms-xml-provisioning.php -i %id%');
+		$cmd = str_replace('%id%', $id, $cmd);
+		$res = 0;
+		system($cmd . " >/dev/null", $res);
+		return $res;
+	}
 }
 
 ?>

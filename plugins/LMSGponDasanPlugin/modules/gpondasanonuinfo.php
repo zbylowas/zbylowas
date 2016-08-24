@@ -112,13 +112,7 @@ function ONU_xml_provisioning($id) {
 	// xajax response
 	$objResponse = new xajaxResponse();
 
-	$cmd = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_helper', SYS_DIR . DIRECTORY_SEPARATOR . 'plugins'
-		. DIRECTORY_SEPARATOR . LMSGponDasanPlugin::plugin_directory_name . DIRECTORY_SEPARATOR
-		. 'bin' . DIRECTORY_SEPARATOR . 'lms-xml-provisioning.php -i %id%');
-	$cmd = str_replace('%id%', $id, $cmd);
-	$res = 0;
-	system($cmd . " >/dev/null", $res);
-
+	$res = $GPON->GponOnuXmlProvisioning(array('id' => $id));
 	if (!$res) {
 		if (ConfigHelper::checkConfig('gpon-dasan.use_radius'))
 			$res = $GPON->GponOnuRadiusDisconnect($id);

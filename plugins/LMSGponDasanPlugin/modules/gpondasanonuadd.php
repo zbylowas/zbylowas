@@ -150,15 +150,21 @@ if(isset($_POST['netdev']))
 				&& isset($_POST['olt_port']) && intval($_POST['olt_port']) && isset($_POST['onu_id']) && intval($_POST['onu_id'])) {
 				$GPON->GponOnuUpdateOnuId($netdevid,$_POST['onu_id']);
 				$GPON->GponOnuLink($_POST['netdevicesid'],$_POST['olt_port'],$netdevid);
-				//if(isset($_POST['onu_description_old']) && $netdevdata['onu_description']!=$_POST['onu_description_old'])
-				//{
+
+				$res = 0;
+				if ($netdevdata['xmlprovisioning'])
+					$res = $GPON->GponOnuXmlProvisioning(array('id' => $netdevid));
+
+				//if (isset($_POST['onu_description_old'])
+				//	&& $netdevdata['onu_description'] != $_POST['onu_description_old']) {
+				if (!$res) {
 					$options_snmp=$GPON->GetGponOlt($_POST['gponoltid']);
 					$GPON->snmp->set_options($options_snmp);
 					$GPON->snmp->ONU_set_description($_POST['olt_port'],$_POST['onu_id'],$netdevdata['onu_description']);
 					$gponoltprofiles_temp = $GPON->GetGponOltProfiles($_POST['gponoltid']);
 					$GPON->snmp->ONU_SetProfile($_POST['olt_port'], $_POST['onu_id'],
 						$gponoltprofiles_temp[$netdevdata['gponoltprofilesid']]['name']);
-				//}
+				}
 			}
 			$SESSION->redirect('?m=gpondasanonuinfo&id=' . $netdevid);
 
