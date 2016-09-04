@@ -29,10 +29,10 @@ $GPON = LMSGponDasanPlugin::getGponInstance();
 $layout['pagetitle'] = 'GPON-OLT';
 
 if(!isset($_GET['o']))
-	$SESSION->restore('ndlo', $o);
+	$SESSION->restore('gdoltlo', $o);
 else
 	$o = $_GET['o'];
-$SESSION->save('ndlo', $o);
+$SESSION->save('gdoltlo', $o);
 
 $netdevlist = $GPON->GetGponOltList($o);
 $listdata['total'] = $netdevlist['total'];
@@ -43,13 +43,13 @@ unset($netdevlist['order']);
 unset($netdevlist['direction']);
 
 if(!isset($_GET['page']))
-        $SESSION->restore('ndlp', $_GET['page']);
+        $SESSION->restore('gdoltlp', $_GET['page']);
 	
 $page = (! $_GET['page'] ? 1 : $_GET['page']);
 $pagelimit = ConfigHelper::getConfig('gpon-dasan.olt_pagelimit', $listdata['total']);
 $start = ($page - 1) * $pagelimit;
 
-$SESSION->save('ndlp', $page);
+$SESSION->save('gdoltlp', $page);
 
 $SESSION->save('backto', $_SERVER['QUERY_STRING']);
 
