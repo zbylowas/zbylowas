@@ -158,12 +158,12 @@ elseif(isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name']) &
 		// remove unneeded spaces and cut $customer and $comment to fit into database (150 chars limit)
 		$customer = trim($lastname.' '.$name);
 		$customer = preg_replace('/[ ]+/',' ',$customer);
-		$customer = substr($customer,0,150);
+		$customer = mb_substr($customer,0,150);
 
 		$comment = trim($comment);
 		$comment = preg_replace('/[ ]+/',' ',$comment);
-		if (strlen($comment) > 150)
-			$comment = substr($comment, 0, 150);
+		if (mb_strlen($comment) > 150)
+			$comment = mb_substr($comment, 0, 150);
 
 		if(!empty($pattern['use_line_hash']))
 			$hash = md5($theline.(!empty($pattern['line_idx_hash']) ? $ln : ''));
