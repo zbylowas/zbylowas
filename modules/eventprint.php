@@ -24,7 +24,7 @@
  *  $Id$
  */
 
-function GetEvents($date=NULL, $userid=0, $customerid=0)
+function GetEvents($date=NULL, $userid=0, $customerid=0, $privacy = 0, $closed = '')
 {
 	global $AUTH;
 
@@ -41,6 +41,7 @@ function GetEvents($date=NULL, $userid=0, $customerid=0)
 		 FROM events LEFT JOIN customerview c ON (customerid = c.id) LEFT JOIN nodes ON (nodeid = nodes.id)
 		 WHERE ((date >= ? AND date < ?) OR (enddate <> 0 AND date < ? AND enddate >= ?)) AND (private = 0 OR (private = 1 AND userid = ?)) '
 		 .($customerid ? 'AND customerid = '.intval($customerid) : '')
+		 . ($closed != '' ? ' AND closed = ' . intval($closed) : '')
 		 .' ORDER BY date, begintime',
 		 array((CONTACT_MOBILE|CONTACT_FAX|CONTACT_LANDLINE), CONTACT_DISABLED, CONTACT_DISABLED,
 		 	$date, $enddate, $enddate, $date, $AUTH->id));
@@ -72,7 +73,7 @@ if(!$date)
 	$SESSION->redirect('?m=eventlist');
 }
 
-$eventlist = GetEvents($date, $_GET['a'], $_GET['u']);
+$eventlist = GetEvents($date, $_GET['a'], $_GET['u'], intval($_GET['privacy']), $_GET['closed']);
 
 $layout['pagetitle'] = trans('Timetable');
 
