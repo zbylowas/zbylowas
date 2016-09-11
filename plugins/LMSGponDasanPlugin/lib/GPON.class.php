@@ -478,7 +478,7 @@ class GPON_DASAN {
 	}
 
 	public function GetGponOnuPhoneVoip($gpononuid) {
-		$result = $this->DB->GetAll('SELECT v.id, v.phone
+		$result = $this->DB->GetAll('SELECT v.id, v.login AS phone
 			FROM voipaccounts v
 			JOIN customers c ON c.id = v.ownerid
 			JOIN ' . self::SQL_TABLE_GPONONU2CUSTOMERS . ' g2c ON g2c.customersid = c.id
@@ -489,7 +489,7 @@ class GPON_DASAN {
 
 	public function GetPhoneVoip($id) {
 		if (intval($id))
-			$result = $this->DB->GetRow('SELECT v.id, v.login, v.passwd, v.phone
+			$result = $this->DB->GetRow('SELECT v.id, v.login, v.passwd, v.login AS phone
 			FROM voipaccounts v
 			WHERE v.id = ?', array($id));
 		else
@@ -500,7 +500,7 @@ class GPON_DASAN {
 
 	public function GetPhoneVoipForCustomer($ownerid) {
 		if (intval($ownerid))
-			$result = $this->DB->GetAll('SELECT v.id, v.phone
+			$result = $this->DB->GetAll('SELECT v.id, v.login AS phone
 				FROM voipaccounts v
 				JOIN customers c ON c.id = v.ownerid
 				WHERE c.id=?', array($ownerid));
@@ -650,9 +650,9 @@ class GPON_DASAN {
 					WHERE go2o.gpononuid = g.id) AS gponoltid,
 				(SELECT gop.name FROM " . self::SQL_TABLE_GPONOLTPROFILES . " gop
 					WHERE gop.id = g.gponoltprofilesid) AS profil_olt,
-				(SELECT va.phone FROM voipaccounts va
+				(SELECT va.login AS phone FROM voipaccounts va
 					WHERE va.id = g.voipaccountsid1) AS voipaccountsid1_phone,
-				(SELECT va.phone FROM voipaccounts va
+				(SELECT va.login AS phone FROM voipaccounts va
 					WHERE va.id = g.voipaccountsid2) AS voipaccountsid2_phone,
 				(SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no
 					WHERE no.id=g.host_id1) AS host_id1_host,
@@ -700,9 +700,9 @@ class GPON_DASAN {
 					WHERE go2o.gpononuid=g.id) AS gponoltid,
 				(SELECT gop.name FROM " . self::SQL_TABLE_GPONOLTPROFILES . " gop
 					WHERE gop.id = g.gponoltprofilesid) AS profil_olt,
-				(SELECT va.phone FROM voipaccounts va
+				(SELECT va.login AS phone FROM voipaccounts va
 					WHERE va.id=g.voipaccountsid1) AS voipaccountsid1_phone,
-				(SELECT va.phone FROM voipaccounts va
+				(SELECT va.login AS phone FROM voipaccounts va
 					WHERE va.id=g.voipaccountsid2) AS voipaccountsid2_phone,
 				(SELECT (" . $this->DB->Concat('no.name', "' / '", 'INET_NTOA(ipaddr)') . ") FROM nodes no
 					WHERE no.id=g.host_id1) AS host_id1_host,
