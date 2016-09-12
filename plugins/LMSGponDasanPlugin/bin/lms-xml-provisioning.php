@@ -175,10 +175,10 @@ $query = "SELECT o.id AS gpononuid, o.name, o.properties, m.id AS modelid, m.nam
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
 	) h2 ON h2.id = o.host_id2
 	LEFT JOIN (
-		SELECT id, (" . $DB->Concat('login', "'/'", 'passwd', "'/'", 'phone') . ") AS details FROM voipaccounts
+		SELECT id, (" . $DB->Concat('login', "'/'", 'passwd', "'/'", 'login') . ") AS details FROM voipaccounts
 	) p1 ON p1.id = o.voipaccountsid1
 	LEFT JOIN (
-		SELECT id, (" . $DB->Concat('login', "'/'", 'passwd', "'/'", 'phone') . ") AS details FROM voipaccounts
+		SELECT id, (" . $DB->Concat('login', "'/'", 'passwd', "'/'", 'login') . ") AS details FROM voipaccounts
 	) p2 ON p2.id = o.voipaccountsid2
 	LEFT JOIN (
 		SELECT onuid,

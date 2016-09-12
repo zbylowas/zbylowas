@@ -184,10 +184,10 @@ $query = "SELECT o.name, m.name AS model, p.name AS profile, o.onudescription AS
 		JOIN networks net ON net.address = (n.ipaddr & INET_ATON(mask))
 	) host2 ON host2.id = o.host_id2
 	LEFT JOIN (
-		SELECT id, phone, (" . $DB->Concat('login', "' '", 'passwd') . ") AS auth FROM voipaccounts
+		SELECT id, login AS phone, (" . $DB->Concat('login', "' '", 'passwd') . ") AS auth FROM voipaccounts
 	) phone1 ON phone1.id = o.voipaccountsid1
 	LEFT JOIN (
-		SELECT id, phone, (" . $DB->Concat('login', "' '", 'passwd') . ") AS auth FROM voipaccounts
+		SELECT id, login AS phone, (" . $DB->Concat('login', "' '", 'passwd') . ") AS auth FROM voipaccounts
 	) phone2 ON phone2.id = o.voipaccountsid2
 	LEFT JOIN (
 		SELECT onuid,
