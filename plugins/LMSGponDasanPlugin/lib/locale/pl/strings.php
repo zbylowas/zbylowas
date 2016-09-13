@@ -88,6 +88,6 @@ $_LANG['TV channel list'] = 'Lista kanałów TV';
 $_LANG['New TV channel'] = 'Nowy kanał TV';
 $_LANG['ONU auto-connection'] = 'Auto podłączanie ONU';
 
-$_LANG['Dasan GPON ONU\'s: $a'] = 'Końcówki GPON Dasan: $a';
+$_LANG['Dasan GPON ONU\'s ($a):'] = 'Końcówki GPON Dasan ($a):';
 
 ?>
