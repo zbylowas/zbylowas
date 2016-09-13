@@ -1,16 +1,16 @@
 <!--// $Id$ //-->
 {$xajax}
-<TABLE class="lmsbox">
+<TABLE class="lmsbox" id="gpon-dasan-onu">
 	<THEAD>
 	<TR>
-		<TD style="width: 100%;" class="fall hand text-left bold nobr" onClick="showOrHide('gpondasandevices');">
+		<TD style="width: 100%;" class="fall hand text-left bold nobr lmsbox-titlebar" data-lmsbox-content="gpon-dasan-onu-panel">
 			<IMG SRC="img/mac.gif" alt="">
 			{t a=$gpondasanonus|@count}Dasan GPON ONU's: $a{/t}
 		</TD>
 	</TR>
 	</THEAD>
 	<TBODY>
-	<TR id="gpondasandevices" style="display: none;">
+	<TR id="gpon-dasan-onu-panel" style="display: none;">
 		<TD style="width: 100%;" class="fall">
 			<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
 	<TR class="dark">
@@ -89,7 +89,7 @@
 </TABLE>
 <SCRIPT type="text/javascript">
 <!--
-if (getCookie('gpondasandevices')=='1')
-	document.getElementById('gpondasandevices').style.display = '';
+	if (getCookie('gpon-dasan-onu-panel') == '1')
+		document.getElementById('gpon-dasan-onu-panel').style.display = '';
 //-->
 </SCRIPT>
