@@ -1,9 +1,12 @@
 <!--// $Id$ //-->
 {$xajax}
 <TABLE class="lmsbox sortable" id="gpon-dasan-onu">
+	<COLGROUP>
+		<COL style="width: 100%;">
+	</COLGROUP>
 	<THEAD>
-	<TR>
-		<TD style="width: 100%;" class="fall hand text-left bold nobr lmsbox-titlebar" data-lmsbox-content="gpon-dasan-onu-panel">
+	<TR class="hand lmsbox-titlebar" data-lmsbox-content="gpon-dasan-onu-panel">
+		<TD class="fall text-left bold nobr">
 			<IMG SRC="img/mac.gif" alt="">
 			{t a=$gpondasanonus|@count}Dasan GPON ONU's ($a):{/t}
 		</TD>
@@ -11,7 +14,7 @@
 	</THEAD>
 	<TBODY>
 	<TR id="gpon-dasan-onu-panel" style="display: none;">
-		<TD style="width: 100%;" class="fall">
+		<TD class="fall">
 			<TABLE cellpadding="5" cellspacing="0" WIDTH="100%">
 	<TR class="dark">
 		<TD class="fleftu" style="width: 57%;">
