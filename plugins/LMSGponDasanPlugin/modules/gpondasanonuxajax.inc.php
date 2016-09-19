@@ -75,12 +75,16 @@ function ONU_GeneratePasswords() {
 	$user_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_user_password', '', true);
 	$passwords = compact('admin_password', 'telnet_password', 'user_password');
 
+	$password_characters = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_password_characters',
+		'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
 	foreach (array_keys($passwords) as $password_type) {
 		$password = $passwords[$password_type];
 		if ($password) {
 			if (preg_match('/%(?<chars>[0-9]+)?random%/', $password, $m)) {
 				$chars = isset($m['chars']) ? intval($m['chars']) : 12;
-				$password = preg_replace('/%[0-9]*random%/', generate_random_string($chars), $password);
+				$password = preg_replace('/%[0-9]*random%/',
+					generate_random_string($chars, $password_characters), $password);
 			}
 			$objResponse->assign($password_type, "value", $password);
 		}
@@ -108,10 +112,14 @@ function ONU_GenerateWifiSettings($onudata) {
 	$wifi_ssid = str_replace('%customerid%', empty($customers) ? 0 : intval($customers[0]['customersid']), $wifi_ssid);
 	$objResponse->assign("wifi_ssid", "value", $wifi_ssid);
 
+	$password_characters = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_password_characters',
+		'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
 	$wifi_password = ConfigHelper::getConfig('gpon-dasan.xml_provisioning_default_wifi_password', '');
 	if (preg_match('/%(?<chars>[0-9]+)?random%/', $wifi_password, $m)) {
 		$chars = isset($m['chars']) ? intval($m['chars']) : 12;
-		$wifi_password = preg_replace('/%[0-9]*random%/', generate_random_string($chars), $wifi_password);
+		$wifi_password = preg_replace('/%[0-9]*random%/',
+			generate_random_string($chars, $password_characters), $wifi_password);
 	}
 	$objResponse->assign("wifi_password", "value", $wifi_password);
 
