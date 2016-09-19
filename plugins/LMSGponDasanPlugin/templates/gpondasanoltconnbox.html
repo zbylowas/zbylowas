@@ -1,5 +1,24 @@
 <!--// $Id$ //-->
 {$xajax}
+<script type="text/javascript">
+<!--
+	var current_port = 0;
+
+	function OLT_ONU_walk_callback() {
+		xajax_OLT_ONU_walk_Xj({$netdevinfo.gponoltid}, ++current_port,
+			current_port == {count($gponoltportsinfo)} ? null : 'OLT_ONU_walk_callback');
+	}
+
+	function OLT_ONU_walk() {
+		var filter = document.forms['choosefilter'].elements['f'];
+		var port = parseInt(filter.options[filter.selectedIndex].value);
+		if (port)
+			xajax_OLT_ONU_walk_Xj({$netdevinfo.gponoltid}, port);
+		else
+			OLT_ONU_walk_callback();
+	}
+//-->
+</script>
 <TABLE WIDTH="100%" CELLPADDING="3">
         <TR class="dark">
 	        <TD width="100%" class="fall hand" align="left" nowrap="nowrap" onClick="showOrHide('devicedevices');">
@@ -21,7 +40,7 @@
 			 {trans("Customer:")}
 		</TD>
 		<TD class="fleftu" style="border-left:0px;border-bottom:0px;" width="10%" align="center" colspan="5">
-		<input type="button" value="Pokaż dane SNMP" id="pokaz_dane_ONU" OnClick="xajax_OLT_ONU_walk_Xj({$netdevinfo.gponoltid}, document.forms['choosefilter'].elements['f'].options[document.forms['choosefilter'].elements['f'].selectedIndex].value);">
+		<input type="button" value="Pokaż dane SNMP" id="pokaz_dane_ONU" OnClick="OLT_ONU_walk();">
 		<div id="OLT_ONU_date"></div>
 		</TD>
 		<TD class="fbt" width="1%" align="right" rowspan="2" NOWRAP>

@@ -30,7 +30,7 @@ if (!$LMS->NetDevExists($_GET['id']))
 	$SESSION->redirect('?m=gpondasanoltlist');
 
 /* Using AJAX plugins */
-function OLT_ONU_walk_Xj($gponoltid, $port = null) {
+function OLT_ONU_walk_Xj($gponoltid, $port = null, $callback = null) {
 	// xajax response
 	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
@@ -46,7 +46,12 @@ function OLT_ONU_walk_Xj($gponoltid, $port = null) {
 					$objResponse->assign($k . "_ONU_" . $k1,"innerHTML", $v1);
 				}
 	$error_snmp = $GPON->snmp->get_correct_connect_snmp();
-	$objResponse->assign("OLT_ONU_date", "innerHTML", $error_snmp.'Dane z dnia: <b>'.date('Y-m-d H:i:s').'</b>');
+
+	if ($callback === null)
+		$objResponse->assign("OLT_ONU_date", "innerHTML", $error_snmp.'Dane z dnia: <b>'.date('Y-m-d H:i:s').'</b>');
+	else
+		$objResponse->call($callback);
+
 	return $objResponse;
 }
 
