@@ -7,6 +7,8 @@
 	function OLT_ONU_walk_callback() {
 		xajax_OLT_ONU_walk_Xj({$netdevinfo.gponoltid}, ++current_port,
 			current_port == {count($gponoltportsinfo)} ? null : 'OLT_ONU_walk_callback');
+		if (current_port == {count($gponoltportsinfo)})
+			current_port = 0;
 	}
 
 	function OLT_ONU_walk() {
