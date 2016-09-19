@@ -72,33 +72,23 @@ $listdata['direction'] = $d;
 $listdata['filtr'] = $f;
 
 /* Using AJAX plugins */
-function OLT_ONU_walk_Xj($gponoltid)
-{
+function OLT_ONU_walk_Xj($gponoltid, $port = null) {
 	// xajax response
 	$GPON = LMSGponDasanPlugin::getGponInstance();
 	$objResponse = new xajaxResponse();
-	$options_snmp=$GPON->GetGponOlt($gponoltid);
+	$options_snmp = $GPON->GetGponOlt($gponoltid);
 	$GPON->snmp->set_options($options_snmp);
-	$OLT_ONU=$GPON->snmp->OLT_ONU_walk_get_param();
-	if(is_array($OLT_ONU) && count($OLT_ONU)>0)
-	{
-		foreach($OLT_ONU as $k=>$v)
-		{
-			if(is_array($v) && count($v)>0)
-			{
-				foreach($v as $k1=>$v1)
-				{
-					if($k=='RxPower')
-					{
-						$v1='<font color="'.$GPON->snmp->style_gpon_rx_power($v1,0).'">'.$v1.'</font>';
-					}
-					$objResponse->assign($k."_ONU_".$k1,"innerHTML",$v1);
+	$OLT_ONU = $GPON->snmp->OLT_ONU_walk_get_param($port);
+	if (is_array($OLT_ONU) && !empty($OLT_ONU))
+		foreach ($OLT_ONU as $k => $v)
+			if (is_array($v) && !empty($v))
+				foreach ($v as $k1 => $v1) {
+					if ($k == 'RxPower')
+						$v1 = '<font color="' . $GPON->snmp->style_gpon_rx_power($v1,0) . '">'.$v1.'</font>';
+					$objResponse->assign($k . "_ONU_" . $k1, "innerHTML", $v1);
 				}
-			}
-		}
-	}
-	$error_snmp=$GPON->snmp->get_correct_connect_snmp();
-	$objResponse->assign("OLT_ONU_date","innerHTML",$error_snmp.'Dane z dnia: <b>'.date('Y-m-d H:i:s').'</b>');
+	$error_snmp = $GPON->snmp->get_correct_connect_snmp();
+	$objResponse->assign("OLT_ONU_date", "innerHTML", $error_snmp . 'Dane z dnia: <b>'.date('Y-m-d H:i:s').'</b>');
 	return $objResponse;
 }
 

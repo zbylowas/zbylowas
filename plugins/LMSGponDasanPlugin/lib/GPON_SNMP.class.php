@@ -1637,47 +1637,42 @@ class GPON_DASAN_SNMP {
 		return $this->walk('sleGponOnuRxPower');
 	}
 
-	function OLT_ONU_walk()
-	{
-		$result=array();
-		$result['Distance']=$this->walk('sleGponOnuDistance');
-		$result['RxPower']=$this->walk('sleGponOnuRxPower');
-		$result['Profile']=$this->walk('sleGponOnuProfile');
-		$result['Status']=$this->walk('sleGponOnuStatus');
-		$result['DeactiveReason']=$this->walk('sleGponOnuDeactiveReason');
-		
+	private function OLT_ONU_walk($port = null) {
+		$result = array();
+		if (empty($port))
+			$port = '';
+		else
+			$port = '.' . $port;
+		$result['Distance'] = $this->walk('sleGponOnuDistance'. $port);
+		$result['RxPower'] = $this->walk('sleGponOnuRxPower' . $port);
+		$result['Profile'] = $this->walk('sleGponOnuProfile' . $port);
+		$result['Status'] = $this->walk('sleGponOnuStatus' . $port);
+		$result['DeactiveReason'] = $this->walk('sleGponOnuDeactiveReason' . $port);
+
 		return $result;
 	}
-	function OLT_ONU_walk_get_param()
-	{
-		$result1=array();
-		$result=$this->OLT_ONU_walk();
-		if(is_array($result) && count($result)>0)
-		{
-			foreach($result as $k=>$v)
-			{
-				if(is_array($v) && count($v)>0)
-				{
-					foreach($v as $k1=>$v1)
-					{
-						$k1=str_replace($this->path_OID.'sleGponOnuDistance.','',$k1);
-						$k1=str_replace($this->path_OID.'sleGponOnuRxPower.','',$k1);
-						$k1=str_replace($this->path_OID.'sleGponOnuProfile.','',$k1);
-						$k1=str_replace($this->path_OID.'sleGponOnuStatus.','',$k1);
-						$k1=str_replace($this->path_OID.'sleGponOnuDeactiveReason.','',$k1);
-						
+
+	public function OLT_ONU_walk_get_param($port = null) {
+		$result1 = array();
+		$result = $this->OLT_ONU_walk($port);
+		if (is_array($result) && !empty($result))
+			foreach ($result as $k => $v)
+				if (is_array($v) && !empty($v))
+					foreach ($v as $k1 => $v1) {
+						$k1 = str_replace($this->path_OID . 'sleGponOnuDistance.', '', $k1);
+						$k1 = str_replace($this->path_OID . 'sleGponOnuRxPower.', '', $k1);
+						$k1 = str_replace($this->path_OID . 'sleGponOnuProfile.', '', $k1);
+						$k1 = str_replace($this->path_OID . 'sleGponOnuStatus.', '', $k1);
+						$k1 = str_replace($this->path_OID . 'sleGponOnuDeactiveReason.', '', $k1);
+
 						$v1=$this->clean_snmp_value($v1);
-						if($k=='Status')
-						{
-							$v1=$this->color_snmp_value($v1);
-						}
-						$result1[$k][$k1]=$v1;
+						if ($k == 'Status')
+							$v1 = $this->color_snmp_value($v1);
+						$result1[$k][$k1] = $v1;
 					}
-				}
-			}
-		}
 		return $result1;
 	}
+
 	function OLT_get_param_edit($OLT_id=0)
 	{
 		$onchange=' onchange="this.style.borderColor=\'red\';"';
