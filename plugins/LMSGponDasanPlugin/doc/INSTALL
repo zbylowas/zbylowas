@@ -32,25 +32,27 @@ Provisioning XML (skrypt bin/lms-xml-provisioning.php):
 4. Ustawieniem gpon-dasan.xml_provisioning_filename wskazać ścieżkę do plików, które
    będzie generował skrypt bin/lms-xml-provisioning.php (może wystąpić symbol %sn%
    za który zostanie wstaiony numer seryjny końcówki).
-5. Ustawienia gpon-dasan.xml_provisioning_admin_password, gpon-dasan.xml_provisioning_telnet_password
+5. Ustawienie gpon-dasan.xml_provisioning_password_characters ustala zestaw znaków używany przy
+   generowaniu losowych haseł (domyślnie: 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ).
+6. Ustawienia gpon-dasan.xml_provisioning_admin_password, gpon-dasan.xml_provisioning_telnet_password
    i gpon-dasan.xml_provisioning_user_password ustalają odpowiednio domyślne hasła administratora końcówki,
    usługi telnet działającej na końcówce oraz hasło użytkownika końcówki. W haśle użytkownika końcówki
    może wystąpić symbol specjalny %14random% za który wstawiany jest losowy ciąg znaków o długości 14
    (długość można zmieniać poprzez wpisane przed słowem random innej liczby).
-6. Ustawienie gpon-dasan.xml_provisioning_web_port ustala port tcp na którym
+7. Ustawienie gpon-dasan.xml_provisioning_web_port ustala port tcp na którym
    działa interfejs www końcówki.
-7. Ustawienia gpon-dasan.xml_provisioning_default_wifi_ssid oraz gpon-dasan.xml_provisioning_default_wifi_password
+8. Ustawienia gpon-dasan.xml_provisioning_default_wifi_ssid oraz gpon-dasan.xml_provisioning_default_wifi_password
    ustalają wzorzec automatycznie generowanych z poziomu UI wtyczki ustawień sieci bezprzewodowej
    (gdy ustawienia są niepuste w UI jest dostępny przycisk "Generuj"). Pierwsze ustawienie obsługuje
    symbol specjalny %sn% za który wstawiany jest numer seryjny końcówki. Drugie ustawienie obsługuje
    symbol specjalny %14random% za który wstawiany jest losowy ciąg znaków o długości 14 (długość można
    zmieniać poprzez wpisane przed słowem random innej liczby).
-8. Ustawienie gpon-dasan.xml_provisioning_lan_networks określa listę predefiniowanych konfiguracji sieci IP
+9. Ustawienie gpon-dasan.xml_provisioning_lan_networks określa listę predefiniowanych konfiguracji sieci IP
    dla sieci LAN na końcówce od strony klienta. Dobrym przykładem jest domyślna wartość tego pola.
-9. Ustawienie gpon-dasan.xml_provisioning_vlans określa listę obsługiwanych przez operatora vlanów, których
+10. Ustawienie gpon-dasan.xml_provisioning_vlans określa listę obsługiwanych przez operatora vlanów, których
    możliwość konfiguracji ma być dostępna na portach końcówki od strony klienta
    (przykład: 16|BIURO,101|ADMIN - vlan 16 o nazwie BIURO i vlan 101 o nazwie ADMIN).
-10. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
+11. Symbole specjalne obsługiwane w szablonie konfiguracji xml:
    {$admin_password} - hasło administratora końcówki (pobrane z ustawienia końcówki lub ze zmiennej
    konfiguracyjnej gpon-dasan.xml_provisioning_admin_password),
    {$telnet_password} - hasło usługi telnet na końcówce (pobrane z ustawienia końcówki lub ze zmiennej
