@@ -37,7 +37,7 @@ function OLT_ONU_walk_Xj($gponoltid, $port = null, $callback = null) {
 	$options_snmp = $GPON->GetGponOlt($gponoltid);
 	$GPON->snmp->set_options($options_snmp);
 	$OLT_ONU = $GPON->snmp->OLT_ONU_walk_get_param($port);
-	if (is_array($OLT_ONU) && !empty($OLT_ONU)) {
+	if (is_array($OLT_ONU) && !empty($OLT_ONU))
 		foreach ($OLT_ONU as $k => $v)
 			if (is_array($v) && !empty($v))
 				foreach ($v as $k1=>$v1) {
