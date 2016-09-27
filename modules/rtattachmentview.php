@@ -31,7 +31,7 @@ if (isset($_GET['tid']))
 	$ticketid = intval($_GET['tid']);
 
 if (isset($ticketid) && isset($msgid) && isset($_GET['file'])) {
-	$filename = $_GET['file'];
+	$filename = urldecode($_GET['file']);
 	if (isset($_GET['img'])) {
 		if ($attach = $DB->GetRow('SELECT * FROM rtattachments WHERE messageid = ? AND filename = ?', array($msgid, $filename))) {
 			$file = ConfigHelper::getConfig('rt.mail_dir') . sprintf("/%06d/%06d/%s", $ticketid, $msgid, $filename);
